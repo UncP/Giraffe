@@ -61,9 +61,7 @@ class Vector3
 		static Vector3<double> Zero;
 		static Vector3<double> One;
 
-		union { T x_; T r_; };
-		union { T y_; T g_; };
-		union { T z_; T b_; };
+		T x_, y_, z_;
 
 		Vector3() = default;
 		Vector3(const T &t):x_(t), y_(t), z_(t) { }
@@ -99,6 +97,10 @@ class Vector3
 			return *this;
 		}
 
+		Vector3 operator*=(const Vector3 &v) {
+			x_ *= v.x_, y_ *= v.y_, z_ *= v.z_;
+			return *this;
+		}
 		Vector3 operator*(const double d) const {
 			return Vector3(x_ * d, y_ * d, z_ * d);
 		}
@@ -160,38 +162,5 @@ template <typename T>
 std::ostream& operator<<(std::ostream &os, const Vector3<T> &v) {
 	return os << setw(6) << v.x_ << " " << setw(6) << v.y_ << " " << setw(6) << v.z_ << std::endl;
 }
-
-/**
- *		COLOR
-**/
-class Color : public Vec3
-{
-	public:
-		static Color Black;
-		static Color White;
-		static Color Red;
-		static Color Green;
-		static Color Blue;
-		static Color Yellow;
-		static Color Purple;
-
-		double a_ = 1.0;
-
-		Color() = default;
-		Color(const double &d):Vec3(d) { }
-		Color(const double &r, const double &g, const double &b):Vec3(r, g, b) { }
-		Color(const Vec3 &c):Vec3(c) { }
-
-		uint32_t uint() const {
-			uint32_t ret = 0;
-			ret |= static_cast<uint8_t>((a_ > 1.0 ? 1.0 : a_) * 255.0) << 24;
-			ret |= static_cast<uint8_t>((x_ > 1.0 ? 1.0 : x_) * 255.0) << 16;
-			ret |= static_cast<uint8_t>((y_ > 1.0 ? 1.0 : y_) * 255.0) <<  8;
-			ret |= static_cast<uint8_t>((z_ > 1.0 ? 1.0 : z_) * 255.0);
-			return ret;
-		}
-
-		~Color() { };
-};
 
 #endif /* _VECTOR_H_ */

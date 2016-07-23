@@ -11,11 +11,3 @@
 
 template <> Vec3 Vec3::Zero(0.0, 0.0, 0.0);
 template <> Vec3 Vec3::One (1.0, 1.0, 1.0);
-
-Color Color::Black	(Vec3::One);
-Color Color::White	(Vec3::One);
-Color Color::Red   	(1.0, 0.0, 0.0);
-Color Color::Green 	(0.0, 1.0, 0.0);
-Color Color::Blue  	(0.0, 0.0, 1.0);
-Color Color::Yellow	(1.0, 1.0, 0.0);
-Color Color::Purple	(1.0, 0.0, 1.0);

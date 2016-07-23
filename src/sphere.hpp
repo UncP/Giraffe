@@ -12,7 +12,11 @@
 
 #include "vector.hpp"
 
-enum REFL { DIFF, SPEC, REFR };
+enum REFL { kDiffuse,
+						kPhong,
+						kReflect,
+						kRefract,
+					};
 
 class Sphere
 {
@@ -20,8 +24,8 @@ class Sphere
 		Sphere() = default;
 		Sphere(	const Vec3 &center,
 						const double radis,
-						const Color &surfaceColor,
-						const REFL refl = DIFF)
+						const Vec3 &surfaceColor,
+						const REFL refl = kDiffuse)
 		:	center_(center), radis_(radis), radis2_(radis * radis),surfaceColor_(surfaceColor),
 			refl_(refl) { }
 
@@ -43,7 +47,7 @@ class Sphere
 
 		const Vec3& center() const { return center_; }
 
-		const Color surfaceColor() const {
+		const Vec3& surfaceColor() const {
 			return surfaceColor_;
 		}
 
@@ -55,7 +59,7 @@ class Sphere
 		Vec3 		center_;
 		double 	radis_;
 		double 	radis2_;
-		Color 	surfaceColor_;
+		Vec3 		surfaceColor_;
 		REFL 		refl_;
 };
 

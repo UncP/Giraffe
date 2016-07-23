@@ -31,7 +31,6 @@ class PointLight : public Light
 		double illuminate(const Vec3 &pos, Vec3 &dir) const override {
 			dir = origin_ - pos;
 			double r2 = dir.length() / (4 * PI);
-			if (r2 < 1.0) r2 = 1.0;
 			normalize(dir);
 			return intensity_ / r2;
 		}

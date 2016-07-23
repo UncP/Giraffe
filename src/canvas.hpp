@@ -29,17 +29,21 @@ class Canvas
 			if (!out) { std::cerr << "文件打开失败 :(\n"; return ; }
 			out << "P6\n" << width_ << " " << height_ << "\n255\n";
 			for (int i = 0, end = width_ * height_; i < end; ++i) {
-				Color c(pixels_[i]);
-				out << static_cast<uint8_t>(std::min(1.0, c.r_) * 255.0) <<
-							 static_cast<uint8_t>(std::min(1.0, c.g_) * 255.0) <<
-							 static_cast<uint8_t>(std::min(1.0, c.b_) * 255.0);
+				uint8_t r = (pixels_[i] >> 16) & 0xFF;
+				uint8_t g = (pixels_[i] >> 8) & 0xFF;
+				uint8_t b = (pixels_[i]) & 0xFF;
+				out << r << g << b;
 			}
 			out.close();
 		}
 
-		void putPixel(const int x, const int y, const Color &c) {
-			if (x >= 0 && x < width_ && y >=0 && y < height_)
-				pixels_[x + width_ * y] = c.uint();
+		void putPixel(const int x, const int y, const Vec3 &v) {
+			if (x >= 0 && x < width_ && y >=0 && y < height_) {
+				int index = x + width_ * y;
+				pixels_[index] |= static_cast<uint8_t>(std::min(v.x_, 1.0) * 255.0) << 16;
+				pixels_[index] |= static_cast<uint8_t>(std::min(v.y_, 1.0) * 255.0) << 8;
+				pixels_[index] |= static_cast<uint8_t>(std::min(v.z_, 1.0) * 255.0);
+			}
 		}
 
 		Canvas(const Canvas &) = delete;

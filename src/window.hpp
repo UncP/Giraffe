@@ -46,15 +46,16 @@ class Window
 			}
 		}
 
-		void rayTrace(const Vec3 &origin, const vector<Sphere *> &objects, vector<Light *> &light) {
-			double fov = 75.0;
+		void rayTrace(const Vec3 &origin, const double &fov, const vector<Light *> &light,
+									const vector<Sphere *> &spheres) {
 			double fac = tan(fov * PI / 360.0);
-#pragma omp parallel for
+			Vec3 color;
+#pragma omp parallel for private(color)
 			for (int x = 0; x < width_; ++x) {
-				for (int y = 0; y < height_; ++y) {
+				for (int y = 0; y < height_; ++y, color=Vec3(0.0)) {
 					Vec3 dir((2*((x+0.5)/width_)-1)*fac, (1-2*((y+0.5)/height_))*fac, -1);
 					normalize(dir);
-					Color color = Ray(origin, dir).trace(objects, 0, light);
+					color += Ray(origin, dir).trace(light, spheres, 0);
 					canvas_->putPixel(x, y, color);
 				}
 			}

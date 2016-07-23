@@ -1,3 +1,0 @@
-#! /bin/sh
-make && ./ray_tracer
-gprof ray_tracer gmon.out -p | sed -n -e 4,14p -s
