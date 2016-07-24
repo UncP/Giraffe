@@ -25,6 +25,7 @@ class Window
 	public:
 		Window(const int width, const int height, const char *title)
 			:width_(width), height_(height) {
+			initLookupTable();
 			if (SDL_Init(SDL_INIT_VIDEO)) {
 				std::cerr << "SDL_Init failed :(\n";
 				exit(-1);

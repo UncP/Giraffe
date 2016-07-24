@@ -10,9 +10,7 @@
 #ifndef _LIGHT_H_
 #define _LIGHT_H_
 
-const double PI = 3.141592653589793238;
-
-#include "vector.hpp"
+#include "utility.hpp"
 
 class Light
 {

@@ -12,6 +12,8 @@
 
 #include <vector>
 #include <limits>
+#include <random>
+#include <ctime>
 
 #include "sphere.hpp"
 #include "light.hpp"
