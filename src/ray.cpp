@@ -78,7 +78,7 @@ Vec3 Ray::trace(const std::vector<Light *> &light,
 											sample.x_ * Y.z_ + sample.y_ * hitNormal.z_ + sample.z_ * X.z_);
 			giColor += a * Ray(hitPos + sampleDir * bias, sampleDir).trace(light, spheres, depth);
 		}
-		giColor /= (N * pdf);
+		giColor /= N;
 		color = ((color / PI) + 2 * giColor);
 	} else if (mat == kReflect) {
 		Vec3 newHitPos = hitPos + hitNormal * bias;

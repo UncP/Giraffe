@@ -14,7 +14,7 @@ int main(int argc, char **argv)
 	Window win(500, 500, "rayTracer");
 	std::vector<Sphere *> spheres;
 	// background
-	// spheres.push_back(new Sphere(Vec3(0.0, 0.0, -1050.0), 1000.0, Vec3(0.7, 0.8, 0.6)));
+	spheres.push_back(new Sphere(Vec3(0.0, 0.0, -1050.0), 1000.0, Vec3(0.7, 0.8, 0.8)));
 	// floor
 	spheres.push_back(new Sphere(Vec3(0.0, -1005.0, -20.0), 1000.0, Vec3(0.6, 0.6, 0.6)));
 
