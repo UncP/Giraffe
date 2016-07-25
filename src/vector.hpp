@@ -16,52 +16,14 @@
 
 using std::setw;
 
-/**
- *		VECTOR2
-**/
-template <typename T>
-class Vector2
-{
-	public:
-		union { T x_; T u_; };
-		union { T y_; T v_; };
-
-		// Constructor
-		Vector2() = default;
-		Vector2(const T &t):x_(t), y_(t) { }
-		Vector2(const T &x, const T &y):x_(x), y_(y) { }
-		Vector2(const Vector2 &v):x_(v.x_), y_(v.y_) { }
-
-		Vector2& operator=(const Vector2 &v) {
-			x_ = v.x_;
-			y_ = v.y_;
-			return *this;
-		}
-
-		// Operation
-
-		~Vector2() { }
-};
-
-typedef Vector2<double> Vec2;
-
-template <typename T>
-std::ostream& operator<<(std::ostream &os, const Vector2<T> &v) {
-	return os << setw(6) << v.x_ << " " << setw(6) << v.y_ << std::endl;
-}
-
-
-/**
- *		VECTOR3
-**/
 template <typename T>
 class Vector3
 {
 	public:
-		static Vector3<double> Zero;
-		static Vector3<double> One;
 
-		T x_, y_, z_;
+		T x_ = 0;
+		T y_ = 0;
+		T z_ = 0;
 
 		Vector3() = default;
 		Vector3(const T &t):x_(t), y_(t), z_(t) { }
@@ -97,10 +59,14 @@ class Vector3
 			return *this;
 		}
 
+		Vector3 operator*(const Vector3 &v) const {
+			return Vector3(x_ * v.x_, y_ * v.y_, z_ * v.z_);
+		}
 		Vector3 operator*=(const Vector3 &v) {
 			x_ *= v.x_, y_ *= v.y_, z_ *= v.z_;
 			return *this;
 		}
+
 		Vector3 operator*(const double d) const {
 			return Vector3(x_ * d, y_ * d, z_ * d);
 		}

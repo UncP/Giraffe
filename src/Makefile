@@ -1,10 +1,11 @@
 CPP 		 = g++
 CPPFLAGS = -std=c++11 -Wall -O3 -fopenmp
-LDFLAGS  = -lSDL -lSDLmain -lpng
+LDFLAGS  = -lSDL -lSDLmain
 
-ray_tracer:vector.cpp ray.cpp ray_tracer.cpp
-	$(CPP) $(CPPFLAGS) -o ray_tracer vector.cpp utility.cpp ray.cpp \
-	ray_tracer.cpp $(LDFLAGS)
+OBJ = vector.o utility.o sphere.o light.o ray.o window.o
+
+ray_tracer:$(OBJ) ray_tracer.cpp
+	$(CPP) $(CPPFLAGS) -o ray_tracer $(OBJ) ray_tracer.cpp $(LDFLAGS)
 
 clean:
-	rm ray_tracer .tags*
+	rm *.o .tags* *.ppm ray_tracer

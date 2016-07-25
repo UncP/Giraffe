@@ -15,45 +15,66 @@
 class Light
 {
 	public:
-		virtual double illuminate(const Vec3 &, Vec3 &) const = 0;
+		Light(const Vec3 &color, const double intensity):color_(color), intensity_(intensity) { }
+
+		virtual void illuminate(const Vec3 &, Vec3 &, Vec3 &, double &dis) const = 0;
 
 		virtual ~Light() { }
+
+		Vec3 color_;
+		double intensity_;
 };
 
 class PointLight : public Light
 {
 	public:
-		PointLight(const Vec3 &origin, const double intensity = 1.0)
-		:origin_(origin), intensity_(intensity) { }
+		PointLight(	const Vec3 	&origin,
+								const double intensity = 1.0,
+								const Vec3 	&color 		 = Vec3(1.0, 1.0, 1.0))
+		:Light(color, intensity), origin_(origin) { }
 
-		double illuminate(const Vec3 &pos, Vec3 &dir) const override {
+		void illuminate(const Vec3 &pos, Vec3 &dir, Vec3 &intensity, double &dis) const override {
 			dir = origin_ - pos;
-			double r2 = dir.length() / (4 * PI);
+			dis = dir.length();
+			double r2 = dis / (4 * PI);
 			normalize(dir);
-			return intensity_ / r2;
+			intensity = color_ * (intensity_ / r2);
 		}
 
 		~PointLight() { }
 	private:
 		Vec3 	 origin_;
-		double intensity_;
 };
 
 class DirectionalLight : public Light
 {
 	public:
-		DirectionalLight(const Vec3 &direction, const double intensity = 1.0)
-		:direction_(direction), intensity_(intensity) { normalize(direction_); }
+		DirectionalLight(	const Vec3 	&direction,
+											const double intensity = 1.0,
+											const Vec3 	&color 		 = Vec3(1.0, 1.0, 1.0))
+		:Light(color, intensity), direction_(direction) { normalize(direction_); }
 
-		double illuminate(const Vec3 &pos, Vec3 &dir) const override {
+		void illuminate(const Vec3 &pos, Vec3 &dir, Vec3 &intensity, double &dis) const override {
 			dir = -direction_;
-			return intensity_;
+			intensity = color_ * intensity_;
 		}
 
 		~DirectionalLight() { }
 	private:
 		Vec3 	 direction_;
-		double intensity_;
+};
+
+class EnvironmentalLight : public Light
+{
+	public:
+		EnvironmentalLight(	const double intensity = 1.0,
+												const Vec3 	&color 		 = Vec3(1.0, 1.0, 1.0)):Light(color, intensity) { }
+
+		void illuminate(const Vec3 &pos, Vec3 &dir, Vec3 &intensity, double &dis) const override {
+			intensity = color_ * intensity_;
+		}
+
+		~EnvironmentalLight() { }
 };
 
 #endif /* _LIGHT_H_ */

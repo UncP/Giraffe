@@ -12,55 +12,41 @@
 
 #include "vector.hpp"
 
-enum REFL { kDiffuse,
-						kPhong,
-						kReflect,
-						kRefract,
-					};
+enum REFL { kDiffuse, kReflect, kRefract };
 
 class Sphere
 {
 	public:
-		Sphere() = default;
 		Sphere(	const Vec3 &center,
 						const double radis,
-						const Vec3 &surfaceColor,
-						const REFL refl = kDiffuse)
-		:	center_(center), radis_(radis), radis2_(radis * radis),surfaceColor_(surfaceColor),
-			refl_(refl) { }
+						const Vec3 &albedo = Vec3(0.18, 0.18, 0.18),
+						const REFL &refl = kDiffuse)
+		:	center_(center), radis_(radis), radis2_(radis * radis), refl_(refl), albedo_(albedo) { }
 
 		double intersect(const Vec3 &pos, const Vec3 &dir) const {
-											// 光线起始点到球心的向量
 			Vec3 posToCenter = center_ - pos;
-											// 光线起始点到球心的向量在光线上的投影长度
-			double projectLen = dot(posToCenter, dir);
-											// 反向则不相交
-			if (projectLen < 0) return -1.0;
-											// 球心到光线的距离平方
-			double distance2 = posToCenter.length2() - projectLen * projectLen;
-											// 勾股定理判断球与光线是否有交点
-			if (distance2 > radis2_) return -1.0;
-			double distance = sqrt(radis2_ - distance2);
-											// 更新光源到最近物体的距离
-			return projectLen - distance;
+			double project = dot(posToCenter, dir);
+			double det = radis2_ + project * project - posToCenter.length2();
+			if (det < 0)
+				return 0;
+			else
+				det = std::sqrt(det);
+			double bias = 1e-4;
+			double dis;
+			return (dis = project - det ) > bias ? dis : ((dis = project + det) > bias ? dis : 0);
 		}
 
 		const Vec3& center() const { return center_; }
-
-		const Vec3& surfaceColor() const {
-			return surfaceColor_;
-		}
-
-		const REFL refl() const { return refl_; }
-
+		const Vec3& albedo() const { return albedo_; }
+		const REFL& refl()	 const { return refl_; }
 		~Sphere() { }
 
 	private:
 		Vec3 		center_;
 		double 	radis_;
 		double 	radis2_;
-		Vec3 		surfaceColor_;
 		REFL 		refl_;
+		Vec3 		albedo_;
 };
 
 #endif /* _SHAPE_H_ */
