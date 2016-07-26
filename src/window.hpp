@@ -14,8 +14,12 @@
 #include <SDL/SDL.h>
 
 #include "ray.hpp"
+#include "camera.hpp"
 
-using std::vector;
+static const double fac = 0.5135;
+
+static std::default_random_engine generator(time(0));
+static std::uniform_real_distribution<double> distribution(0, 1);
 
 class Window
 {
@@ -43,17 +47,30 @@ class Window
 			SDL_WM_SetCaption(title, NULL);
 		}
 
-		void rayTrace(const Vec3 &origin, const double &fov, const vector<Light *> &light,
-									const vector<Sphere *> &spheres) {
-			double fac = tan(fov * PI / 360.0);
-#pragma omp parallel for schedule(dynamic, 1)
+		void rayTrace(const Camera &cam, const std::vector<Sphere *> &spheres, const int &samples) {
+			Vec3 cx(width_ * fac / height_, 0, 0), cy(cross(cx, cam.direction_));
+			normalize(cy);
+			cy *= fac;
+			Vec3 color;
+			#pragma omp parallel for schedule(dynamic, 1) private(color)
 			for (int x = 0; x < width_; ++x) {
-				fprintf(stderr,"\r%5.2f%%", 100 * (x / static_cast<float>(width_-1)));
+				fprintf(stderr,"\rprogress: %5.2f%%", 100 * (x / static_cast<float>(width_-1)));
 				for (int y = 0; y < height_; ++y) {
-					Vec3 dir((2*((x+0.5)/width_)-1)*fac, (1-2*((y+0.5)/height_))*fac, -1);
-					normalize(dir);
-					int i = x + y * width_;
-					pixels_[i] += Ray(origin, dir).trace(light, spheres, 0);
+					for (int sx = 0, i = x + (height_ -1 - y) * width_; sx < 2; ++sx) {
+						for (int sy = 0; sy < 2; ++sy, color = Vec3()) {
+							for (int n = 0; n < samples; ++n) {
+								double a = distribution(generator);
+								double b = distribution(generator);
+								a = a < 1 ? std::sqrt(a) - 1 : 1 - std::sqrt(2 - a);
+								b = b < 1 ? std::sqrt(b) - 1 : 1 - std::sqrt(2 - b);
+								Vec3 dir = ((((sx + 0.5 + a) / 2 + x) / width_ ) - 0.5) * cx  +
+													 ((((sy + 0.5 + b) / 2 + y) / height_) - 0.5) * cy + cam.direction_;
+								normalize(dir);
+								color += Ray(cam.origin_+100*dir, dir).trace(spheres, 0) * (1.0 / samples);
+							}
+							pixels_[i] += color * 0.25;
+						}
+					}
 				}
 			}
 		}
@@ -65,17 +82,18 @@ class Window
 				canvas_[i] |= static_cast<uint8_t>(std::min(pixels_[i].y_, 1.0) * 255.0) << 8;
 				canvas_[i] |= static_cast<uint8_t>(std::min(pixels_[i].z_, 1.0) * 255.0);
 			}
-			SDL_UpdateRect(screen_, 0, 0, 0, 0); }
+			SDL_UpdateRect(screen_, 0, 0, 0, 0);
+		}
 
 		void save(const char *file) const {
 			std::ofstream out(file, std::ios::out | std::ios::binary);
 			if (!out) { std::cerr << "文件打开失败 :(\n"; return ; }
-			out << "P6\n" << width_ << " " << height_ << "\n255\n";
+			out << "P3\n" << width_ << " " << height_ << "\n255\n";
 			for (int i = 0, end = width_ * height_; i < end; ++i) {
-				uint8_t r = static_cast<uint32_t>(std::min(pixels_[i].x_, 1.0) * 255.0);
-				uint8_t g = static_cast<uint32_t>(std::min(pixels_[i].y_, 1.0) * 255.0);
-				uint8_t b = static_cast<uint32_t>(std::min(pixels_[i].z_, 1.0) * 255.0);
-				out << r << g << b;
+				int r = static_cast<int>(std::pow(std::min(pixels_[i].x_,1.0),1 / 2.2) * 255 + 0.5);
+				int g = static_cast<int>(std::pow(std::min(pixels_[i].y_,1.0),1 / 2.2) * 255 + 0.5);
+				int b = static_cast<int>(std::pow(std::min(pixels_[i].z_,1.0),1 / 2.2) * 255 + 0.5);
+				out << r << " " << g << " " << b << " ";
 			}
 			out.close();
 		}

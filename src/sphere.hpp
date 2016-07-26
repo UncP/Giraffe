@@ -14,14 +14,18 @@
 
 enum REFL { kDiffuse, kReflect, kRefract };
 
+const double BIAS = 1e-4;
+
 class Sphere
 {
 	public:
 		Sphere(	const Vec3 &center,
 						const double radis,
-						const Vec3 &albedo = Vec3(0.18, 0.18, 0.18),
-						const REFL &refl = kDiffuse)
-		:	center_(center), radis_(radis), radis2_(radis * radis), refl_(refl), albedo_(albedo) { }
+						const Vec3 &color 	 = Vec3(0.0),
+						const Vec3 &emission = Vec3(0.0),
+						const REFL &refl 		 = kDiffuse)
+		:	center_(center), radis_(radis), radis2_(radis * radis), refl_(refl), color_(color),
+			emission_(emission) { }
 
 		double intersect(const Vec3 &pos, const Vec3 &dir) const {
 			Vec3 posToCenter = center_ - pos;
@@ -31,22 +35,18 @@ class Sphere
 				return 0;
 			else
 				det = std::sqrt(det);
-			double bias = 1e-4;
 			double dis;
-			return (dis = project - det ) > bias ? dis : ((dis = project + det) > bias ? dis : 0);
+			return (dis = project - det) > BIAS ? dis : ((dis = project + det) > BIAS ? dis : 0);
 		}
 
-		const Vec3& center() const { return center_; }
-		const Vec3& albedo() const { return albedo_; }
-		const REFL& refl()	 const { return refl_; }
 		~Sphere() { }
 
-	private:
 		Vec3 		center_;
 		double 	radis_;
 		double 	radis2_;
 		REFL 		refl_;
-		Vec3 		albedo_;
+		Vec3 		color_;
+		Vec3		emission_;
 };
 
 #endif /* _SHAPE_H_ */

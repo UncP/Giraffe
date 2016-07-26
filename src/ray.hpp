@@ -12,21 +12,17 @@
 
 #include <vector>
 #include <limits>
-#include <random>
 #include <ctime>
+#include <random>
 
 #include "sphere.hpp"
-#include "light.hpp"
-#include "utility.hpp"
-
-const double DOUBLE_MAX = std::numeric_limits<double>::max();
 
 class Ray
 {
 	public:
-		Ray(const Vec3 &origin, const Vec3 &dir = Vec3(0.0, 0.0, 0.0)):origin_(origin), dir_(dir) { }
+		Ray(const Vec3 &origin, const Vec3 &dir = Vec3()):origin_(origin), dir_(dir) { }
 
-		Vec3 trace(const std::vector<Light *> &, const std::vector<Sphere *> &, int);
+		Vec3 trace(const std::vector<Sphere *> &, int);
 
 		~Ray() { }
 

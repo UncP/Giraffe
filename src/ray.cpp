@@ -9,16 +9,15 @@
 
 #include "ray.hpp"
 
-static const double bias = 1e-4;
-static const int 		N 	 = 8;
-static const double pdf  = 1.0 / (2 * PI);
+const double DOUBLE_MAX = std::numeric_limits<double>::max();
+const double PI = 3.141592653589793238;
+const double kRefractionRatio = 1.5;
 
-std::default_random_engine generator(time(0));
-std::uniform_real_distribution<double> distribution(0, 1);
+static std::default_random_engine generator(time(0));
+static std::uniform_real_distribution<double> distribution(0, 1);
 
 Sphere* Ray::intersect(const std::vector<Sphere *> &spheres, double &near)
-{	// 判断每个物体是否与光线相交
-	// 若有相交, 找出与光线相交距离最短的那个物体
+{
 	Sphere *hitSphere = nullptr;
 	for (size_t i = 0, end = spheres.size(); i != end; ++i) {
 		double distance = spheres[i]->intersect(origin_, dir_);
@@ -30,62 +29,66 @@ Sphere* Ray::intersect(const std::vector<Sphere *> &spheres, double &near)
 	return hitSphere;
 }
 
-Vec3 Ray::trace(const std::vector<Light *> &light,
-								const std::vector<Sphere *> &spheres,
-								int depth)
+Vec3 Ray::trace(const std::vector<Sphere *> &spheres, int depth)
 {
-	if (++depth > 3) return Vec3(0);
-
 	double near = DOUBLE_MAX;
-	Sphere *hitSphere = intersect(spheres, near);
+	Sphere *sphere = intersect(spheres, near);
+	if (!sphere) return Vec3();
 
-	// 没有物体与光线相交
-	if (!hitSphere) return Vec3(0);
+	Vec3 color(sphere->color_);
+	double max = std::max(color.x_, std::max(color.y_, color.z_));
+	if (++depth > 5) {
+		if (distribution(generator) < max) color *= (1.0 / max);
+		else return sphere->emission_;
+	}
 
-	Vec3 hitPos 	 = origin_ + dir_ * near;
-	Vec3 hitNormal = hitPos - hitSphere->center();
-	normalize(hitNormal);
+	Vec3 pos = origin_ + dir_ * near;
+	Vec3 normal = pos - sphere->center_;
+	normalize(normal);
+	Vec3 newNormal(normal);
 
 	bool into = true;
-	if (dot(dir_, hitNormal) > 0) hitNormal = -hitNormal, into = false;
+	if (dot(dir_, normal) > 0) newNormal = -newNormal, into = false;
 
-	REFL mat = hitSphere->refl();
+	REFL mat = sphere->refl_;
 	if (mat == kDiffuse) {
-		Vec3 color(0);
-		Vec3 newHitPos = hitPos + hitNormal * bias;
-		for (size_t i = 0, lEnd = light.size(); i != lEnd; ++i) {
-			bool flag = true;
-			Vec3 lightDir(hitNormal), intensity;
-			double distance;
-			light[i]->illuminate(hitPos, lightDir, intensity, distance);
-			for (size_t j = 0, sEnd = spheres.size(); j != sEnd; ++j) {
-				double dis = spheres[j]->intersect(newHitPos, lightDir);
-				if (dis > 0.0 && dis < distance) {
-					flag = false;
-					break;
-				}
-			}
-			if (flag)
-				return hitSphere->albedo() * intensity * std::max(0.0, dot(hitNormal, lightDir));
-		}
-	} else if (mat == kReflect) {
-		Vec3 newHitPos = hitPos + hitNormal * bias;
-		Vec3 reflDir;
-		reflect(dir_, hitNormal, reflDir);
-		return Ray(newHitPos, reflDir).trace(light, spheres, depth);
-	} else if (mat == kRefract) {
-		Vec3 reflDir;
-		reflect(dir_, hitNormal, reflDir);
-		Vec3 refrDir;
-		double kr = 0.0;
-		fresnel(dir_, hitNormal, into, refrDir, kr);
-		if (kr == 0.0)
-			return Ray(hitPos + hitNormal * bias, reflDir).trace(light, spheres, depth) * (1 - kr) *
-						 hitSphere->albedo();
+		Vec3 u, v, w(newNormal);
+		if (std::fabs(w.x_) > 0.1)
+			u = cross(Vec3(0, 1, 0), w);
 		else
-			return (Ray(hitPos + hitNormal * bias, reflDir).trace(light, spheres, depth) * (1 - kr) +
-							Ray(hitPos - hitNormal * bias, refrDir).trace(light, spheres, depth) * kr) *
-							hitSphere->albedo();
+			u = cross(Vec3(1, 0, 0), w);
+		normalize(u);
+		v = cross(w, u);
+		normalize(v);
+		double a = distribution(generator), b = distribution(generator);
+		double sini = std::sqrt(a), cosi = 2 * PI * b;
+		Vec3 dir((sini * std::cos(cosi) * u) + (sini * std::sin(cosi) * v) + (std::sqrt(1 - a) * w));
+		normalize(dir);
+		return sphere->emission_ + color * Ray(pos, dir).trace(spheres, depth);
+	} else if (mat == kReflect) {
+		Vec3 refl = dir_ - 2 * dot(dir_, normal) * normal;
+		normalize(refl);
+		return sphere->emission_ + color * Ray(pos, refl).trace(spheres, depth);
 	}
-	return Vec3(0);
+	Vec3 refl(dir_ - 2 * dot(dir_, normal) * normal);
+	normalize(refl);
+	double etai = 1.0, etat = kRefractionRatio;
+	double ior;
+	if (into)
+		ior = 1.0 / kRefractionRatio;
+	else
+		ior = kRefractionRatio;
+	double cos1 = -dot(dir_, newNormal), cos2;
+	if ((cos2 = (1 - ior * ior * (1.0 - cos1 * cos1))) < 0.0)
+		return sphere->emission_ + color * Ray(pos, refl).trace(spheres, depth);
+	Vec3 refr(dir_ * ior + newNormal * (ior * cos1 - std::sqrt(cos2)));
+	normalize(refr);
+	double a = etat - etai, b = etat + etai;
+	double R0 = a * a / (b * b), c = 1 - (into ? cos1 : dot(refr, normal));
+	double Re = R0 + (1 - R0) * c * c * c * c * c, Tr = 1 - Re;
+	double P = 0.25 + 0.5 * Re, RP = Re / P, TP = Tr / (1 - P);
+	return sphere->emission_ + color * (depth > 2 ?
+		(distribution(generator) < P ? Ray(pos, refl).trace(spheres, depth) * RP :
+																	 Ray(pos, refr).trace(spheres, depth) * TP) :
+		Ray(pos, refl).trace(spheres, depth) * Re + Ray(pos, refr).trace(spheres, depth) * Tr);
 }

@@ -26,7 +26,7 @@ class Vector3
 		T z_ = 0;
 
 		Vector3() = default;
-		Vector3(const T &t):x_(t), y_(t), z_(t) { }
+		explicit Vector3(const T &t):x_(t), y_(t), z_(t) { }
 		Vector3(const T &x, const T &y, const T &z):x_(x), y_(y), z_(z) { }
 		Vector3(const Vector3 &v):x_(v.x_), y_(v.y_), z_(v.z_) { }
 
@@ -61,10 +61,6 @@ class Vector3
 
 		Vector3 operator*(const Vector3 &v) const {
 			return Vector3(x_ * v.x_, y_ * v.y_, z_ * v.z_);
-		}
-		Vector3 operator*=(const Vector3 &v) {
-			x_ *= v.x_, y_ *= v.y_, z_ *= v.z_;
-			return *this;
 		}
 
 		Vector3 operator*(const double d) const {
