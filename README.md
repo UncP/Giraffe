@@ -1,6 +1,6 @@
 ###光线追踪器
-	仿照 smallpt 实现的一个基于蒙特卡洛算法的光线追踪器
-	Features:	
+	仿照 smallpt (http://kevinbeason.com/smallpt/) 实现的一个基于蒙特卡洛算法的光线追踪器
+	特点:	
 		漫反射
 		镜面反射
 		折射
