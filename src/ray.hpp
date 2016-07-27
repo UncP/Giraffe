@@ -17,10 +17,14 @@
 
 #include "sphere.hpp"
 
+class Camera;
+
 class Ray
 {
+	friend Camera;
 	public:
-		Ray(const Vec3 &origin, const Vec3 &dir = Vec3()):origin_(origin), dir_(dir) { }
+		Ray() = default;
+		Ray(const Vec3 &origin, const Vec3 &dir):origin_(origin), dir_(dir) { }
 
 		Vec3 trace(const std::vector<Sphere *> &, int);
 

@@ -10,7 +10,6 @@
 #include "ray.hpp"
 
 const double DOUBLE_MAX = std::numeric_limits<double>::max();
-const double PI = 3.141592653589793238;
 const double kRefractionRatio = 1.5;
 
 static std::default_random_engine generator(time(0));
@@ -49,7 +48,6 @@ Vec3 Ray::trace(const std::vector<Sphere *> &spheres, int depth)
 
 	bool into = true;
 	if (dot(dir_, normal) > 0) newNormal = -newNormal, into = false;
-
 	REFL mat = sphere->refl_;
 	if (mat == kDiffuse) {
 		Vec3 u, v, w(newNormal);
@@ -65,30 +63,30 @@ Vec3 Ray::trace(const std::vector<Sphere *> &spheres, int depth)
 		Vec3 dir((sini * std::cos(cosi) * u) + (sini * std::sin(cosi) * v) + (std::sqrt(1 - a) * w));
 		normalize(dir);
 		return sphere->emission_ + color * Ray(pos, dir).trace(spheres, depth);
-	} else if (mat == kReflect) {
-		Vec3 refl = dir_ - 2 * dot(dir_, normal) * normal;
-		normalize(refl);
-		return sphere->emission_ + color * Ray(pos, refl).trace(spheres, depth);
 	}
-	Vec3 refl(dir_ - 2 * dot(dir_, normal) * normal);
+
+	Vec3 refl = dir_ - 2 * dot(dir_, normal) * normal;
 	normalize(refl);
+
+	if (mat == kReflect)
+		return sphere->emission_ + color * Ray(pos, refl).trace(spheres, depth);
+
 	double etai = 1.0, etat = kRefractionRatio;
 	double ior;
-	if (into)
-		ior = 1.0 / kRefractionRatio;
-	else
-		ior = kRefractionRatio;
+	if (into) ior = 1.0 / kRefractionRatio;
+	else 			ior = kRefractionRatio;
+
 	double cos1 = -dot(dir_, newNormal), cos2;
 	if ((cos2 = (1 - ior * ior * (1.0 - cos1 * cos1))) < 0.0)
 		return sphere->emission_ + color * Ray(pos, refl).trace(spheres, depth);
+
 	Vec3 refr(dir_ * ior + newNormal * (ior * cos1 - std::sqrt(cos2)));
 	normalize(refr);
 	double a = etat - etai, b = etat + etai;
 	double R0 = a * a / (b * b), c = 1 - (into ? cos1 : dot(refr, normal));
 	double Re = R0 + (1 - R0) * c * c * c * c * c, Tr = 1 - Re;
 	double P = 0.25 + 0.5 * Re, RP = Re / P, TP = Tr / (1 - P);
-	return sphere->emission_ + color * (depth > 2 ?
-		(distribution(generator) < P ? Ray(pos, refl).trace(spheres, depth) * RP :
-																	 Ray(pos, refr).trace(spheres, depth) * TP) :
+	return sphere->emission_ + color * (depth > 2 ? (distribution(generator) < P ?
+		Ray(pos, refl).trace(spheres, depth) * RP : Ray(pos, refr).trace(spheres, depth) * TP) :
 		Ray(pos, refl).trace(spheres, depth) * Re + Ray(pos, refr).trace(spheres, depth) * Tr);
 }

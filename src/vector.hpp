@@ -16,6 +16,8 @@
 
 using std::setw;
 
+const double PI = 3.141592653589793238;
+
 template <typename T>
 class Vector3
 {
@@ -94,6 +96,7 @@ class Vector3
 };
 
 typedef Vector3<double> Vec3;
+typedef Vector3<double> Vec;
 
 template <typename T>
 inline Vector3<T> operator*(const double d, const Vector3<T> &v) {
