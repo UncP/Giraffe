@@ -28,44 +28,56 @@ Sphere* Ray::intersect(const std::vector<Sphere *> &spheres, double &near)
 	return hitSphere;
 }
 
-Vec3 Ray::trace(const std::vector<Sphere *> &spheres, int depth)
+Vec Ray::trace(const std::vector<Sphere *> &spheres, int depth)
 {
 	double near = DOUBLE_MAX;
 	Sphere *sphere = intersect(spheres, near);
-	if (!sphere) return Vec3();
+	if (!sphere) return Vec();
 
-	Vec3 color(sphere->color_);
+	Vec color(sphere->color_);
 	double max = std::max(color.x_, std::max(color.y_, color.z_));
 	if (++depth > 5) {
 		if (distribution(generator) < max) color *= (1.0 / max);
 		else return sphere->emission_;
 	}
 
-	Vec3 pos = origin_ + dir_ * near;
-	Vec3 normal = pos - sphere->center_;
+	Vec pos = origin_ + dir_ * near;
+	Vec normal = pos - sphere->center_;
 	normalize(normal);
-	Vec3 newNormal(normal);
+	Vec adjNormal(normal);
 
 	bool into = true;
-	if (dot(dir_, normal) > 0) newNormal = -newNormal, into = false;
+	if (dot(dir_, normal) > 0) adjNormal = -adjNormal, into = false;
+
 	REFL mat = sphere->refl_;
 	if (mat == kDiffuse) {
-		Vec3 u, v, w(newNormal);
+		Vec u, v, w(adjNormal);
 		if (std::fabs(w.x_) > 0.1)
-			u = cross(Vec3(0, 1, 0), w);
+			u = cross(Vec(0, 1, 0), w);
 		else
-			u = cross(Vec3(1, 0, 0), w);
+			u = cross(Vec(1, 0, 0), w);
 		normalize(u);
 		v = cross(w, u);
 		normalize(v);
 		double a = distribution(generator), b = distribution(generator);
-		double sini = std::sqrt(a), cosi = 2 * PI * b;
-		Vec3 dir((sini * std::cos(cosi) * u) + (sini * std::sin(cosi) * v) + (std::sqrt(1 - a) * w));
+		double sini = std::sqrt(a), cosi = DOU_PI * b;
+		Vec dir((sini*std::cos(cosi)*u) + (sini*std::sin(cosi)*v) + (std::sqrt(1-a)*w));
 		normalize(dir);
+
+		// Vec c;
+		// for (int i = 0, end = spheres.size(); i != end; ++i) {
+		// 	if (!spheres[i]->emit_ || spheres[i] == sphere) continue;
+		// 	Vec newDir(spheres[i]->center_ - sphere->center_);
+		// 	normalize(newDir);
+		// 	Sphere *obj;
+		// 	if (!(obj = Ray(pos, newDir).intersect(spheres, near)) || obj == spheres[i])
+		// 		c += spheres[i]->emission_ * color * std::max(0.0, dot(newDir, adjNormal));
+		// }
+
 		return sphere->emission_ + color * Ray(pos, dir).trace(spheres, depth);
 	}
 
-	Vec3 refl = dir_ - 2 * dot(dir_, normal) * normal;
+	Vec refl = dir_ - 2 * dot(dir_, normal) * normal;
 	normalize(refl);
 
 	if (mat == kReflect)
@@ -76,11 +88,11 @@ Vec3 Ray::trace(const std::vector<Sphere *> &spheres, int depth)
 	if (into) ior = 1.0 / kRefractionRatio;
 	else 			ior = kRefractionRatio;
 
-	double cos1 = -dot(dir_, newNormal), cos2;
+	double cos1 = -dot(dir_, adjNormal), cos2;
 	if ((cos2 = (1 - ior * ior * (1.0 - cos1 * cos1))) < 0.0)
 		return sphere->emission_ + color * Ray(pos, refl).trace(spheres, depth);
 
-	Vec3 refr(dir_ * ior + newNormal * (ior * cos1 - std::sqrt(cos2)));
+	Vec refr(dir_ * ior + adjNormal * (ior * cos1 - std::sqrt(cos2)));
 	normalize(refr);
 	double a = etat - etai, b = etat + etai;
 	double R0 = a * a / (b * b), c = 1 - (into ? cos1 : dot(refr, normal));

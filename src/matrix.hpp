@@ -10,20 +10,14 @@
 #ifndef _MATRIX_H_
 #define _MATRIX_H_
 
-#include <iostream>
 #include <cassert>
-#include <cmath>
 #include <cstring>
-#include <cstdlib>
 
 #include "vector.hpp"
 
 class Matrix
 {
-	friend
-		std::ostream& operator<<(std::ostream &, const Matrix &);
 	public:
-		static const int DIM_ = 4;
 		static Matrix Identity;
 
 		Matrix() = default;
@@ -34,16 +28,16 @@ class Matrix
 		);
 
 		Matrix& operator=(const Matrix &m) {
-			static const int size = DIM_ * DIM_ * sizeof(double);
+			static const int size = 4 * 4 * sizeof(double);
 			memcpy(_m, m._m, size);
 			return *this;
 		}
 
-		Matrix operator+(const Matrix &) const;
-		Matrix operator-(const Matrix &) const;
+		Matrix  operator+(const Matrix &) const;
+		Matrix  operator-(const Matrix &) const;
+		Matrix  operator*(const Matrix &) const;
 		Matrix& operator+=(const Matrix &);
 		Matrix& operator-=(const Matrix &);
-		Matrix operator*(const Matrix &) const;
 		Matrix& operator*=(const Matrix &);
 
 		Matrix& makeScale(const Vec3 &);
@@ -54,18 +48,24 @@ class Matrix
 
 		Vec3 operator*(const Vec3 &) const;
 
-		Matrix& makeOrthographic(const Vec3 &, const Vec3 &);
+		Matrix& toRaster(const int, const int);
+		Matrix& toNdc(const Vec3 &, const Vec3 &);
+
 		Matrix& makeProjection(const Vec3 &);
 
 		Matrix& makePerspective(const Vec3 &, const Vec3 &);
-		// Matrix& makePerspective(const double, const Vec2 &);
+		Matrix& makePerspective(const double, const double, const double);
 
 		~Matrix() { }
-	private:
+
 		union {
-			double m_[DIM_ * DIM_];
-			double _m[DIM_][DIM_];
+			double m_[4][4];
+			double _m[16];
 		};
 };
+
+std::ostream& operator<<(std::ostream &, const Matrix &);
+
+Matrix inverse(Matrix &);
 
 #endif /* _MATRIX_H_ */

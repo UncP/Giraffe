@@ -15,6 +15,7 @@
 #include <SDL/SDL.h>
 #include <png.h>
 
+#include "scene.hpp"
 #include "ray.hpp"
 #include "camera.hpp"
 
@@ -23,7 +24,7 @@ class Window
 	public:
 		Window() = default;
 		Window(const int width, const int height, const char *title)
-			:width_(width), height_(height), pixels_(new Vec3[width_*height_]) {
+			:width_(width), height_(height), pixels_(new Vec[width_*height_]) {
 			if (!pixels_) {
 				std::cerr << "颜色初始化失败 :(\n";
 				exit(-1);
@@ -45,28 +46,7 @@ class Window
 			SDL_WM_SetCaption(title, NULL);
 		}
 
-		void render(const Scene &scene, const int &samples) {
-			const Camera &camera = scene.camera();
-			const std::vector<Sphere *> &spheres = scene.sphere();
-			double inv = 1.0 / samples;
-			Vec3 color;
-			#pragma omp parallel for schedule(dynamic, 1) private(color)
-			for (int x = 0; x < width_; ++x) {
-				fprintf(stderr,"\rprogress: %5.2f%%", 100 * (x / static_cast<float>(width_-1)));
-				for (int y = 0; y < height_; ++y) {
-					for (int sx = 0, i = x + (height_ - 1 - y) * width_; sx < 2; ++sx) {
-						for (int sy = 0; sy < 2; ++sy, color = Vec3()) {
-							for (int n = 0; n < samples; ++n) {
-								Ray ray;
-								camera.computeRay(width_, height_, sx, sy, x, y, ray);
-								color += ray.trace(spheres, 0) * inv;
-							}
-							pixels_[i] += color * 0.25;
-						}
-					}
-				}
-			}
-		}
+		void render(const Scene &, const int &);
 
 		void show() const {
 			for (int i = 0, end = width_ * height_; i < end; ++i) {
@@ -145,7 +125,7 @@ class Window
 	private:
 		int 				 width_;
 		int					 height_;
-		Vec3				*pixels_;
+		Vec				*pixels_;
 		uint32_t		*canvas_;
 		SDL_Surface *screen_;
 };

@@ -19,16 +19,19 @@ const double BIAS = 1e-4;
 class Sphere
 {
 	public:
-		Sphere(	const Vec3 &center,
+		Sphere(	const Vec &center,
 						const double radis,
-						const Vec3 &color 	 = Vec3(0.0),
-						const Vec3 &emission = Vec3(0.0),
+						const Vec &color 	 	 = Vec(0.0),
+						const Vec &emission  = Vec(0.0),
 						const REFL &refl 		 = kDiffuse)
 		:	center_(center), radis_(radis), radis2_(radis * radis), refl_(refl), color_(color),
-			emission_(emission) { }
+			emission_(emission) {
+				if (emission_ == Vec(0.0)) emit_ = false;
+				else 											 emit_ = true;
+			}
 
-		double intersect(const Vec3 &pos, const Vec3 &dir) const {
-			Vec3 posToCenter = center_ - pos;
+		double intersect(const Vec &pos, const Vec &dir) const {
+			Vec posToCenter = center_ - pos;
 			double project = dot(posToCenter, dir);
 			double det = radis2_ + project * project - posToCenter.length2();
 			if (det < 0)
@@ -41,12 +44,13 @@ class Sphere
 
 		~Sphere() { }
 
-		Vec3 		center_;
+		Vec 		center_;
 		double 	radis_;
 		double 	radis2_;
+		bool 		emit_;
 		REFL 		refl_;
-		Vec3 		color_;
-		Vec3		emission_;
+		Vec 		color_;
+		Vec			emission_;
 };
 
 #endif /* _SHAPE_H_ */

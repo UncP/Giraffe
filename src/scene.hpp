@@ -20,19 +20,24 @@ class Scene
 {
 	public:
 		static Scene CornellBox;
+		static Scene DepthOfField;
 
-		Scene(const char *name, const Camera &camera, const std::vector<Sphere *> &spheres)
-		:name_(name), camera_(camera), spheres_(spheres) { }
-		Scene(const Scene &s):name_(s.name_), camera_(s.camera_), spheres_(s.spheres_) { }
+		Scene(const char *name, const int width, const int height, Camera *camera,
+					const std::vector<Sphere *> &spheres)
+		:name_(name), width_(width), height_(height), camera_(camera), spheres_(spheres) { }
 
 		const std::string& name() const { return name_; }
-		const Camera& camera() const { return camera_; };
-		const std::vector<Sphere *>& sphere()  const { return spheres_; };
+		const Camera& camera() const { return *camera_; };
+		const std::vector<Sphere *>& sphere() const { return spheres_; };
+		const int width() const  { return width_; }
+		const int height() const { return height_; }
 
-		~Scene() { }
+		~Scene() { delete camera_; }
+
 	private:
 		std::string 					name_;
-		Camera 								camera_;
+		int 									width_, height_;
+		Camera 							 *camera_;
 		std::vector<Sphere *> spheres_;
 };
 

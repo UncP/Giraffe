@@ -16,6 +16,7 @@
 #include <random>
 
 #include "sphere.hpp"
+#include "random.hpp"
 
 class Camera;
 
@@ -27,13 +28,12 @@ class Ray
 		Ray(const Vec3 &origin, const Vec3 &dir):origin_(origin), dir_(dir) { }
 
 		Vec3 trace(const std::vector<Sphere *> &, int);
+		Sphere* intersect(const std::vector<Sphere *> &, double &);
 
 		~Ray() { }
 
-	private:
 		Vec3 		origin_;
 		Vec3 		dir_;
-		Sphere* intersect(const std::vector<Sphere *> &, double &);
 };
 
 #endif /* _RAY_H_ */

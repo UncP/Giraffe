@@ -13,10 +13,12 @@
 #include <iostream>
 #include <iomanip>
 #include <cmath>
+#include <cassert>
 
 using std::setw;
 
-const double PI = 3.141592653589793238;
+const double PI 		= 3.141592653589793238;
+const double DOU_PI = 2.0 * PI;
 
 template <typename T>
 class Vector3
@@ -92,6 +94,13 @@ class Vector3
 			return sqrt(length2());
 		}
 
+		const T& operator[](const int i) const {
+			assert(i >= 0 && i < 3);
+			if (i == 0) return x_;
+			if (i == 1) return y_;
+			if (i == 2) return z_;
+		}
+
 		~Vector3() { }
 };
 
@@ -125,7 +134,7 @@ inline void normalize(Vector3<T> &v) {
 
 template <typename T>
 std::ostream& operator<<(std::ostream &os, const Vector3<T> &v) {
-	return os << setw(6) << v.x_ << " " << setw(6) << v.y_ << " " << setw(6) << v.z_ << std::endl;
+	return os << setw(8) << v.x_ << " " << setw(8) << v.y_ << " " << setw(8) << v.z_ << std::endl;
 }
 
 #endif /* _VECTOR_H_ */
