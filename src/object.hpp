@@ -10,15 +10,52 @@
 #ifndef _OBJECT_HPP_
 #define _OBJECT_HPP_
 
+#include "vector.hpp"
+#include "utility.hpp"
+
 class Object
 {
 	public:
-		Object();
+		Object() = default;
 
-		virtual double intersect(const Vec &, const Vec &) const = 0;
+		virtual void intersect(const Vec &, const Vec &, Isect &) const = 0;
+
+		virtual void computeAABB(Vec &, Vec &) const {
+			std::cerr << "virtual function called :(\n";
+			exit(-1);
+		}
+
+		virtual const Vec& center() const {
+			std::cerr << "virtual function called :(\n";
+			exit(-1);
+			// return Vec::Zero;
+		}
+
+		virtual const Vec& color() const {
+			std::cerr << "virtual function called :(\n";
+			exit(-1);
+			// return Vec::Zero;
+		}
+
+		virtual bool emit() const {
+			std::cerr << "virtual function called :(\n";
+			exit(-1);
+			// return false;
+		}
+
+		virtual const Vec& emission() const {
+			std::cerr << "virtual function called :(\n";
+			exit(-1);
+			// return Vec::Zero;
+		}
+
+		virtual REFL refl() const {
+			std::cerr << "virtual function called :(\n";
+			exit(-1);
+			// return kDiffuse;
+		}
 
 		virtual ~Object() { }
-
 };
 
 #endif /* _OBJECT_HPP_ */

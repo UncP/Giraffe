@@ -30,6 +30,7 @@ class Camera
 		Vec u_, v_, w_;
 		Matrix worldToCamera_;
 		Matrix cameraToWorld_;
+		Matrix rasterToWorld_;
 };
 
 class PerspectiveCamera : public Camera
@@ -43,8 +44,6 @@ class PerspectiveCamera : public Camera
 
 		~PerspectiveCamera() { }
 
-	private:
-		Matrix rasterToCamera_;
 };
 
 class ProjectiveCamera : public Camera
@@ -56,14 +55,13 @@ class ProjectiveCamera : public Camera
 
 		void computeRay(const double &x, const double &y, Ray &ray) const override;
 
-		const Matrix& rasterToScreen() { return rasterToScreen_; }
+		const Matrix& rasterToWorld() const { return rasterToWorld_; }
 
 		~ProjectiveCamera() { }
 
 	private:
 		int lensRadius_;
 		int focalDistance_;
-		Matrix rasterToScreen_;
 };
 
 #endif /* _CAMERA_HPP_ */

@@ -73,7 +73,7 @@ Matrix& Matrix::operator*=(const Matrix &m)
 	return *this = operator*(m);
 }
 
-Matrix& Matrix::makeTransform(const Vec &v)
+Matrix& Matrix::makeTranslate(const Vec &v)
 {
 	*this = Identity;
 	m_[3][0] = v.x_;
@@ -326,6 +326,16 @@ Matrix inverse(Matrix &m)
 	for (int i = 0; i < 16; ++i)
 		ret._m[i] = inv[i] * det;
 	return ret;
+}
+
+Matrix translate(const Vec &v)
+{
+	return Matrix(1, 0, 0, v[0], 0, 1, 0, v[1], 0, 0, 1, v[2], 0, 0, 0, 1);
+}
+
+Matrix scale(const Vec &v)
+{
+	return Matrix(v[0], 0, 0, 0, 0, v[1], 0, 0, 0, 0, v[2], 0, 0, 0, 0, 1);
 }
 
 std::ostream& operator<<(std::ostream &os, const Matrix &m)

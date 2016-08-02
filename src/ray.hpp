@@ -12,23 +12,19 @@
 
 #include <vector>
 #include <limits>
-#include <ctime>
-#include <random>
 
-#include "sphere.hpp"
+#include "object.hpp"
 #include "random.hpp"
-
-class Camera;
 
 class Ray
 {
-	friend Camera;
 	public:
 		Ray() = default;
+
 		Ray(const Vec3 &origin, const Vec3 &dir):origin_(origin), dir_(dir) { }
 
-		Vec3 trace(const std::vector<Sphere *> &, int);
-		Sphere* intersect(const std::vector<Sphere *> &, double &);
+		Vec trace(const std::vector<Object *> &, int);
+		void intersect(const std::vector<Object *> &, Isect &);
 
 		~Ray() { }
 

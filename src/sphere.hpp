@@ -10,13 +10,9 @@
 #ifndef _SHAPE_H_
 #define _SHAPE_H_
 
-#include "vector.hpp"
+#include "object.hpp"
 
-enum REFL { kDiffuse, kReflect, kRefract };
-
-const double BIAS = 1e-4;
-
-class Sphere
+class Sphere : public Object
 {
 	public:
 		Sphere(	const Vec &center,
@@ -24,29 +20,56 @@ class Sphere
 						const Vec &color 	 	 = Vec(0.0),
 						const Vec &emission  = Vec(0.0),
 						const REFL &refl 		 = kDiffuse)
-		:	center_(center), radis_(radis), radis2_(radis * radis), refl_(refl), color_(color),
-			emission_(emission) {
-				if (emission_ == Vec(0.0)) emit_ = false;
-				else 											 emit_ = true;
-			}
+		:c_(center), r_(radis), r2_(radis * radis), refl_(refl), color_(color), emission_(emission) {
+			if (emission_ == Vec(0.0)) emit_ = false;
+			else 											 emit_ = true;
+		}
 
-		double intersect(const Vec &pos, const Vec &dir) const {
-			Vec posToCenter = center_ - pos;
-			double project = dot(posToCenter, dir);
-			double det = radis2_ + project * project - posToCenter.length2();
-			if (det < 0)
-				return 0;
-			else
-				det = std::sqrt(det);
-			double dis;
-			return (dis = project - det) > BIAS ? dis : ((dis = project + det) > BIAS ? dis : 0);
+		void intersect(const Vec &o, const Vec &d, Isect &isect) const override {
+			Vec l = c_ - o;
+			double s = dot(l, d);
+			double l2 = l.length2();
+			if (s < 0 && l2 > r2_)
+				return ;
+			double q2 = l2 - s * s;
+			if (q2 > r2_)
+				return ;
+			double q = std::sqrt(r2_ - q2);
+			double dis = l2 > r2_ ? (s - q) : (s + q);
+			isect.update(dis, this);
+
+			// Vec oriToCenter 	= pos_ - ori;
+			// double projectLen = dot(posToCenter, dir);
+			// double det = radis2_ + projectLen * projectLen - oriToCenter.length2();
+			// if (det < 0)
+			// 	return 0;
+			// else
+			// 	det = std::sqrt(det);
+			// double dis;
+			// return (dis = projectLen - det) > 0 ? dis : ((dis = projectLen + det) > 0 ? dis : 0);
+		}
+
+		const Vec& center() const override { return c_; }
+
+		const Vec& color() const override { return color_; }
+
+		bool emit() const override { return emit_; }
+
+		const Vec& emission() const override { return emission_; }
+
+		REFL refl() const override { return refl_; }
+
+		void computeAABB(Vec &lbn, Vec &rtf) const override {
+			lbn = Vec(c_.x_-r_, c_.y_-r_, c_.z_+r_);
+			rtf = Vec(c_.x_+r_, c_.y_+r_, c_.z_-r_);
 		}
 
 		~Sphere() { }
 
-		Vec 		center_;
-		double 	radis_;
-		double 	radis2_;
+	private:
+		Vec 		c_;
+		double 	r_;
+		double 	r2_;
 		bool 		emit_;
 		REFL 		refl_;
 		Vec 		color_;

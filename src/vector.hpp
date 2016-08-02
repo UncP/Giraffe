@@ -14,16 +14,16 @@
 #include <iomanip>
 #include <cmath>
 #include <cassert>
+#include <limits>
 
 using std::setw;
-
-const double PI 		= 3.141592653589793238;
-const double DOU_PI = 2.0 * PI;
 
 template <typename T>
 class Vector3
 {
 	public:
+
+		static Vector3<double> Zero;
 
 		T x_ = 0;
 		T y_ = 0;
@@ -94,11 +94,18 @@ class Vector3
 			return sqrt(length2());
 		}
 
-		const T& operator[](const int i) const {
+		const T operator[](const int i) const {
 			assert(i >= 0 && i < 3);
 			if (i == 0) return x_;
 			if (i == 1) return y_;
-			if (i == 2) return z_;
+			return z_;
+		}
+
+		T operator[](const int i) {
+			assert(i >= 0 && i < 3);
+			if (i == 0) return x_;
+			if (i == 1) return y_;
+			return z_;
 		}
 
 		~Vector3() { }

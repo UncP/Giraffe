@@ -23,12 +23,12 @@ class Scene
 		static Scene DepthOfField;
 
 		Scene(const char *name, const int width, const int height, Camera *camera,
-					const std::vector<Sphere *> &spheres)
-		:name_(name), width_(width), height_(height), camera_(camera), spheres_(spheres) { }
+					const std::vector<Object *> &objects)
+		:name_(name), width_(width), height_(height), camera_(camera), objects_(objects) { }
 
 		const std::string& name() const { return name_; }
 		const Camera& camera() const { return *camera_; };
-		const std::vector<Sphere *>& sphere() const { return spheres_; };
+		const std::vector<Object *>& objects() const { return objects_; };
 		const int width() const  { return width_; }
 		const int height() const { return height_; }
 
@@ -38,7 +38,7 @@ class Scene
 		std::string 					name_;
 		int 									width_, height_;
 		Camera 							 *camera_;
-		std::vector<Sphere *> spheres_;
+		std::vector<Object *> objects_;
 };
 
 #endif /* _SCENE_HPP_ */

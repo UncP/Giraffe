@@ -14,6 +14,7 @@
 #include <cstring>
 
 #include "vector.hpp"
+#include "utility.hpp"
 
 class Matrix
 {
@@ -40,20 +41,20 @@ class Matrix
 		Matrix& operator-=(const Matrix &);
 		Matrix& operator*=(const Matrix &);
 
-		Matrix& makeScale(const Vec3 &);
+		Matrix& makeScale(const Vec &);
 		Matrix& makeRotateX(const double);
 		Matrix& makeRotateY(const double);
 		Matrix& makeRotateZ(const double);
-		Matrix& makeTransform(const Vec3 &);
+		Matrix& makeTranslate(const Vec &);
 
-		Vec3 operator*(const Vec3 &) const;
+		Vec operator*(const Vec &) const;
 
 		Matrix& toRaster(const int, const int);
-		Matrix& toNdc(const Vec3 &, const Vec3 &);
+		Matrix& toNdc(const Vec &, const Vec &);
 
-		Matrix& makeProjection(const Vec3 &);
+		Matrix& makeProjection(const Vec &);
 
-		Matrix& makePerspective(const Vec3 &, const Vec3 &);
+		Matrix& makePerspective(const Vec &, const Vec &);
 		Matrix& makePerspective(const double, const double, const double);
 
 		~Matrix() { }
@@ -67,5 +68,9 @@ class Matrix
 std::ostream& operator<<(std::ostream &, const Matrix &);
 
 Matrix inverse(Matrix &);
+
+Matrix translate(const Vec &);
+
+Matrix scale(const Vec &);
 
 #endif /* _MATRIX_H_ */

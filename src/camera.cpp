@@ -36,22 +36,19 @@ PerspectiveCamera::PerspectiveCamera(	const Vec &origin,
 	Matrix perspective;
 	perspective.makePerspective(fov, near, far);
 
-	Matrix screenToNdc;
-	screenToNdc.toNdc(Vec(-250, -250, 0), Vec(250, 250, -1000));
+	Matrix toScreen = perspective * worldToCamera_;
 
 	double ratio = width / static_cast<double>(height);
-	Matrix ndcToRaster;
-	ndcToRaster.toRaster(width, height * ratio);
+	Matrix worldToRaster =	scale(Vec(width, height * ratio, 1)) * translate(Vec(0.5, 0.5, 0)) *
+													toScreen;
 
-	Matrix cameraToRaster = ndcToRaster * screenToNdc * perspective;
-	rasterToCamera_ = inverse(cameraToRaster);
-	std::cout << rasterToCamera_;
+	rasterToWorld_ = inverse(worldToRaster);
 }
 
 void PerspectiveCamera::computeRay(const double &x, const double &y, Ray &ray) const
 {
-	ray.dir_ 		= rasterToCamera_ * Vec(x, y, 0);
-	ray.dir_ 	 += direction_;
+	ray.dir_ 		= rasterToWorld_ * Vec(x, y, 0);
+	ray.dir_.z_ = direction_.z_;
 	ray.origin_ = origin_;
 	normalize(ray.dir_);
 }
@@ -63,25 +60,24 @@ ProjectiveCamera::ProjectiveCamera(	const Vec &origin,
 																		const int &width, const int &height)
 :Camera(origin, direction, up), lensRadius_(lensRadius), focalDistance_(focalDistance)
 {
-	Matrix screenToNdc;
-	int n = 80;
-	screenToNdc.toNdc(Vec(-n, -n, -1), Vec(n, n, -100));
+	Matrix worldToNdc;
+	int limit = 100;
+	worldToNdc.toNdc(Vec(-limit, -limit, -1), Vec(limit, limit, -100));
 
 	double ratio = width / static_cast<double>(height);
 	Matrix ndcToRaster;
 	ndcToRaster.toRaster(width, height * ratio);
 
-	Matrix screenToRaster = ndcToRaster * screenToNdc;
-	rasterToScreen_ = inverse(screenToRaster);
+	Matrix worldToRaster = ndcToRaster * worldToNdc;
+	rasterToWorld_ = inverse(worldToRaster);
 }
 
 void ProjectiveCamera::computeRay(const double &x, const double &y, Ray &ray) const
 {
-	Vec pos = rasterToScreen_ * Vec(x, y, 0);
+	Vec pos = rasterToWorld_ * Vec(x, y, 0);
+	pos.z_ = 0;
 	Vec hit = pos + Vec(0.0, 0.0, -focalDistance_);
-
 	ray.origin_ = Vec(lensRadius_ * Random2(), lensRadius_ * Random2(), 0);
 	ray.dir_ = hit - ray.origin_;
-	// ray.dir_ = Vec(0.0, 0.02, -1.0);
 	normalize(ray.dir_);
 }
