@@ -25,9 +25,9 @@ class Sphere : public Object
 			else 											 emit_ = true;
 		}
 
-		void intersect(const Vec &o, const Vec &d, Isect &isect) const override {
-			Vec l = c_ - o;
-			double s = dot(l, d);
+		void intersect(const Ray &r, Isect &isect) const override {
+			Vec l = c_ - r.ori_;
+			double s = dot(l, r.dir_);
 			double l2 = l.length2();
 			if (s < 0 && l2 > r2_)
 				return ;
@@ -60,8 +60,8 @@ class Sphere : public Object
 		REFL refl() const override { return refl_; }
 
 		void computeAABB(Vec &lbn, Vec &rtf) const override {
-			lbn = Vec(c_.x_-r_, c_.y_-r_, c_.z_+r_);
-			rtf = Vec(c_.x_+r_, c_.y_+r_, c_.z_-r_);
+			lbn = Vec(c_.x_-r_, c_.y_-r_, c_.z_-r_);
+			rtf = Vec(c_.x_+r_, c_.y_+r_, c_.z_+r_);
 		}
 
 		~Sphere() { }

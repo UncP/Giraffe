@@ -9,16 +9,16 @@
 
 #include "bvh.hpp"
 
-static bool _intersect(const double &o, const double &d, const double &s, const double &b,
-	double &tmin, double &tmax)
+static bool _intersect(const double &o, const double &d, const double &f,
+	const double &s, const double &b, double &tmin, double &tmax)
 {
 	double parallel = std::fabs(d);
 	if (parallel < kParallel) {
 		if (o < s || o > b) return false;
 	} else {
-		double min, max, fac = 1.0 / d;
-		min = (s - o) * fac;
-		max = (b - o) * fac;
+		double min, max;
+		min = (s - o) * f;
+		max = (b - o) * f;
 		if (min > max) std::swap(min, max);
 		if (max < 0) return false;
 		if (min > tmin) tmin = min;
@@ -28,79 +28,101 @@ static bool _intersect(const double &o, const double &d, const double &s, const 
 	return true;
 }
 
-void AABB::intersect(const Vec &o, const Vec &d, Isect &isect) const
+void AABB::intersect(const Ray &ray, Isect &isect) const
 {
 	double tmin = -kInfinity, tmax = kInfinity;
-	if (!_intersect(o.x_, d.x_, lbn_.x_, rtf_.x_, tmin, tmax))
+	if (!_intersect(ray.ori_.x_, ray.dir_.x_, ray.inv_.x_, lbf_.x_, rtn_.x_, tmin, tmax))
 		return ;
-	if (!_intersect(o.y_, d.y_, lbn_.y_, rtf_.y_, tmin, tmax))
+	if (!_intersect(ray.ori_.y_, ray.dir_.y_, ray.inv_.y_, lbf_.y_, rtn_.y_, tmin, tmax))
 		return ;
-	if (!_intersect(o.z_, d.z_, lbn_.z_, rtf_.z_, tmin, tmax))
+	if (!_intersect(ray.ori_.z_, ray.dir_.z_, ray.inv_.z_, lbf_.z_, rtn_.z_, tmin, tmax))
 		return ;
 
 	isect.update(tmin, this);
 }
 
-bool BVHNode::intersect(const Vec &o, const Vec &d, Isect &isect) const
+bool BVHNode::intersect(const Ray &ray, Isect &isect) const
 {
-	obj_->intersect(o, d, isect);
+	obj_->intersect(ray, isect);
 	if (isect.miss()) return false;
 
 	if (!left_) return true;
 
-	if (left_-> intersect(o, d, isect)) return true;
-	if (right_->intersect(o, d, isect)) return true;
+	if (left_-> intersect(ray, isect)) return true;
+	if (right_->intersect(ray, isect)) return true;
 	return false;
 }
 
-void BVH::intersect(const Vec &o, const Vec &d, Isect &isect) const
+void BVH::intersect(const Ray &ray, Isect &isect) const
 {
-	root_->intersect(o, d, isect);
+	root_->intersect(ray, isect);
 }
 
-static inline void _sortByPlane(std::vector<AABB> &box, const Plane &p)
+static AABB _calculateBoundsBox(const std::vector<Object *> &objects, std::vector<AABB> &bounds)
 {
-	std::sort(box.begin(), box.end(),
-		[p](const AABB &m, const AABB &n) { return m[1][p] < n[1][p]; });
-}
+	Vec low(kInfinity), high(-kInfinity);
+	for (size_t i = 0; i != objects.size(); ++i) {
+		objects[i]->computeAABB(bounds[i][0], bounds[i][1]);
 
-static int _splitByPlane(const std::vector<AABB> &bounds)
-{
-
-}
-
-void BVHNode::split(const AABB &box, std::vector<AABB> &bounds)
-{
-	obj_ = shared_ptr<Object>(new AABB(box));
-	_sortByPlane(bounds, box.getSplitPlane());
-	int pos = _splitByPlane(bounds);
-}
-
-static AABB _calculateBox(const std::vector<AABB> &bounds)
-{
-	Vec low(kInfinity, kInfinity, -kInfinity), high(-kInfinity, -kInfinity, kInfinity);
-	for (size_t i = 0; i != bounds.size(); ++i) {
 		if (bounds[i][0].x_ < low.x_) low.x_ = bounds[i][0].x_;
 		if (bounds[i][0].y_ < low.y_) low.y_ = bounds[i][0].y_;
-		if (bounds[i][0].z_ > low.z_) low.z_ = bounds[i][0].z_;
+		if (bounds[i][0].z_ < low.z_) low.z_ = bounds[i][0].z_;
 
 		if (bounds[i][1].x_ > high.x_) high.x_ = bounds[i][1].x_;
 		if (bounds[i][1].y_ > high.y_) high.y_ = bounds[i][1].y_;
-		if (bounds[i][1].z_ < high.z_) high.z_ = bounds[i][1].z_;
+		if (bounds[i][1].z_ > high.z_) high.z_ = bounds[i][1].z_;
 	}
 	return AABB(low, high);
 }
 
-static AABB _calculateBounds(const std::vector<Object *> &objects, std::vector<AABB> &bounds)
+static inline void _sortByPlane(std::vector<Object*> &objects, std::vector<AABB> &box,
+	const Plane &p)
 {
-	for (size_t i = 0; i != objects.size(); ++i)
-		objects[i]->computeAABB(bounds[i][0], bounds[i][1]);
+	std::sort(box.begin(), box.end(),
+		[p](const AABB &m, const AABB &n) { return m[1][p] < n[1][p]; });
+	std::sort(objects.begin(), objects.end(),
+		[p](const Object *a, const Object *b) { return a->center()[p] < b->center()[p]; });
 }
 
-void BVH::build(const std::vector<Object *> &objects)
+static int _splitByPlane(std::vector<Object*> &objects, std::vector<AABB> &bounds,
+	const Plane &p)
+{
+	_sortByPlane(objects, bounds, p);
+	double mid = (bounds[0][1][p] + bounds[bounds.size()-1][1][p]) / 2;
+	auto it = find_if(bounds.begin(), bounds.end(),
+		[mid, p](const AABB &box) { return box[1][p] > mid; });
+	if (it == bounds.begin() || it == bounds.end()) {
+		return 1;
+	} else {
+		return it - bounds.begin();
+	}
+}
+
+void BVHNode::split(const AABB &box, std::vector<Object *> &objects, std::vector<AABB> &bounds)
+{
+	if (objects.size() == 1) {
+		obj_ = shared_ptr<Object>(objects[0]);
+		return ;
+	}
+
+	obj_ = shared_ptr<Object>(new AABB(box));
+
+	int pos = _splitByPlane(objects, bounds, box.getSplitPlane());
+
+	left_  = shared_ptr<BVHNode>(new BVHNode());
+	right_ = shared_ptr<BVHNode>(new BVHNode());
+	std::vector<Object*> lObjects(objects.begin(), objects.begin()+pos);
+	std::vector<Object*> rObjects(objects.begin()+pos, objects.end());
+	std::vector<AABB> lBounds(lObjects.size()), rBounds(rObjects.size());
+	AABB lBox = _calculateBoundsBox(lObjects, lBounds);
+	AABB rBox = _calculateBoundsBox(rObjects, rBounds);
+	left_	->split(lBox, lObjects, lBounds);
+	right_->split(rBox, rObjects, rBounds);
+}
+
+void BVH::build(std::vector<Object *> &objects)
 {
 	std::vector<AABB> bounds(objects.size());
-	_calculateBounds(objects, bounds);
-	AABB box = _calculateBox(bounds);
-	root_->split(box, bounds);
+	AABB box = _calculateBoundsBox(objects, bounds);
+	root_->split(box, objects, bounds);
 }

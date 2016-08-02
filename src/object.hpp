@@ -12,18 +12,24 @@
 
 #include "vector.hpp"
 #include "utility.hpp"
+#include "ray.hpp"
 
 class Object
 {
 	public:
 		Object() = default;
 
-		virtual void intersect(const Vec &, const Vec &, Isect &) const = 0;
+		virtual void intersect(const Ray &, Isect &) const = 0;
 
 		virtual void computeAABB(Vec &, Vec &) const {
 			std::cerr << "virtual function called :(\n";
 			exit(-1);
 		}
+
+		// virtual const AABB& boundingBox() const {
+		// 	std::cerr << "virtual function called :(\n";
+		// 	exit(-1);
+		// }
 
 		virtual const Vec& center() const {
 			std::cerr << "virtual function called :(\n";

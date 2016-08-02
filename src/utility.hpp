@@ -21,7 +21,7 @@ const double kEpsilon = 1e-4;
 
 enum REFL { kDiffuse, kReflect, kRefract };
 
-enum Plane { Xaxis, Yaxis, Zaxis };
+enum Plane { Xaxis = 0, Yaxis = 1, Zaxis = 2 };
 
 class Object;
 

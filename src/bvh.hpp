@@ -23,39 +23,39 @@ class AABB : public Object
 {
 	public:
 		AABB() = default;
-		AABB(const Vec &lbn, const Vec &rtf):lbn_(lbn), rtf_(rtf) { }
-		AABB(const AABB &box):lbn_(box.lbn_), rtf_(box.rtf_) { }
+		AABB(const Vec &lbf, const Vec &rtn):lbf_(lbf), rtn_(rtn) { }
+		AABB(const AABB &box):lbf_(box.lbf_), rtn_(box.rtn_) { }
 
 		AABB& operator=(const AABB &box) {
-			lbn_ = box.lbn_;
-			rtf_ = box.rtf_;
+			lbf_ = box.lbf_;
+			rtn_ = box.rtn_;
 			return *this;
 		}
 
-		void intersect(const Vec &, const Vec &, Isect &) const override;
+		void intersect(const Ray &, Isect &) const override;
 
 		const Vec& operator[](const int i) const {
 			assert(i >= 0 && i < 2);
-			if (!i) return lbn_;
-			return rtf_;
+			if (!i) return lbf_;
+			return rtn_;
 		}
 
 		Vec& operator[](const int i) {
 			assert(i >= 0 && i < 2);
-			if (!i) return lbn_;
-			return rtf_;
+			if (!i) return lbf_;
+			return rtn_;
 		}
 
 		Plane getSplitPlane() const {
-			double x = rtf_.x_ - lbn_.x_, y = rtf_.y_ - lbn_.y_, z = lbn_.z_ - rtf_.z_;
+			double x = rtn_.x_ - lbf_.x_, y = rtn_.y_ - lbf_.y_, z = rtn_.z_ - lbf_.z_;
 			return x > y && x > z ? Xaxis : y > z ? Yaxis : Zaxis;
 		}
 
 		~AABB() { }
 
 	private:
-		Vec lbn_;		// left  bottom near
-		Vec rtf_;		// right  top		far
+		Vec lbf_;		// left  bottom far
+		Vec rtn_;		// right  top		near
 };
 
 class BVHNode
@@ -63,9 +63,9 @@ class BVHNode
 	public:
 		BVHNode() { obj_ = nullptr; left_ = nullptr; right_ = nullptr; }
 
-		bool intersect(const Vec &, const Vec &, Isect &) const;
+		bool intersect(const Ray &, Isect &) const;
 
-		void split(const AABB &, std::vector<AABB> &);
+		void split(const AABB &, std::vector<Object*> &, std::vector<AABB> &);
 
 		~BVHNode() { }
 	private:
@@ -79,9 +79,9 @@ class BVH : public Object
 	public:
 		BVH() { root_ = shared_ptr<BVHNode>(new BVHNode()); }
 
-		void intersect(const Vec &, const Vec &, Isect &) const override;
+		void intersect(const Ray &, Isect &) const override;
 
-		void build(const std::vector<Object *> &);
+		void build(std::vector<Object *> &);
 
 		~BVH() { }
 

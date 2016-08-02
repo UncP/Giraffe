@@ -24,8 +24,8 @@ void test(const Scene &scene, int samples)
 
 int main(int argc, char **argv)
 {
-	test(Scene::DepthOfField, argc == 2 ? atoi(argv[1]) : 4);
-	// test(Scene::CornellBox, argc == 2 ? atoi(argv[1]) : 4);
+	// test(Scene::DepthOfField, argc == 2 ? atoi(argv[1]) : 4);
+	test(Scene::CornellBox, argc == 2 ? atoi(argv[1]) : 4);
 
 
 	return 0;

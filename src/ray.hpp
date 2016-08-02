@@ -21,15 +21,15 @@ class Ray
 	public:
 		Ray() = default;
 
-		Ray(const Vec3 &origin, const Vec3 &dir):origin_(origin), dir_(dir) { }
-
-		Vec trace(const std::vector<Object *> &, int);
-		void intersect(const std::vector<Object *> &, Isect &);
+		Ray(const Vec3 &ori, const Vec3 &dir):ori_(ori), dir_(dir) {
+			inv_ = Vec(1.0 / dir_.x_, 1.0 / dir_.y_, 1.0 / dir_.z_);
+		}
 
 		~Ray() { }
 
-		Vec3 		origin_;
-		Vec3 		dir_;
+		Vec ori_;
+		Vec dir_;
+		Vec inv_;
 };
 
 #endif /* _RAY_H_ */
