@@ -32,16 +32,15 @@ static Vec trace(const Ray &ray, const std::vector<Object *> &objects, int depth
 	Vec pos = ray.ori_ + ray.dir_ * isect.dis_;
 	Vec normal = pos - obj->center();
 	normalize(normal);
-	Vec adjNormal(normal);
 
 	bool into = true;
-	if (dot(ray.dir_, normal) > 0) adjNormal = -adjNormal, into = false;
+	if (dot(ray.dir_, normal) > 0) normal = -normal, into = false;
 
-	Vec reflPos = pos + adjNormal * kEpsilon;
+	Vec reflPos = pos + normal * kEpsilon;
 	REFL mat = obj->refl();
 
 	if (mat == kDiffuse) {
-		Vec u, v, w(adjNormal);
+		Vec u, v, w(normal);
 		if (std::fabs(w.x_) > 0.1)
 			u = cross(Vec(0, 1, 0), w);
 		else
@@ -60,7 +59,7 @@ static Vec trace(const Ray &ray, const std::vector<Object *> &objects, int depth
 		// 	normalize(newDir);
 		// 	Object *obj;
 		// 	if (!(obj = Ray(pos, newDir).intersect(objects, near)) || obj == objects[i])
-		// 		c += objects[i]->emission() * color * std::max(0.0, dot(newDir, adjNormal));
+		// 		c += objects[i]->emission() * color * std::max(0.0, dot(newDir, normal));
 		// }
 
 		return obj->emission() + color * trace(Ray(reflPos, dir), objects, depth);
@@ -77,16 +76,16 @@ static Vec trace(const Ray &ray, const std::vector<Object *> &objects, int depth
 	if (into) ior = 1.0 / kRefractionRatio;
 	else 			ior = kRefractionRatio;
 
-	double cos1 = -dot(ray.dir_, adjNormal), cos2;
+	double cos1 = -dot(ray.dir_, normal), cos2;
 	if ((cos2 = (1 - ior * ior * (1.0 - cos1 * cos1))) < 0.0)
 		return obj->emission() + color * trace(Ray(reflPos, refl), objects, depth);
 
-	Vec refr(ray.dir_ * ior + adjNormal * (ior * cos1 - std::sqrt(cos2)));
-	Vec refrPos = pos - adjNormal * kEpsilon;
+	Vec refr(ray.dir_ * ior + normal * (ior * cos1 - std::sqrt(cos2)));
+	Vec refrPos = pos - normal * kEpsilon;
 	normalize(refr);
 
 	double a = etat - etai, b = etat + etai;
-	double R0 = a * a / (b * b), c = 1 - (into ? cos1 : dot(refr, normal));
+	double R0 = a * a / (b * b), c = 1 - (into ? cos1 : -dot(refr, normal));
 	double Re = R0 + (1 - R0) * c * c * c * c * c, Tr = 1 - Re;
 
 	double P = 0.25 + 0.5 * Re, RP = Re / P, TP = Tr / (1 - P);
@@ -101,6 +100,8 @@ void Window::render(const Scene &scene, const int &samples)
 	const std::vector<Object *> &spheres = scene.objects();
 	double inv = 1.0 / samples;
 	Vec color;
+	auto beg = std::chrono::high_resolution_clock::now();
+
 	#pragma omp parallel for schedule(dynamic, 1) private(color)
 	for (int x = 0; x < width_; ++x) {
 		fprintf(stderr,"\rprogress: %5.2f%%", 100 * (x / static_cast<float>(width_-1)));
@@ -109,8 +110,7 @@ void Window::render(const Scene &scene, const int &samples)
 				for (int sy = 0; sy < 2; ++sy, color = Vec()) {
 					for (int n = 0; n < samples; ++n) {
 						double a = Random(), b = Random();
-						Ray ray;
-						camera.computeRay(x+(a+sx+0.5)*0.5, y+(b+sy+0.5)*0.5, ray);
+						Ray ray = camera.computeRay(x+(a+sx+0.5)*0.5, y+(b+sy+0.5)*0.5);
 						color += trace(ray, spheres, 0) * inv;
 					}
 					pixels_[i] += color * 0.25;
@@ -118,6 +118,13 @@ void Window::render(const Scene &scene, const int &samples)
 			}
 		}
 	}
+
+	auto end  = std::chrono::high_resolution_clock::now();
+	auto Time = std::chrono::duration<double, std::milli>(end - beg).count();
+	std::cout << "\ntime: " << setw(8) << (Time / 1000) << "  s\n";
+
+	show();
+	save_png(title_);
 }
 
 void Window::show() const {
@@ -129,11 +136,15 @@ void Window::show() const {
 		canvas_[i] |= static_cast<uint8_t>(std::min(pixels_[i].z_, 1.0) * 255.0);
 	}
 	SDL_UpdateRect(screen_, 0, 0, 0, 0);
+	getchar();
 }
 
-void Window::save_ppm(const char *file) const {
+void Window::save_ppm(const char *name) const {
+	char file[32];
+	strcpy(file, name);
+	strcat(file, ".png");
 	std::ofstream out(file, std::ios::out | std::ios::binary);
-	if (!out) { std::cerr << "文件打开失败 :(\n"; return ; }
+	if (!out) { std::cerr << "ppm格式图片保存失败 :(\n"; return ; }
 	out << "P3\n" << width_ << " " << height_ << "\n255\n";
 	for (int i = 0, end = width_ * height_; i < end; ++i) {
 		int r = static_cast<int>(std::pow(std::min(pixels_[i].x_,1.0),1 / 2.2) * 255 + 0.5);
@@ -144,25 +155,31 @@ void Window::save_ppm(const char *file) const {
 	out.close();
 }
 
-bool Window::save_png(const char *file) const
+bool Window::save_png(const char *name) const
 {
+	char file[32];
+	strcpy(file, name);
+	strcat(file, ".png");
 	FILE *fp = fopen(file, "wb");
 	if (!fp) return false;
 
 	png_structp png_ptr = png_create_write_struct(PNG_LIBPNG_VER_STRING, 0, 0, 0);
 	if (!png_ptr) {
+		std::cerr << "png格式图片保存失败 :(\n";
 		fclose(fp);
 		return false;
 	}
 	png_infop info_ptr = png_create_info_struct(png_ptr);
 	if (!info_ptr) {
 		png_destroy_write_struct(&png_ptr, (png_infopp) 0);
+		std::cerr << "png格式图片保存失败 :(\n";
 		fclose(fp);
 		return false;
 	}
 
 	if (setjmp(png_jmpbuf(png_ptr))) {
 		png_destroy_write_struct(&png_ptr, &info_ptr);
+		std::cerr << "png格式图片保存失败 :(\n";
 		fclose(fp);
 		return false;
 	}
@@ -175,6 +192,11 @@ bool Window::save_png(const char *file) const
 	png_set_flush(png_ptr, 10);
 
 	unsigned char *pic = new unsigned char[height_ * width_ * 4];
+	if (!pic) {
+		std::cerr << "png格式图片保存失败 :(\n";
+		return false;
+	}
+
 	for (int i = 0, end = width_ * height_; i < end; ++i) {
 		canvas_[i] = 0;
 		canvas_[i] |= 0xFF << 24;
@@ -182,10 +204,12 @@ bool Window::save_png(const char *file) const
 		canvas_[i] |= static_cast<uint8_t>(std::min(pixels_[i].y_, 1.0) * 255.0) << 8;
 		canvas_[i] |= static_cast<uint8_t>(std::min(pixels_[i].x_, 1.0) * 255.0);
 	}
+
 	memcpy(pic, static_cast<void *>(canvas_), height_ * width_ * 4);
 	png_bytep *row_pointers = new png_bytep[height_];
-	if (!pic || !row_pointers) {
+	if (!row_pointers) {
 		png_destroy_write_struct(&png_ptr, &info_ptr);
+		std::cerr << "png格式图片保存失败 :(\n";
 		return false;
 	}
 	for (int y = 0; y < height_; ++y)

@@ -28,34 +28,34 @@ static bool _intersect(const double &o, const double &d, const double &f,
 	return true;
 }
 
-void AABB::intersect(const Ray &ray, Isect &isect) const
+bool AABB::intersect(const Ray &ray, Isect &isect) const
 {
 	double tmin = -kInfinity, tmax = kInfinity;
 	if (!_intersect(ray.ori_.x_, ray.dir_.x_, ray.inv_.x_, lbf_.x_, rtn_.x_, tmin, tmax))
-		return ;
+		return false;
 	if (!_intersect(ray.ori_.y_, ray.dir_.y_, ray.inv_.y_, lbf_.y_, rtn_.y_, tmin, tmax))
-		return ;
+		return false;
 	if (!_intersect(ray.ori_.z_, ray.dir_.z_, ray.inv_.z_, lbf_.z_, rtn_.z_, tmin, tmax))
-		return ;
+		return false;
 
-	isect.update(tmin, this);
+	return true;
 }
 
 bool BVHNode::intersect(const Ray &ray, Isect &isect) const
 {
-	obj_->intersect(ray, isect);
-	if (isect.miss()) return false;
+	if (!obj_->intersect(ray, isect))
+		return false;
 
 	if (!left_) return true;
 
-	if (left_-> intersect(ray, isect)) return true;
-	if (right_->intersect(ray, isect)) return true;
-	return false;
+	bool l = left_-> intersect(ray, isect);
+	bool r = right_->intersect(ray, isect);
+	return l || r;
 }
 
-void BVH::intersect(const Ray &ray, Isect &isect) const
+bool BVH::intersect(const Ray &ray, Isect &isect) const
 {
-	root_->intersect(ray, isect);
+	return root_->intersect(ray, isect);
 }
 
 static AABB _calculateBoundsBox(const std::vector<Object *> &objects, std::vector<AABB> &bounds)
@@ -91,11 +91,12 @@ static int _splitByPlane(std::vector<Object*> &objects, std::vector<AABB> &bound
 	double mid = (bounds[0][1][p] + bounds[bounds.size()-1][1][p]) / 2;
 	auto it = find_if(bounds.begin(), bounds.end(),
 		[mid, p](const AABB &box) { return box[1][p] > mid; });
-	if (it == bounds.begin() || it == bounds.end()) {
+	if (it == bounds.begin())
 		return 1;
-	} else {
+	if (it == bounds.end())
+		return bounds.size() - 1;
+	else
 		return it - bounds.begin();
-	}
 }
 
 void BVHNode::split(const AABB &box, std::vector<Object *> &objects, std::vector<AABB> &bounds)
@@ -106,11 +107,25 @@ void BVHNode::split(const AABB &box, std::vector<Object *> &objects, std::vector
 	}
 
 	obj_ = shared_ptr<Object>(new AABB(box));
+	if (!obj_) {
+		std::cerr << "BVH build failed :(\n";
+		exit(-1);
+	}
 
 	int pos = _splitByPlane(objects, bounds, box.getSplitPlane());
 
 	left_  = shared_ptr<BVHNode>(new BVHNode());
+	if (!left_) {
+		std::cerr << "BVH build failed :(\n";
+		exit(-1);
+	}
+
 	right_ = shared_ptr<BVHNode>(new BVHNode());
+	if (!right_) {
+		std::cerr << "BVH build failed :(\n";
+		exit(-1);
+	}
+
 	std::vector<Object*> lObjects(objects.begin(), objects.begin()+pos);
 	std::vector<Object*> rObjects(objects.begin()+pos, objects.end());
 	std::vector<AABB> lBounds(lObjects.size()), rBounds(rObjects.size());
@@ -125,4 +140,19 @@ void BVH::build(std::vector<Object *> &objects)
 	std::vector<AABB> bounds(objects.size());
 	AABB box = _calculateBoundsBox(objects, bounds);
 	root_->split(box, objects, bounds);
+}
+
+void BVHNode::traverse()
+{
+	if (obj_)
+		obj_->print();
+	else
+		return ;
+	if (left_ ) left_-> traverse();
+	if (right_) right_->traverse();
+}
+
+void BVH::print() const
+{
+	root_->traverse();
 }

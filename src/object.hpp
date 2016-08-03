@@ -19,17 +19,14 @@ class Object
 	public:
 		Object() = default;
 
-		virtual void intersect(const Ray &, Isect &) const = 0;
+		virtual bool intersect(const Ray &, Isect &) const = 0;
 
 		virtual void computeAABB(Vec &, Vec &) const {
 			std::cerr << "virtual function called :(\n";
 			exit(-1);
 		}
 
-		// virtual const AABB& boundingBox() const {
-		// 	std::cerr << "virtual function called :(\n";
-		// 	exit(-1);
-		// }
+		virtual void print() const = 0;
 
 		virtual const Vec& center() const {
 			std::cerr << "virtual function called :(\n";

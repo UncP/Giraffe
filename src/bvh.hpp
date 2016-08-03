@@ -32,7 +32,11 @@ class AABB : public Object
 			return *this;
 		}
 
-		void intersect(const Ray &, Isect &) const override;
+		bool intersect(const Ray &, Isect &) const override;
+
+		void print() const override {
+			std::cout << "box\n" << lbf_ << rtn_;
+		}
 
 		const Vec& operator[](const int i) const {
 			assert(i >= 0 && i < 2);
@@ -61,9 +65,11 @@ class AABB : public Object
 class BVHNode
 {
 	public:
-		BVHNode() { obj_ = nullptr; left_ = nullptr; right_ = nullptr; }
+		BVHNode():obj_(nullptr), left_(nullptr), right_(nullptr)  { }
 
 		bool intersect(const Ray &, Isect &) const;
+
+		void traverse();
 
 		void split(const AABB &, std::vector<Object*> &, std::vector<AABB> &);
 
@@ -77,9 +83,11 @@ class BVHNode
 class BVH : public Object
 {
 	public:
-		BVH() { root_ = shared_ptr<BVHNode>(new BVHNode()); }
+		BVH():root_(shared_ptr<BVHNode>(new BVHNode())) { }
 
-		void intersect(const Ray &, Isect &) const override;
+		bool intersect(const Ray &, Isect &) const override;
+
+		void print() const override;
 
 		void build(std::vector<Object *> &);
 

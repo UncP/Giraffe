@@ -13,13 +13,12 @@
 #include <vector>
 #include <limits>
 
-#include "object.hpp"
 #include "random.hpp"
 
 class Ray
 {
 	public:
-		Ray() = default;
+		Ray() = delete;
 
 		Ray(const Vec3 &ori, const Vec3 &dir):ori_(ori), dir_(dir) {
 			inv_ = Vec(1.0 / dir_.x_, 1.0 / dir_.y_, 1.0 / dir_.z_);

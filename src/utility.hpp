@@ -31,7 +31,7 @@ class Isect
 		Isect():dis_(kInfinity), obj_(nullptr) { }
 
 		void update(const double &dis, const Object *obj) {
-			if (dis >= dis_ || dis < 0) return ;
+			if (dis > dis_ || dis < 0) return ;
 			dis_ = dis;
 			obj_ = const_cast<Object *>(obj);
 		}

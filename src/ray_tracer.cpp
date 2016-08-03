@@ -10,22 +10,17 @@
 #include "scene.hpp"
 #include "window.hpp"
 
-void test(const Scene &scene, int samples)
+void test(Scene &scene, int samples, bool accelerate)
 {
+	if (accelerate) scene.accelerate();
 	Window win(scene.width(), scene.height(), scene.name().c_str());
 	win.render(scene, samples);
-	win.show();
-
-	// win.save_ppm("demo.ppm");
-	win.save_png("demo.png");
-
-	getchar();
 }
 
 int main(int argc, char **argv)
 {
-	// test(Scene::DepthOfField, argc == 2 ? atoi(argv[1]) : 4);
-	test(Scene::CornellBox, argc == 2 ? atoi(argv[1]) : 4);
+	test(Scene::DepthOfField, argc >= 2 ? atoi(argv[1]) : 4, argc == 3);
+	// test(Scene::CornellBox, argc == 2 ? atoi(argv[1]) : 4);
 
 
 	return 0;

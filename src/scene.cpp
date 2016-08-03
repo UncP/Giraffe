@@ -9,8 +9,8 @@
 
 #include "scene.hpp"
 
-static const int sceneWidth = 512, sceneHeight = 512;
-// static const int sceneWidth = 1024, sceneHeight = 768;
+// static const int sceneWidth = 512, sceneHeight = 512;
+static const int sceneWidth = 1024, sceneHeight = 768;
 static Camera *cam = new PerspectiveCamera(	Vec(0, 0, 0), 	\
 																						Vec(0, -0.07, -1.0),\
 																						Vec(0, 1.0, 0),		\
@@ -33,7 +33,7 @@ Scene Scene::CornellBox(Scene("cornell box", sceneWidth, sceneHeight, cam, spher
 static Camera *pro = new ProjectiveCamera(Vec(0, 0, 0), \
 																					Vec(0, 0, -1), \
 																					Vec(0, 1.0, 0), \
-																					5, 250, \
+																					6, 250, \
 																					sceneWidth, sceneHeight);
 
 static std::vector<Object *> sequence = {
@@ -41,15 +41,30 @@ static std::vector<Object *> sequence = {
 	new Sphere(Vec(-120, 0, -400), 	25, 	Vec(1.0, 0, 0)),
 	new Sphere(Vec(-100, 0, -375), 	25, 	Vec(1.0, 0, 0)),
 	new Sphere(Vec(-80, 0, -350), 	25, 	Vec(1.0, 0, 0)),
+
 	new Sphere(Vec(-60, 0, -325), 	25, 	Vec(1.0, 0, 0)),
 	new Sphere(Vec(-40, 0, -300), 	25, 	Vec(1.0, 0, 0)),
 	new Sphere(Vec(-20, 0, -275), 	25, 	Vec(1.0, 0, 0)),
 	new Sphere(Vec(	0, 0,  -250),		25, 	Vec(1.0, 0, 0)),
+
 	new Sphere(Vec(	20, 0, -225),		25, 	Vec(1.0, 0, 0)),
 	new Sphere(Vec(	40, 0, -200), 	25, 	Vec(1.0, 0, 0)),
 	new Sphere(Vec(	60, 0, -175), 	25, 	Vec(1.0, 0, 0)),
+
 	new Sphere(Vec(0, -1e5-25, 0), 	1e5, 	Vec(0.75)),
 	new Sphere(Vec(0, 136, -250), 	33, 	Vec(1.0), Vec(20, 20, 20))
 };
 
 Scene Scene::DepthOfField(Scene("depth of field", sceneWidth, sceneHeight, pro, sequence));
+
+void Scene::accelerate() {
+	BVH *bvh = new BVH();
+	if (!bvh) {
+		std::cerr << "acceleration failed :(\n";
+		return ;
+	}
+	bvh->build(objects_);
+	objects_.clear();
+	// bvh->print();
+	objects_.push_back(static_cast<Object *>(bvh));
+}

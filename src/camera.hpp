@@ -19,7 +19,7 @@ class Camera
 	public:
 		Camera(const Vec &origin, const Vec &direction, const Vec &up);
 
-		virtual void computeRay(const double &, const double &, Ray &) const = 0;
+		virtual Ray computeRay(const double &, const double &) const = 0;
 
 		virtual ~Camera() { }
 
@@ -40,7 +40,7 @@ class PerspectiveCamera : public Camera
 			const int &width = 512, const int &height = 512,
 			const double &fov = 60.0, const int &near = 1, const int &far = 1000);
 
-		void computeRay(const double &, const double &, Ray &) const;
+		Ray computeRay(const double &, const double &) const;
 
 		~PerspectiveCamera() { }
 
@@ -53,7 +53,7 @@ class ProjectiveCamera : public Camera
 			const int &lensRadius = 1, const int &focalDistance = 200,
 			const int &width = 512, const int &height = 512);
 
-		void computeRay(const double &x, const double &y, Ray &ray) const override;
+		Ray computeRay(const double &x, const double &y) const override;
 
 		const Matrix& rasterToWorld() const { return rasterToWorld_; }
 

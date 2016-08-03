@@ -45,12 +45,13 @@ PerspectiveCamera::PerspectiveCamera(	const Vec &origin,
 	rasterToWorld_ = inverse(worldToRaster);
 }
 
-void PerspectiveCamera::computeRay(const double &x, const double &y, Ray &ray) const
+Ray PerspectiveCamera::computeRay(const double &x, const double &y) const
 {
-	ray.dir_ 		= rasterToWorld_ * Vec(x, y, 0);
-	ray.dir_.z_ = direction_.z_;
-	ray.origin_ = origin_;
-	normalize(ray.dir_);
+	Vec dir = rasterToWorld_ * Vec(x, y, 0);
+	dir.z_  = direction_.z_;
+	Vec ori = origin_;
+	normalize(dir);
+	return Ray(ori, dir);
 }
 
 ProjectiveCamera::ProjectiveCamera(	const Vec &origin,
@@ -72,12 +73,13 @@ ProjectiveCamera::ProjectiveCamera(	const Vec &origin,
 	rasterToWorld_ = inverse(worldToRaster);
 }
 
-void ProjectiveCamera::computeRay(const double &x, const double &y, Ray &ray) const
+Ray ProjectiveCamera::computeRay(const double &x, const double &y) const
 {
 	Vec pos = rasterToWorld_ * Vec(x, y, 0);
 	pos.z_ = 0;
 	Vec hit = pos + Vec(0.0, 0.0, -focalDistance_);
-	ray.origin_ = Vec(lensRadius_ * Random2(), lensRadius_ * Random2(), 0);
-	ray.dir_ = hit - ray.origin_;
-	normalize(ray.dir_);
+	Vec ori = Vec(lensRadius_ * Random2(), lensRadius_ * Random2(), 0);
+	Vec dir = hit - ori;
+	normalize(dir);
+	return Ray(ori, dir);
 }

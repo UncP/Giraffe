@@ -10,10 +10,11 @@
 #ifndef _WINDOW_H_
 #define _WINDOW_H_
 
-#include <fstream>
 #include <stdlib.h>
 #include <SDL/SDL.h>
 #include <png.h>
+#include <fstream>
+#include <chrono>
 
 #include "scene.hpp"
 #include "ray.hpp"
@@ -24,7 +25,8 @@ class Window
 	public:
 		Window() = default;
 		Window(const int width, const int height, const char *title)
-			:width_(width), height_(height), pixels_(new Vec[width_*height_]) {
+			:title_(const_cast<char*>(title)), width_(width), height_(height),
+			 pixels_(new Vec[width_*height_]) {
 			if (!pixels_) {
 				std::cerr << "颜色初始化失败 :(\n";
 				exit(-1);
@@ -56,6 +58,7 @@ class Window
 
 		~Window() { delete [] pixels_; }
 	private:
+		char*				 title_;
 		int 				 width_;
 		int					 height_;
 		Vec					*pixels_;

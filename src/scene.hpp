@@ -15,6 +15,7 @@
 
 #include "sphere.hpp"
 #include "camera.hpp"
+#include "bvh.hpp"
 
 class Scene
 {
@@ -25,6 +26,8 @@ class Scene
 		Scene(const char *name, const int width, const int height, Camera *camera,
 					const std::vector<Object *> &objects)
 		:name_(name), width_(width), height_(height), camera_(camera), objects_(objects) { }
+
+		void accelerate();
 
 		const std::string& name() const { return name_; }
 		const Camera& camera() const { return *camera_; };
