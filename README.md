@@ -13,3 +13,6 @@
 ###Depth of Field
 	64 samples
 ![](./image/depth_of_field_64.png)
+
+	4096 samples
+![](./image/depth_of_field_4096.png)
