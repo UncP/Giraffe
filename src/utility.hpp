@@ -23,6 +23,18 @@ enum REFL { kDiffuse, kReflect, kRefract };
 
 enum Plane { Xaxis = 0, Yaxis = 1, Zaxis = 2 };
 
+const uint8_t kNormalNumber = 7;
+
+const Vec NormalSet[kNormalNumber] = {
+	Vec(1, 0, 0),
+	Vec(0, 1, 0),
+	Vec(0, 0, 1),
+	Vec( std::sqrt(3)/3.0,  std::sqrt(3)/3.0, std::sqrt(3)/3.0),
+	Vec(-std::sqrt(3)/3.0,  std::sqrt(3)/3.0, std::sqrt(3)/3.0),
+	Vec(-std::sqrt(3)/3.0, -std::sqrt(3)/3.0, std::sqrt(3)/3.0),
+	Vec( std::sqrt(3)/3.0, -std::sqrt(3)/3.0, std::sqrt(3)/3.0)
+};
+
 class Object;
 
 class Isect

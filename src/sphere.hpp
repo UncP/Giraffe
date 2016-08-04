@@ -64,10 +64,7 @@ class Sphere : public Object
 
 		REFL refl() const override { return refl_; }
 
-		void computeAABB(Vec &lbn, Vec &rtf) const override {
-			lbn = Vec(c_.x_-r_, c_.y_-r_, c_.z_-r_);
-			rtf = Vec(c_.x_+r_, c_.y_+r_, c_.z_+r_);
-		}
+		void computeBox(std::vector<double> &, std::vector<double> &, const Vec *) const override;
 
 		~Sphere() { }
 

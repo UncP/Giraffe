@@ -18,48 +18,62 @@
 
 using std::shared_ptr;
 
-// Axis-Aligned Bounding Box
-class AABB : public Object
+class Box : public Object
 {
 	public:
-		AABB() = default;
-		AABB(const Vec &lbf, const Vec &rtn):lbf_(lbf), rtn_(rtn) { }
-		AABB(const AABB &box):lbf_(box.lbf_), rtn_(box.rtn_) { }
+		Box() = default;
 
-		AABB& operator=(const AABB &box) {
-			lbf_ = box.lbf_;
-			rtn_ = box.rtn_;
-			return *this;
-		}
+		const size_t size() const { return near_.size(); }
 
 		bool intersect(const Ray &, Isect &) const override;
 
-		void print() const override {
-			std::cout << "box\n" << lbf_ << rtn_;
-		}
-
-		const Vec& operator[](const int i) const {
-			assert(i >= 0 && i < 2);
-			if (!i) return lbf_;
-			return rtn_;
-		}
-
-		Vec& operator[](const int i) {
-			assert(i >= 0 && i < 2);
-			if (!i) return lbf_;
-			return rtn_;
-		}
-
 		Plane getSplitPlane() const {
-			double x = rtn_.x_ - lbf_.x_, y = rtn_.y_ - lbf_.y_, z = rtn_.z_ - lbf_.z_;
-			return x > y && x > z ? Xaxis : y > z ? Yaxis : Zaxis;
+			double x = far_[0] - near_[0];
+			double y = far_[1] - near_[1];
+			double z = far_[2] - near_[2];
+			return x >= y && x >= z ? Xaxis : y >= z ? Yaxis : Zaxis;
 		}
 
-		~AABB() { }
+		void print() const override {
+			std::cout << "box\n";
+			for (size_t i = 0; i != near_.size(); ++i)
+				std::cout << setw(8) << near_[i] << " ";
+			std::cout << std::endl;
+			for (size_t i = 0; i != far_.size(); ++i)
+				std::cout << setw(8) << far_[i] << " ";
+			std::cout << std::endl;
+		}
 
-	private:
-		Vec lbf_;		// left  bottom far
-		Vec rtn_;		// right  top		near
+		~Box() { }
+
+		std::vector<double> near_;
+		std::vector<double> far_;
+};
+
+// Axis-Aligned Bounding Box
+class AABB : public Box
+{
+	public:
+		AABB() {
+			for (size_t i = 0; i != 3; ++i) {
+				near_.push_back(kInfinity);
+				far_.push_back(-kInfinity);
+			}
+		}
+		~AABB() { }
+};
+
+// Discrete Oriented Polytopes
+class DOP : public Box
+{
+	public:
+		DOP() {
+			for (size_t i = 0; i < kNormalNumber; ++i) {
+				near_.push_back(kInfinity);
+				far_.push_back(-kInfinity);
+			}
+		}
+		~DOP() { }
 };
 
 class BVHNode
@@ -71,9 +85,10 @@ class BVHNode
 
 		void traverse();
 
-		void split(const AABB &, std::vector<Object*> &, std::vector<AABB> &);
+		void split(Box *, std::vector<Object*> &, std::vector<Box *> &);
 
 		~BVHNode() { }
+
 	private:
 		shared_ptr<Object>	obj_;
 		shared_ptr<BVHNode> left_;

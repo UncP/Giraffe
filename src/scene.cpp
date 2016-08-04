@@ -9,8 +9,8 @@
 
 #include "scene.hpp"
 
-// static const int sceneWidth = 512, sceneHeight = 512;
-static const int sceneWidth = 1024, sceneHeight = 768;
+static const int sceneWidth = 512, sceneHeight = 512;
+// static const int sceneWidth = 1024, sceneHeight = 768;
 static Camera *cam = new PerspectiveCamera(	Vec(0, 0, 0), 	\
 																						Vec(0, -0.07, -1.0),\
 																						Vec(0, 1.0, 0),		\

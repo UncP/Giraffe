@@ -21,7 +21,8 @@ class Object
 
 		virtual bool intersect(const Ray &, Isect &) const = 0;
 
-		virtual void computeAABB(Vec &, Vec &) const {
+		virtual void computeBox(std::vector<double> &, std::vector<double> &,
+			const Vec *) const {
 			std::cerr << "virtual function called :(\n";
 			exit(-1);
 		}

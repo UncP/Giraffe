@@ -10,25 +10,24 @@
 #ifndef _RAY_H_
 #define _RAY_H_
 
-#include <vector>
+#include <array>
 #include <limits>
 
-#include "random.hpp"
+#include "utility.hpp"
 
 class Ray
 {
 	public:
 		Ray() = delete;
 
-		Ray(const Vec3 &ori, const Vec3 &dir):ori_(ori), dir_(dir) {
-			inv_ = Vec(1.0 / dir_.x_, 1.0 / dir_.y_, 1.0 / dir_.z_);
-		}
+		Ray(const Vec3 &, const Vec3 &);
 
 		~Ray() { }
 
 		Vec ori_;
 		Vec dir_;
-		Vec inv_;
+		std::array<double, kNormalNumber> no_;
+		std::array<double, kNormalNumber> nd_;
 };
 
 #endif /* _RAY_H_ */
