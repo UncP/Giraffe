@@ -1,5 +1,5 @@
-##光线追踪器
-###基于 [http://kevinbeason.com/smallpt/]("smallpt") 实现的一个基于蒙特卡洛算法的光线追踪器
+###光线追踪器
+###基于 [http://kevinbeason.com/smallpt/]("smallpt") 实现的蒙特卡洛算法光线追踪器
 ###Features:
 * 漫反射
 * 镜面反射
@@ -10,7 +10,6 @@
 * BVH
 	-	AABB (Axis-Aligned Bounding Box)
 	-	DOP	(Discrete Oriented Polytopes)
-
 
 
 ###Cornell Box
