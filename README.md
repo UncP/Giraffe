@@ -8,6 +8,8 @@
 * Russian Roulette
 * 反走样
 * BVH
+	-	AABB (Axis-Aligned Bounding Box)
+	-	DOP	(Discrete Oriented Polytopes)
 
 
 
