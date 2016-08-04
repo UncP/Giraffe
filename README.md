@@ -1,5 +1,5 @@
 ##光线追踪器
-###仿照 [http://kevinbeason.com/smallpt/]("smallpt") 实现的一个基于蒙特卡洛算法的光线追踪器
+###基于 [http://kevinbeason.com/smallpt/]("smallpt") 实现的一个基于蒙特卡洛算法的光线追踪器
 ###Features:
 * 漫反射
 * 镜面反射
@@ -8,6 +8,15 @@
 * Russian Roulette
 * 反走样
 * BVH
+
+
+
+###Cornell Box
+	64 samples
+![](./image/cornell_box_64.png)
+
+	4096 samples
+![](./image/cornell_box_4096.png)
 
 
 ###Depth of Field
