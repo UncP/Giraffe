@@ -90,6 +90,7 @@ void BVHNode::split(Box *box, std::vector<Object *> &objects, std::vector<Box *>
 {
 	if (objects.size() == 1) {
 		obj_ = shared_ptr<Object>(objects[0]);
+		delete box;
 		return ;
 	}
 
@@ -99,13 +100,13 @@ void BVHNode::split(Box *box, std::vector<Object *> &objects, std::vector<Box *>
 
 	left_  = shared_ptr<BVHNode>(new BVHNode());
 	if (!left_) {
-		std::cerr << "BVH build failed :(\n";
+		std::cerr << "building BVH failed :(\n";
 		exit(-1);
 	}
 
 	right_ = shared_ptr<BVHNode>(new BVHNode());
 	if (!right_) {
-		std::cerr << "BVH build failed :(\n";
+		std::cerr << "building BVH failed :(\n";
 		exit(-1);
 	}
 
@@ -122,26 +123,15 @@ void BVHNode::split(Box *box, std::vector<Object *> &objects, std::vector<Box *>
 
 	left_	->split(lBox, lObjects, lBoxes);
 	right_->split(rBox, rObjects, rBoxes);
+	for (size_t i = 0; i != lBoxes.size(); ++i) delete lBoxes[i];
+	for (size_t i = 0; i != rBoxes.size(); ++i) delete rBoxes[i];
 }
 
-void BVH::build(std::vector<Object *> &objects)
-{
+void BVH::build(std::vector<Object *> &objects) {
 	std::vector<Box *> boxes(objects.size());
 	for (size_t i = 0; i != objects.size(); ++i) boxes[i] = new AABB();
 	Box *box = new AABB();
 	_calculateBounds(objects, boxes, box);
 	root_->split(box, objects, boxes);
-}
-
-void BVHNode::traverse()
-{
-	if (obj_) obj_->print();
-	else			return ;
-	if (left_ ) left_-> traverse();
-	if (right_) right_->traverse();
-}
-
-void BVH::print() const
-{
-	root_->traverse();
+	for (size_t i = 0; i != boxes.size(); ++i) delete boxes[i];
 }

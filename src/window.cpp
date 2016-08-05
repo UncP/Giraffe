@@ -100,8 +100,8 @@ void Window::render(const Scene &scene, const int &samples)
 	const std::vector<Object *> &spheres = scene.objects();
 	double inv = 1.0 / samples;
 	Vec color;
+	Ray::setDenominator(width_ * height_ * samples * 4);
 	auto beg = std::chrono::high_resolution_clock::now();
-
 	#pragma omp parallel for schedule(dynamic, 1) private(color)
 	for (int x = 0; x < width_; ++x) {
 		fprintf(stderr,"\rprogress: %5.2f%%", 100 * (x / static_cast<float>(width_-1)));

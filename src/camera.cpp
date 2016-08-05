@@ -39,10 +39,15 @@ PerspectiveCamera::PerspectiveCamera(	const Vec &origin,
 	Matrix toScreen = perspective * worldToCamera_;
 
 	double ratio = width / static_cast<double>(height);
-	Matrix worldToRaster =	scale(Vec(width, height * ratio, 1)) * translate(Vec(0.5, 0.5, 0)) *
+	Matrix worldToRaster =	scale(Vec(width, -height * ratio, 1)) * translate(Vec(0.5, -0.5, 0)) *
 													toScreen;
 
 	rasterToWorld_ = inverse(worldToRaster);
+	// Vec a1(0, 0, 0), a2(512, 512, 0);
+	// Vec b1 = rasterToWorld_ * a1;
+	// Vec b2 = rasterToWorld_ * a2;
+	// std::cout << rasterToWorld_;
+	// std::cout << b1 << b2;
 }
 
 Ray PerspectiveCamera::computeRay(const double &x, const double &y) const
@@ -54,7 +59,7 @@ Ray PerspectiveCamera::computeRay(const double &x, const double &y) const
 	return Ray(ori, dir);
 }
 
-ProjectiveCamera::ProjectiveCamera(	const Vec &origin,
+ThinLenCamera::ThinLenCamera(	const Vec &origin,
 																		const Vec &direction,
 																		const Vec &up,
 																		const int &lensRadius, const int &focalDistance,
@@ -73,13 +78,39 @@ ProjectiveCamera::ProjectiveCamera(	const Vec &origin,
 	rasterToWorld_ = inverse(worldToRaster);
 }
 
-Ray ProjectiveCamera::computeRay(const double &x, const double &y) const
+Ray ThinLenCamera::computeRay(const double &x, const double &y) const
 {
 	Vec pos = rasterToWorld_ * Vec(x, y, 0);
 	pos.z_ = 0;
 	Vec hit = pos + Vec(0.0, 0.0, -focalDistance_);
 	Vec ori = Vec(lensRadius_ * Random2(), lensRadius_ * Random2(), 0);
 	Vec dir = hit - ori;
+	normalize(dir);
+	return Ray(ori, dir);
+}
+
+OrthographicCamera::OrthographicCamera(	const Vec &origin,
+																				const Vec &direction,
+																				const Vec &up,
+																				const int &w, const int &h,
+																				const int &width, const int &height)
+:Camera(origin, direction, up)
+{
+	Matrix worldToNdc;
+	worldToNdc.toNdc(Vec(-w/2, -h/2, -1), Vec(w/2, h/2, -100));
+
+	double ratio = width / static_cast<double>(height);
+	Matrix ndcToRaster;
+	ndcToRaster.toRaster(width, height * ratio);
+
+	Matrix worldToRaster = ndcToRaster * worldToNdc;
+	rasterToWorld_ = inverse(worldToRaster);
+}
+
+Ray OrthographicCamera::computeRay(const double &x, const double &y) const
+{
+	Vec ori = rasterToWorld_ * Vec(x, y, 0);
+	Vec dir = direction_;
 	normalize(dir);
 	return Ray(ori, dir);
 }

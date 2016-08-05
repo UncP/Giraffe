@@ -26,33 +26,9 @@ class Sphere : public Object
 			else 											 emit_ = true;
 		}
 
-		bool intersect(const Ray &r, Isect &isect) const override {
-			Vec l = c_ - r.ori_;
-			double s = dot(l, r.dir_);
-			double l2 = l.length2();
-			if (s < 0 && l2 > r2_)
-				return false;
-			double q2 = l2 - s * s;
-			if (q2 > r2_)
-				return false;
-			double q = std::sqrt(r2_ - q2);
-			double dis = l2 > r2_ ? (s - q) : (s + q);
-			isect.update(dis, this);
-			return true;
-			// Vec oriToCenter 	= pos_ - ori;
-			// double projectLen = dot(posToCenter, dir);
-			// double det = radis2_ + projectLen * projectLen - oriToCenter.length2();
-			// if (det < 0)
-			// 	return 0;
-			// else
-			// 	det = std::sqrt(det);
-			// double dis;
-			// return (dis = projectLen - det) > 0 ? dis : ((dis = projectLen + det) > 0 ? dis : 0);
-		}
+		bool intersect(const Ray &r, Isect &isect) const override;
 
-		void print() const override {
-			std::cout << "sphere\n" << c_;
-		}
+		void print() const override { std::cout << "sphere\n" << c_; }
 
 		const Vec& center() const override { return c_; }
 
@@ -68,7 +44,7 @@ class Sphere : public Object
 
 		~Sphere() { }
 
-	private:
+	protected:
 		Vec 		c_;
 		double 	r_;
 		double 	r2_;
@@ -76,6 +52,23 @@ class Sphere : public Object
 		REFL 		refl_;
 		Vec 		color_;
 		Vec			emission_;
+};
+
+class DynamicSphere : public Sphere
+{
+	public:
+		DynamicSphere(const Vec &center,
+									const double radis,
+									const Vec &shift,
+									const Vec &color 	 	 = Vec(0.0),
+									const Vec &emission  = Vec(0.0),
+									const REFL &refl 		 = kDiffuse)
+		:Sphere(center, radis, color, emission, refl), shift_(shift) { }
+
+		bool intersect(const Ray &r, Isect &isect) const override;
+
+	private:
+		Vec shift_;
 };
 
 #endif /* _SHAPE_H_ */

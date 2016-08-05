@@ -22,6 +22,7 @@ class Scene
 	public:
 		static Scene CornellBox;
 		static Scene DepthOfField;
+		static Scene MotionBlur;
 
 		Scene(const char *name, const int width, const int height, Camera *camera,
 					const std::vector<Object *> &objects)

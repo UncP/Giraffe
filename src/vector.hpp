@@ -86,6 +86,12 @@ class Vector3
 		Vector3 operator-() const {
 			return Vector3(-x_, -y_, -z_);
 		}
+		Vector3& operator--() {
+			--x_, --y_, --z_;
+			return *this;
+		}
+
+		bool operator<(const Vector3 &) const;
 
 		const double length2() const {
 			return x_ * x_ + y_ * y_ + z_ * z_;
@@ -94,14 +100,14 @@ class Vector3
 			return sqrt(length2());
 		}
 
-		const T operator[](const int i) const {
+		const T& operator[](const int i) const {
 			assert(i >= 0 && i < 3);
 			if (i == 0) return x_;
 			if (i == 1) return y_;
 			return z_;
 		}
 
-		T operator[](const int i) {
+		T& operator[](const int i) {
 			assert(i >= 0 && i < 3);
 			if (i == 0) return x_;
 			if (i == 1) return y_;
@@ -111,8 +117,9 @@ class Vector3
 		~Vector3() { }
 };
 
-typedef Vector3<double> Vec3;
-typedef Vector3<double> Vec;
+typedef Vector3<double> 			Vec;
+typedef Vector3<unsigned int> uVec;
+typedef Vector3<int> 					iVec;
 
 template <typename T>
 inline Vector3<T> operator*(const double d, const Vector3<T> &v) {

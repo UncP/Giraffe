@@ -55,7 +55,7 @@ class AABB : public Box
 {
 	public:
 		AABB() {
-			for (size_t i = 0; i != 3; ++i) {
+			for (size_t i = 0; i != kAABBNumber; ++i) {
 				near_.push_back(kInfinity);
 				far_.push_back(-kInfinity);
 			}
@@ -68,7 +68,7 @@ class DOP : public Box
 {
 	public:
 		DOP() {
-			for (size_t i = 0; i < kNormalNumber; ++i) {
+			for (size_t i = 0; i < kDOPNumber; ++i) {
 				near_.push_back(kInfinity);
 				far_.push_back(-kInfinity);
 			}
@@ -83,7 +83,12 @@ class BVHNode
 
 		bool intersect(const Ray &, Isect &) const;
 
-		void traverse();
+		void traverse() {
+			if (obj_) obj_->print();
+			else			return ;
+			if (left_ ) left_-> traverse();
+			if (right_) right_->traverse();
+		}
 
 		void split(Box *, std::vector<Object*> &, std::vector<Box *> &);
 
@@ -102,7 +107,7 @@ class BVH : public Object
 
 		bool intersect(const Ray &, Isect &) const override;
 
-		void print() const override;
+		void print() const override { root_->traverse(); }
 
 		void build(std::vector<Object *> &);
 

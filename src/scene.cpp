@@ -11,11 +11,11 @@
 
 static const int sceneWidth = 512, sceneHeight = 512;
 // static const int sceneWidth = 1024, sceneHeight = 768;
-static Camera *cam = new PerspectiveCamera(	Vec(0, 0, 0), 	\
+static Camera *cam1 = new PerspectiveCamera(Vec(0, 0, 0), 	\
 																						Vec(0, -0.07, -1.0),\
 																						Vec(0, 1.0, 0),		\
 																						sceneWidth, sceneHeight);
-static std::vector<Object *> spheres = {
+static std::vector<Object *> obj1 = {
 	new Sphere(Vec(0, 1e5-40, -250),		1e5, 	Vec(0.75)),
 	new Sphere(Vec(0, 1e5+40, -250), 		1e5, 	Vec(0.75)),
 	new Sphere(Vec(0, 0, -1e5-300), 		1e5, 	Vec(0.75)),
@@ -27,35 +27,46 @@ static std::vector<Object *> spheres = {
 	new Sphere(Vec(0, 839.8, -225.0), 	800, 	Vec(1.0), 			Vec(8, 8, 8))
 };
 
-Scene Scene::CornellBox(Scene("cornell box", sceneWidth, sceneHeight, cam, spheres));
+Scene Scene::CornellBox(Scene("cornell box", sceneWidth, sceneHeight, cam1, obj1));
 
 
-static Camera *pro = new ProjectiveCamera(Vec(0, 0, 0), \
-																					Vec(0, 0, -1), \
-																					Vec(0, 1.0, 0), \
-																					6, 250, \
-																					sceneWidth, sceneHeight);
+static Camera *cam2 = new ThinLenCamera(Vec(0, 0, 0), \
+																				Vec(0, 0, -1), \
+																				Vec(0, 1.0, 0), \
+																				6, 250, \
+																				sceneWidth, sceneHeight);
 
-static std::vector<Object *> sequence = {
+static std::vector<Object *> obj2 = {
 	new Sphere(Vec(-140, 0, -425), 	25, 	Vec(1.0, 0, 0)),
 	new Sphere(Vec(-120, 0, -400), 	25, 	Vec(1.0, 0, 0)),
 	new Sphere(Vec(-100, 0, -375), 	25, 	Vec(1.0, 0, 0)),
 	new Sphere(Vec(-80, 0, -350), 	25, 	Vec(1.0, 0, 0)),
-
 	new Sphere(Vec(-60, 0, -325), 	25, 	Vec(1.0, 0, 0)),
 	new Sphere(Vec(-40, 0, -300), 	25, 	Vec(1.0, 0, 0)),
 	new Sphere(Vec(-20, 0, -275), 	25, 	Vec(1.0, 0, 0)),
 	new Sphere(Vec(	0, 0,  -250),		25, 	Vec(1.0, 0, 0)),
-
 	new Sphere(Vec(	20, 0, -225),		25, 	Vec(1.0, 0, 0)),
 	new Sphere(Vec(	40, 0, -200), 	25, 	Vec(1.0, 0, 0)),
 	new Sphere(Vec(	60, 0, -175), 	25, 	Vec(1.0, 0, 0)),
-
 	new Sphere(Vec(0, -1e5-25, 0), 	1e5, 	Vec(0.75)),
 	new Sphere(Vec(0, 136, -250), 	33, 	Vec(1.0), Vec(20, 20, 20))
 };
 
-Scene Scene::DepthOfField(Scene("depth of field", sceneWidth, sceneHeight, pro, sequence));
+Scene Scene::DepthOfField(Scene("depth of field", sceneWidth, sceneHeight, cam2, obj2));
+
+static Camera *cam3 = new ThinLenCamera(Vec(0, 0, 0), \
+																				Vec(0, 0, -1), \
+																				Vec(0, 1.0, 0), \
+																				15, 250, \
+																				sceneWidth, sceneHeight);
+
+static std::vector<Object *> obj3 = {
+	new DynamicSphere(Vec(-40, 40,  -300),	30, Vec(40, -35, 40),	Vec(1.0, 0, 0)),
+	new Sphere(		Vec(0, -1e5-25, 0), 1e5, 	Vec(0.75)),
+	new Sphere(		Vec(0, 136, -250), 	33, 	Vec(1.0), Vec(20, 20, 20))
+};
+
+Scene Scene::MotionBlur(Scene("motion blur", sceneWidth, sceneHeight, cam3, obj3));
 
 void Scene::accelerate() {
 	BVH *bvh = new BVH();

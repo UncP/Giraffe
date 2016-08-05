@@ -10,6 +10,8 @@
 #ifndef _OBJECT_HPP_
 #define _OBJECT_HPP_
 
+#include <vector>
+
 #include "vector.hpp"
 #include "utility.hpp"
 #include "ray.hpp"

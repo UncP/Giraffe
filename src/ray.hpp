@@ -20,12 +20,19 @@ class Ray
 	public:
 		Ray() = delete;
 
-		Ray(const Vec3 &, const Vec3 &);
+		Ray(const Vec &, const Vec &);
 
 		~Ray() { }
 
+		static double A;
+		static double B;
+		static void setDenominator(const double times) {
+			B = times;
+		}
+
 		Vec ori_;
 		Vec dir_;
+		double fac_;
 		std::array<double, kNormalNumber> no_;
 		std::array<double, kNormalNumber> nd_;
 };

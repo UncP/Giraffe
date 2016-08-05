@@ -12,18 +12,17 @@
 
 #include "vector.hpp"
 
-const double PI 		= 3.141592653589793238;
+const double PI = 3.141592653589793238;
 const double DOU_PI = 2.0 * PI;
-const double kInfinity  = std::numeric_limits<double>::max();
+const double kInfinity = std::numeric_limits<double>::max();
 const double kRefractionRatio = 1.5;
-const double kParallel = 1e-20;
 const double kEpsilon = 1e-4;
 
 enum REFL { kDiffuse, kReflect, kRefract };
 
-enum Plane { Xaxis = 0, Yaxis = 1, Zaxis = 2 };
+enum Plane { Xaxis = 0, Yaxis, Zaxis};
 
-const uint8_t kNormalNumber = 7;
+const uint8_t kNormalNumber = 7, kAABBNumber = 3, kDOPNumber = kNormalNumber;
 
 const Vec NormalSet[kNormalNumber] = {
 	Vec(1, 0, 0),

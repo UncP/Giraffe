@@ -1,11 +1,18 @@
+###			https://www.github.com/UncP/Mini_Ray_Tracer			###
+
 CPP 		 = g++
 CPPFLAGS = -std=c++11 -Wall -O3 -fopenmp
 LDFLAGS  = -lSDL -lSDLmain -lpng
+AC 			 =
 
-OBJ = random.o vector.o matrix.o object.o ray.o sphere.o bvh.o camera.o window.o scene.o
+OBJ = random.o vector.o vertex.o matrix.o mesh.o ray.o object.o bvh.o sphere.o \
+			camera.o scene.o window.o
 
 ray_tracer:$(OBJ) ray_tracer.cpp
-	$(CPP) $(CPPFLAGS) -o ray_tracer $(OBJ) ray_tracer.cpp $(LDFLAGS)
+	$(CPP) $(CPPFLAGS) $(AC) -o ray_tracer $(OBJ) ray_tracer.cpp $(LDFLAGS)
+
+ray.o:ray.cpp ray.hpp
+	$(CPP) $(CPPFLAGS) -c $(AC) ray.cpp
 
 clean:
-	rm *.o .tags* demo.ppm demo.png ray_tracer
+	rm *.o .tags* *.png ray_tracer
