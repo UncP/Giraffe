@@ -1,6 +1,5 @@
 ###光线追踪器
-###基于 ["smallpt"](http://kevinbeason.com/smallpt/) 实现的蒙特卡洛算法光线追踪器
-###Features:
+###特点
 * 漫反射
 * 镜面反射
 * 折射
@@ -29,3 +28,12 @@
 
 	4096 samples
 ![](./image/depth_of_field_4096.png)
+
+###参考资料
++ [smallpt](http://kevinbeason.com/smallpt/)
++ [scratch a pixel](http://www.scratchapixel.com/index.php)
++ [CMU 15-462](http://www.cs.cmu.edu/afs/cs/academic/class/15462-s15/www/)
++ Fundamentals of Computer Graphics
++ Realistic Ray Tracing
++ Physically-Based Image Synthesis: From theory to implementation
++ Real-Time Rendering
