@@ -19,6 +19,7 @@
 #include "scene.hpp"
 #include "ray.hpp"
 #include "camera.hpp"
+#include "pathTracer.hpp"
 
 class Window
 {

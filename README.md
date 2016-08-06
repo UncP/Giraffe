@@ -29,11 +29,14 @@
 	4096 samples
 ![](./image/depth_of_field_4096.png)
 
+
 ###参考资料
 + [smallpt](http://kevinbeason.com/smallpt/)
 + [scratch a pixel](http://www.scratchapixel.com/index.php)
 + [CMU 15-462](http://www.cs.cmu.edu/afs/cs/academic/class/15462-s15/www/)
++ [PBRT](https://github.com/mmp/pbrt-v3)
 + Fundamentals of Computer Graphics
 + Realistic Ray Tracing
-+ Physically-Based Image Synthesis: From theory to implementation
++ Physically-Based Image Synthesis: From Theory to Implementation
 + Real-Time Rendering
++ 计算机图形学(Peter Shirley, 第二版中文版)

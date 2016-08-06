@@ -24,6 +24,7 @@ class Vector3
 	public:
 
 		static Vector3<double> Zero;
+		static Vector3<double> One;
 
 		T x_ = 0;
 		T y_ = 0;

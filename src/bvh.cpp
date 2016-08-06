@@ -62,21 +62,21 @@ static void _calculateBounds(const std::vector<Object *> &objects, std::vector<B
 	}
 }
 
-static inline void _sortByPlane(std::vector<Object*> &objects, std::vector<Box *> &boxes,
+static inline void _sortByPlane(std::vector<Object *> &objects, std::vector<Box *> &boxes,
 	const Plane &p)
 {
-	std::sort(boxes.begin(), boxes.end(),
-		[p](const Box *m, const Box *n) { return m->far_[p] < n->far_[p]; });
-	std::sort(objects.begin(), objects.end(),
-		[p](const Object *a, const Object *b) { return a->center()[p] < b->center()[p]; });
+	// std::sort(boxes.begin(), boxes.end(),
+	// 	[p](const Box *m, const Box *n) { return m->far_[p] < n->far_[p]; });
+	// std::sort(objects.begin(), objects.end(),
+	// 	[p](const Object *a, const Object *b) { return a->center()[p] < b->center()[p]; });
 }
 
-static int _splitByPlane(std::vector<Object*> &objects, std::vector<Box *> &boxes,
+static int _splitByPlane(std::vector<Object *> &objects, std::vector<Box *> &boxes,
 	const Plane &p)
 {
 	_sortByPlane(objects, boxes, p);
 	double mid = (boxes[0]->far_[p] + boxes[boxes.size()-1]->far_[p]) / 2;
-	auto it = find_if(boxes.begin(), boxes.end(),
+	auto it = std::find_if(boxes.begin(), boxes.end(),
 		[mid, p](const Box *box) { return box->far_[p] > mid; });
 	if (it == boxes.begin())
 		return 1;
@@ -89,22 +89,22 @@ static int _splitByPlane(std::vector<Object*> &objects, std::vector<Box *> &boxe
 void BVHNode::split(Box *box, std::vector<Object *> &objects, std::vector<Box *> &boxes)
 {
 	if (objects.size() == 1) {
-		obj_ = shared_ptr<Object>(objects[0]);
+		obj_ = std::shared_ptr<Object>(objects[0]);
 		delete box;
 		return ;
 	}
 
-	obj_ = shared_ptr<Object>(box);
+	obj_ = std::shared_ptr<Object>(box);
 
 	int pos = _splitByPlane(objects, boxes, box->getSplitPlane());
 
-	left_  = shared_ptr<BVHNode>(new BVHNode());
+	left_  = std::shared_ptr<BVHNode>(new BVHNode());
 	if (!left_) {
 		std::cerr << "building BVH failed :(\n";
 		exit(-1);
 	}
 
-	right_ = shared_ptr<BVHNode>(new BVHNode());
+	right_ = std::shared_ptr<BVHNode>(new BVHNode());
 	if (!right_) {
 		std::cerr << "building BVH failed :(\n";
 		exit(-1);

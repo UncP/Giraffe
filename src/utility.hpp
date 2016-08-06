@@ -41,10 +41,10 @@ class Isect
 	public:
 		Isect():dis_(kInfinity), obj_(nullptr) { }
 
-		void update(const double &dis, const Object *obj) {
-			if (dis > dis_ || dis < 0) return ;
-			dis_ = dis;
-			obj_ = const_cast<Object *>(obj);
+		void update(const double &dis, const Object *obj, const Vec &normal) {
+			dis_ 		= dis;
+			obj_ 		= const_cast<Object *>(obj);
+			normal_ = normal;
 		}
 
 		bool miss() { return dis_ == kInfinity; }
@@ -53,6 +53,7 @@ class Isect
 
 		double	dis_;
 		Object *obj_;
+		Vec 		normal_;
 };
 
 #endif /* _UITLITY_HPP_ */

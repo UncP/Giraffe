@@ -10,6 +10,7 @@
 #include "vector.hpp"
 
 template<> Vec Vec::Zero(0);
+template<> Vec Vec::One (1);
 
 template<>
 bool iVec::operator<(const iVec &v) const

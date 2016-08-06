@@ -9,9 +9,18 @@
 
 #include "mesh.hpp"
 
-enum ObjFormat {
-	VERTEX_ONLY = 0, VERTEX_UV, VERTEX_NORMAL, VERTEX_UV_NORMAL
-};
+enum ObjFormat { VERTEX_ONLY = 0, VERTEX_UV, VERTEX_NORMAL, VERTEX_UV_NORMAL };
+
+std::ostream& Mesh::print(std::ostream &os) const
+{
+	os << "vertexes\n";
+	for (size_t i = 0; i != vertices_.size(); ++i)
+		os << vertices_[i];
+	os << "triangles\n";
+	for (size_t i = 0; i != triangles_.size(); ++i)
+		os << triangles_[i];
+	return os;
+}
 
 void Mesh::load()
 {
@@ -141,12 +150,52 @@ void Mesh::load()
 	assert(vertices_.size() == (2 * triangles_.size()));
 }
 
-void Mesh::print() const
+void Mesh::computeBox(std::vector<double> &near, std::vector<double> &far,
+	const Vec *normal) const
 {
-	std::cout << "vertexes\n";
-	for (size_t i = 0; i != vertices_.size(); ++i)
-		std::cout << vertices_[i];
-	std::cout << "triangles\n";
-	for (size_t i = 0; i != triangles_.size(); ++i)
-		std::cout << triangles_[i];
+	for (size_t i = 0, iEnd = near.size(); i != iEnd; ++i)
+		for (size_t j = 0, jEnd = vertices_.size(); j != jEnd; ++j) {
+			double dis = dot(vertices_[j].position_, normal[i]);
+			if (dis < near[i]) near[i] = dis;
+			if (dis > far[i]) far[i] = dis;
+		}
+}
+
+bool Mesh::intersect(const Ray &ray, Isect &isect) const
+{
+	bool flag = false;
+	for (size_t i = 0, end = triangles_.size(); i != end; ++i) {
+		const Vec &a = vertices_[triangles_[i].x_].position_;
+		const Vec &b = vertices_[triangles_[i].y_].position_;
+		const Vec &c = vertices_[triangles_[i].z_].position_;
+
+		Vec a_b	(a - b);
+		Vec a_c	(a - c);
+		Vec a_pos(a - ray.ori_);
+
+		Vec a_bCross_a_pos(cross(a_b, a_pos));
+		Vec a_cCross_dir	 (cross(a_c, ray.dir_));
+
+		double m = 1.0 / dot(a_b, a_cCross_dir);
+
+		double t = dot(a_c, a_bCross_a_pos) * (-m);
+		if (t < kEpsilon) continue;
+
+		double u = dot(a_pos, a_cCross_dir) * m;
+		if (u < 0.0 || u > 1.0) continue;
+
+		double v = dot(ray.dir_, a_bCross_a_pos) * m;
+		if (v < 0.0 || v > (1.0 - u)) continue;
+
+		if (t < isect.dis_) {
+			isect.update(t, this, vertices_[triangles_[i].x_].normal_);
+			flag = true;
+		}
+	}
+	return flag;
+}
+
+void Mesh::subdivide()
+{
+
 }

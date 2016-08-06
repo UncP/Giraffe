@@ -16,8 +16,6 @@
 
 #include "object.hpp"
 
-using std::shared_ptr;
-
 class Box : public Object
 {
 	public:
@@ -34,14 +32,15 @@ class Box : public Object
 			return x >= y && x >= z ? Xaxis : y >= z ? Yaxis : Zaxis;
 		}
 
-		void print() const override {
-			std::cout << "box\n";
+		std::ostream& print(std::ostream &os) const override {
+			os << "box\n";
 			for (size_t i = 0; i != near_.size(); ++i)
-				std::cout << setw(8) << near_[i] << " ";
-			std::cout << std::endl;
+				os << setw(8) << near_[i] << " ";
+			os << std::endl;
 			for (size_t i = 0; i != far_.size(); ++i)
-				std::cout << setw(8) << far_[i] << " ";
-			std::cout << std::endl;
+				os << setw(8) << far_[i] << " ";
+			os << std::endl;
+			return os;
 		}
 
 		~Box() { }
@@ -83,11 +82,12 @@ class BVHNode
 
 		bool intersect(const Ray &, Isect &) const;
 
-		void traverse() {
-			if (obj_) obj_->print();
-			else			return ;
-			if (left_ ) left_-> traverse();
-			if (right_) right_->traverse();
+		std::ostream& traverse(std::ostream &os) {
+			if (obj_) obj_->print(os);
+			else			return os;
+			if (left_ ) left_-> traverse(os);
+			if (right_) right_->traverse(os);
+			return os;
 		}
 
 		void split(Box *, std::vector<Object*> &, std::vector<Box *> &);
@@ -95,26 +95,26 @@ class BVHNode
 		~BVHNode() { }
 
 	private:
-		shared_ptr<Object>	obj_;
-		shared_ptr<BVHNode> left_;
-		shared_ptr<BVHNode> right_;
+		std::shared_ptr<Object>	obj_;
+		std::shared_ptr<BVHNode> left_;
+		std::shared_ptr<BVHNode> right_;
 };
 
 class BVH : public Object
 {
 	public:
-		BVH():root_(shared_ptr<BVHNode>(new BVHNode())) { }
+		BVH():root_(std::shared_ptr<BVHNode>(new BVHNode())) { }
 
 		bool intersect(const Ray &, Isect &) const override;
 
-		void print() const override { root_->traverse(); }
+		std::ostream& print(std::ostream &os) const override { root_->traverse(os); return os; }
 
 		void build(std::vector<Object *> &);
 
 		~BVH() { }
 
 	private:
-		shared_ptr<BVHNode> root_;
+		std::shared_ptr<BVHNode> root_;
 };
 
 #endif /* _BVH_HPP_ */

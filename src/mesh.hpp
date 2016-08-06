@@ -18,25 +18,35 @@
 #include <iterator>
 #include <cassert>
 
-#include "vector.hpp"
 #include "vertex.hpp"
+#include "object.hpp"
 
-class Mesh
+class Mesh : public Object
 {
 	public:
-		Mesh(const char *name):name_(std::string(name)) { }
+		Mesh(const char *name):name_(std::string(name)) { load(); }
 
-		void load();
-		void print() const;
+		void computeBox(std::vector<double> &, std::vector<double> &, const Vec *) const override;
+
+		bool intersect(const Ray &, Isect &) const override;
+
+		void subdivide();
+
+		const Vec& color() const override { return Vec::One; }
+		bool emit() const override { return true; }
+		const Vec& emission() const override { return Vec::One; }
+		REFL refl() const override { return kDiffuse; }
+		std::ostream& print(std::ostream &) const override;
 
 		Mesh(const Mesh &) = delete;
 		Mesh& operator=(const Mesh &) = delete;
 		~Mesh() { }
 
 	private:
-		std::string						name_;
-		std::vector<Vex> 			vertices_;
+		std::string					name_;
+		std::vector<Vex> 		vertices_;
 		std::vector<uVec>		triangles_;
+		void load();
 };
 
 #endif /* _MESH_HPP_ */

@@ -10,6 +10,7 @@
 #ifndef _OBJECT_HPP_
 #define _OBJECT_HPP_
 
+#include <iostream>
 #include <vector>
 
 #include "vector.hpp"
@@ -29,13 +30,7 @@ class Object
 			exit(-1);
 		}
 
-		virtual void print() const = 0;
-
-		virtual const Vec& center() const {
-			std::cerr << "virtual function called :(\n";
-			exit(-1);
-			// return Vec::Zero;
-		}
+		virtual std::ostream& print(std::ostream &) const = 0;
 
 		virtual const Vec& color() const {
 			std::cerr << "virtual function called :(\n";
@@ -63,5 +58,7 @@ class Object
 
 		virtual ~Object() { }
 };
+
+std::ostream& operator<<(std::ostream &, const Object *);
 
 #endif /* _OBJECT_HPP_ */

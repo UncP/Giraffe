@@ -32,7 +32,10 @@ bool Sphere::intersect(const Ray &r, Isect &isect) const {
 		return false;
 	double q = std::sqrt(r2_ - q2);
 	double dis = l2 > r2_ ? (s - q) : (s + q);
-	isect.update(dis, this);
+
+	if (dis < isect.dis_)
+		isect.update(dis, this, (r.ori_ + dis * r.dir_) - c_);
+
 	return true;
 	// Vec oriToCenter 	= pos_ - ori;
 	// double projectLen = dot(posToCenter, dir);
@@ -60,6 +63,9 @@ bool DynamicSphere::intersect(const Ray &r, Isect &isect) const {
 		return false;
 	double q = std::sqrt(r2_ - q2);
 	double dis = l2 > r2_ ? (s - q) : (s + q);
-	isect.update(dis, this);
+
+	if (dis < isect.dis_)
+		isect.update(dis, this, (r.ori_ + dis * r.dir_) - c_);
+
 	return true;
 }

@@ -105,11 +105,17 @@ OrthographicCamera::OrthographicCamera(	const Vec &origin,
 
 	Matrix worldToRaster = ndcToRaster * worldToNdc;
 	rasterToWorld_ = inverse(worldToRaster);
+	// Vec a1(0, 0, 0), a2(512, 512, 0);
+	// std::cout << rasterToWorld_;
+	// Vec b1 = rasterToWorld_ * a1;
+	// Vec b2 = rasterToWorld_ * a2;
+	// std::cout << b1 << b2;
 }
 
 Ray OrthographicCamera::computeRay(const double &x, const double &y) const
 {
 	Vec ori = rasterToWorld_ * Vec(x, y, 0);
+	ori.z_ = origin_.z_;
 	Vec dir = direction_;
 	normalize(dir);
 	return Ray(ori, dir);

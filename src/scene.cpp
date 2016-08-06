@@ -62,8 +62,9 @@ static Camera *cam3 = new ThinLenCamera(Vec(0, 0, 0), \
 
 static std::vector<Object *> obj3 = {
 	new DynamicSphere(Vec(-40, 40,  -300),	30, Vec(40, -35, 40),	Vec(1.0, 0, 0)),
-	new Sphere(		Vec(0, -1e5-25, 0), 1e5, 	Vec(0.75)),
-	new Sphere(		Vec(0, 136, -250), 	33, 	Vec(1.0), Vec(20, 20, 20))
+	// new Sphere(				Vec(0, 1e5+80, 0), 	1e5, 	Vec(0.75), Vec(0), kReflect),
+	new Sphere(				Vec(0, -1e5-25, 0), 1e5, 	Vec(0.75)),
+	new Sphere(				Vec(0, 579, -250), 	500, 	Vec(1.0), Vec(12, 12, 12))
 };
 
 Scene Scene::MotionBlur(Scene("motion blur", sceneWidth, sceneHeight, cam3, obj3));
@@ -76,6 +77,6 @@ void Scene::accelerate() {
 	}
 	bvh->build(objects_);
 	objects_.clear();
-	// bvh->print();
+	std::cout << bvh;
 	objects_.push_back(static_cast<Object *>(bvh));
 }

@@ -28,9 +28,7 @@ class Sphere : public Object
 
 		bool intersect(const Ray &r, Isect &isect) const override;
 
-		void print() const override { std::cout << "sphere\n" << c_; }
-
-		const Vec& center() const override { return c_; }
+		std::ostream& print(std::ostream &os) const override { return os << "sphere\n" << c_; }
 
 		const Vec& color() const override { return color_; }
 

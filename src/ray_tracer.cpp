@@ -27,7 +27,10 @@ int main(int argc, char **argv)
 	// test(Scene::MotionBlur, argc >= 2 ? atoi(argv[1]) : 4, 0);
 	// test(Scene::DepthOfField, argc >= 2 ? atoi(argv[1]) : 4, argc == 3);
 	// test(Scene::CornellBox, argc == 2 ? atoi(argv[1]) : 4);
-	Mesh mesh("cube");
-	mesh.print();
+	std::vector<Object *> obj = { new Mesh("cube") };
+	Camera *cam = new OrthographicCamera(Vec(0, 0, 10), Vec(0, 0, -1), Vec(0, 1, 0),
+		10, 10, 512, 512);
+	Scene s("mesh", 512, 512, cam, obj);
+	test(s, 4, 0);
 	return 0;
 }
