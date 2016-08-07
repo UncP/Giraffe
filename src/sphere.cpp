@@ -33,24 +33,17 @@ bool Sphere::intersect(const Ray &r, Isect &isect) const {
 	double q = std::sqrt(r2_ - q2);
 	double dis = l2 > r2_ ? (s - q) : (s + q);
 
-	if (dis < isect.dis_)
-		isect.update(dis, this, (r.ori_ + dis * r.dir_) - c_);
-
+	if (dis < isect.dis_) {
+		Vec hitPos = r.ori_;
+		hitPos += r.dir_ * dis;
+		isect.update(dis, this, hitPos, hitPos - c_, refl_, color_, emit_, emission_);
+	}
 	return true;
-	// Vec oriToCenter 	= pos_ - ori;
-	// double projectLen = dot(posToCenter, dir);
-	// double det = radis2_ + projectLen * projectLen - oriToCenter.length2();
-	// if (det < 0)
-	// 	return 0;
-	// else
-	// 	det = std::sqrt(det);
-	// double dis;
-	// return (dis = projectLen - det) > 0 ? dis : ((dis = projectLen + det) > 0 ? dis : 0);
 }
 
 bool DynamicSphere::intersect(const Ray &r, Isect &isect) const {
 
-	Vec off = shift_ * r.fac_;
+	Vec off = shift_ * Ray::Time;
 	Vec l = (c_ + off) - r.ori_;
 
 	// Vec l = c_ - r.ori_;
@@ -64,8 +57,10 @@ bool DynamicSphere::intersect(const Ray &r, Isect &isect) const {
 	double q = std::sqrt(r2_ - q2);
 	double dis = l2 > r2_ ? (s - q) : (s + q);
 
-	if (dis < isect.dis_)
-		isect.update(dis, this, (r.ori_ + dis * r.dir_) - c_);
-
+	if (dis < isect.dis_) {
+		Vec hitPos = r.ori_;
+		hitPos += r.dir_ * dis;
+		isect.update(dis, this, hitPos, hitPos - c_, refl_, color_, emit_, emission_);
+	}
 	return true;
 }

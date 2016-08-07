@@ -15,10 +15,11 @@ void Window::render(const Scene &scene, const int &samples)
 	const std::vector<Object *> &spheres = scene.objects();
 	double inv = 1.0 / samples;
 	Vec color;
-	Ray::setDenominator(width_ * height_ * samples * 4);
 	auto beg = std::chrono::high_resolution_clock::now();
+	double ratio = 1.0 / width_;
 	#pragma omp parallel for schedule(dynamic, 1) private(color)
 	for (int x = 0; x < width_; ++x) {
+		Ray::setTime(ratio * x);
 		fprintf(stderr,"\rprogress: %5.2f%%", 100 * (x / static_cast<float>(width_-1)));
 		for (int y = 0; y < height_; ++y) {
 			for (int sx = 0, i = x + y * width_; sx < 2; ++sx) {
@@ -35,23 +36,23 @@ void Window::render(const Scene &scene, const int &samples)
 	}
 
 	auto end  = std::chrono::high_resolution_clock::now();
-	auto Time = std::chrono::duration<double, std::milli>(end - beg).count();
-	std::cout << "\ntime: " << setw(8) << (Time / 1000) << "  s\n";
+	auto Time = std::chrono::duration<double, std::ratio<1>>(end - beg).count();
+	std::cout << "\ntime: " << setw(8) << Time << "  s\n";
 
 	show();
 	save_png(title_);
 }
 
 void Window::show() const {
-	for (int i = 0, end = width_ * height_; i < end; ++i) {
-		canvas_[i] = 0;
-		canvas_[i] |= 0xFF << 24;
-		canvas_[i] |= static_cast<uint8_t>(std::min(pixels_[i].x_, 1.0) * 255.0) << 16;
-		canvas_[i] |= static_cast<uint8_t>(std::min(pixels_[i].y_, 1.0) * 255.0) << 8;
-		canvas_[i] |= static_cast<uint8_t>(std::min(pixels_[i].z_, 1.0) * 255.0);
-	}
-	SDL_UpdateRect(screen_, 0, 0, 0, 0);
-	getchar();
+	// for (int i = 0, end = width_ * height_; i < end; ++i) {
+	// 	canvas_[i] = 0;
+	// 	canvas_[i] |= 0xFF << 24;
+	// 	canvas_[i] |= static_cast<uint8_t>(std::min(pixels_[i].x_, 1.0) * 255.0) << 16;
+	// 	canvas_[i] |= static_cast<uint8_t>(std::min(pixels_[i].y_, 1.0) * 255.0) << 8;
+	// 	canvas_[i] |= static_cast<uint8_t>(std::min(pixels_[i].z_, 1.0) * 255.0);
+	// }
+	// SDL_UpdateRect(screen_, 0, 0, 0, 0);
+	// getchar();
 }
 
 void Window::save_ppm(const char *name) const {

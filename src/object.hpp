@@ -26,35 +26,11 @@ class Object
 
 		virtual void computeBox(std::vector<double> &, std::vector<double> &,
 			const Vec *) const {
-			std::cerr << "virtual function called :(\n";
+			std::cerr << "virtual function called in Object :(\n";
 			exit(-1);
 		}
 
 		virtual std::ostream& print(std::ostream &) const = 0;
-
-		virtual const Vec& color() const {
-			std::cerr << "virtual function called :(\n";
-			exit(-1);
-			// return Vec::Zero;
-		}
-
-		virtual bool emit() const {
-			std::cerr << "virtual function called :(\n";
-			exit(-1);
-			// return false;
-		}
-
-		virtual const Vec& emission() const {
-			std::cerr << "virtual function called :(\n";
-			exit(-1);
-			// return Vec::Zero;
-		}
-
-		virtual REFL refl() const {
-			std::cerr << "virtual function called :(\n";
-			exit(-1);
-			// return kDiffuse;
-		}
 
 		virtual ~Object() { }
 };

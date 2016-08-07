@@ -39,12 +39,18 @@ class Object;
 class Isect
 {
 	public:
-		Isect():dis_(kInfinity), obj_(nullptr) { }
+		Isect():dis_(kInfinity) { }
 
-		void update(const double &dis, const Object *obj, const Vec &normal) {
-			dis_ 		= dis;
-			obj_ 		= const_cast<Object *>(obj);
-			normal_ = normal;
+		inline void update(const double &d, const Object *o, const Vec &p, const Vec &n,
+			const REFL &r, const Vec &c, const bool &emit, const Vec &e) {
+			dis_ 			= d;
+			object_ 	= o;
+			position_ = p;
+			normal_ 	= n;
+			refl_ 		= r;
+			color_ 		= c;
+			emit_ 		= emit;
+			emission_ = e;
 		}
 
 		bool miss() { return dis_ == kInfinity; }
@@ -52,8 +58,13 @@ class Isect
 		~Isect() { }
 
 		double	dis_;
-		Object *obj_;
+		const Object *object_;
+		Vec 		position_;
 		Vec 		normal_;
+		REFL 		refl_;
+		Vec 		color_;
+		bool 		emit_;
+		Vec 		emission_;
 };
 
 #endif /* _UITLITY_HPP_ */

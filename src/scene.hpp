@@ -36,11 +36,16 @@ class Scene
 		const int width() const  { return width_; }
 		const int height() const { return height_; }
 
-		~Scene() { delete camera_; }
+		~Scene() {
+			delete camera_;
+			if (!accelerate_)
+				std::for_each(objects_.begin(), objects_.end(), [](Object *obj) { delete obj; });
+		}
 
 	private:
 		std::string 					name_;
 		int 									width_, height_;
+		bool 									accelerate_ = false;
 		Camera 							 *camera_;
 		std::vector<Object *> objects_;
 };

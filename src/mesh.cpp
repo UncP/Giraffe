@@ -188,7 +188,10 @@ bool Mesh::intersect(const Ray &ray, Isect &isect) const
 		if (v < 0.0 || v > (1.0 - u)) continue;
 
 		if (t < isect.dis_) {
-			isect.update(t, this, vertices_[triangles_[i].x_].normal_);
+			Vec hitPos = ray.ori_;
+			hitPos += ray.dir_ * t;
+			isect.update(t, this, hitPos, vertices_[triangles_[i].x_].normal_, kDiffuse, Vec::Zero,
+				true, Vec::One);
 			flag = true;
 		}
 	}

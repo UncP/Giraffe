@@ -2,7 +2,8 @@
 
 CPP 		 = g++
 CPPFLAGS = -std=c++11 -Wall -O3 -fopenmp
-LDFLAGS  = -lSDL -lSDLmain -lpng
+# LDFLAGS  = -lSDL -lSDLmain -lpng
+LDFLAGS  = -lpng
 AC 			 =
 
 OBJ = random.o vector.o vertex.o matrix.o mesh.o ray.o object.o bvh.o sphere.o \

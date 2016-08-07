@@ -24,15 +24,13 @@ class Ray
 
 		~Ray() { }
 
-		static double A;
-		static double B;
-		static void setDenominator(const double times) {
-			B = times;
-		}
+		static double Time;
+
+		static void setTime(const double &t) { Time = t; }
 
 		Vec ori_;
 		Vec dir_;
-		double fac_;
+		// double time_;
 		std::array<double, kNormalNumber> no_;
 		std::array<double, kNormalNumber> nd_;
 };

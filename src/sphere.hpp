@@ -30,14 +30,6 @@ class Sphere : public Object
 
 		std::ostream& print(std::ostream &os) const override { return os << "sphere\n" << c_; }
 
-		const Vec& color() const override { return color_; }
-
-		bool emit() const override { return emit_; }
-
-		const Vec& emission() const override { return emission_; }
-
-		REFL refl() const override { return refl_; }
-
 		void computeBox(std::vector<double> &, std::vector<double> &, const Vec *) const override;
 
 		~Sphere() { }
@@ -65,8 +57,11 @@ class DynamicSphere : public Sphere
 
 		bool intersect(const Ray &r, Isect &isect) const override;
 
+		~DynamicSphere() { }
+
 	private:
 		Vec shift_;
+
 };
 
 #endif /* _SHAPE_H_ */

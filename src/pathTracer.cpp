@@ -9,27 +9,22 @@
 
 #include "pathTracer.hpp"
 
-static void _findHitObject(const Ray &ray, const std::vector<Object *> &objects, Isect &isect)
-{
-	for (size_t i = 0, end = objects.size(); i != end; ++i)
-		objects[i]->intersect(ray, isect);
-}
-
 Vec trace(const Ray &ray, const std::vector<Object *> &objects, int depth)
 {
 	Isect isect;
-	_findHitObject(ray, objects, isect);
+	for (size_t i = 0, end = objects.size(); i != end; ++i)
+		objects[i]->intersect(ray, isect);
+
 	if (isect.miss()) return Vec::Zero;
 
-	Object *obj = isect.obj_;
-	Vec color(obj->color());
+	Vec &color 	= isect.color_;
 	double max = std::max(color.x_, std::max(color.y_, color.z_));
 	if (++depth > 5) {
 		if (Random() < max) color *= (1.0 / max);
-		else return obj->emission();
+		else return isect.emission_;
 	}
 
-	Vec pos = ray.ori_ + ray.dir_ * isect.dis_;
+	Vec &pos 		= isect.position_;
 	Vec &normal = isect.normal_;
 	normalize(normal);
 
@@ -37,7 +32,7 @@ Vec trace(const Ray &ray, const std::vector<Object *> &objects, int depth)
 	if (dot(ray.dir_, normal) > 0) normal = -normal, into = false;
 
 	Vec reflPos = pos + normal * kEpsilon;
-	REFL mat = obj->refl();
+	REFL mat = isect.refl_;
 
 	if (mat == kDiffuse) {
 		Vec u, v, w(normal);
@@ -62,14 +57,14 @@ Vec trace(const Ray &ray, const std::vector<Object *> &objects, int depth)
 		// 		c += objects[i]->emission() * color * std::max(0.0, dot(newDir, normal));
 		// }
 
-		return obj->emission() + color * trace(Ray(reflPos, dir), objects, depth);
+		return isect.emission_ + color * trace(Ray(reflPos, dir), objects, depth);
 	}
 
 	Vec refl = ray.dir_ - 2 * dot(ray.dir_, normal) * normal;
 	normalize(refl);
 
 	if (mat == kReflect)
-		return obj->emission() + color * trace(Ray(reflPos, refl), objects, depth);
+		return isect.emission_ + color * trace(Ray(reflPos, refl), objects, depth);
 
 	double etai = 1.0, etat = kRefractionRatio;
 	double ior;
@@ -78,7 +73,7 @@ Vec trace(const Ray &ray, const std::vector<Object *> &objects, int depth)
 
 	double cos1 = -dot(ray.dir_, normal), cos2;
 	if ((cos2 = (1 - ior * ior * (1.0 - cos1 * cos1))) < 0.0)
-		return obj->emission() + color * trace(Ray(reflPos, refl), objects, depth);
+		return isect.emission_ + color * trace(Ray(reflPos, refl), objects, depth);
 
 	Vec refr(ray.dir_ * ior + normal * (ior * cos1 - std::sqrt(cos2)));
 	Vec refrPos = pos - normal * kEpsilon;
@@ -89,7 +84,7 @@ Vec trace(const Ray &ray, const std::vector<Object *> &objects, int depth)
 	double Re = R0 + (1 - R0) * c * c * c * c * c, Tr = 1 - Re;
 
 	double P = 0.25 + 0.5 * Re, RP = Re / P, TP = Tr / (1 - P);
-	return obj->emission() + color * (depth > 2 ? (Random() < P ?
+	return isect.emission_ + color * (depth > 2 ? (Random() < P ?
 		trace(Ray(reflPos, refl), objects, depth)*RP:trace(Ray(refrPos, refr), objects, depth)*TP):
 		trace(Ray(reflPos, refl), objects, depth)*Re+trace(Ray(refrPos, refr), objects, depth)*Tr);
 }

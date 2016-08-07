@@ -24,22 +24,21 @@
 class Mesh : public Object
 {
 	public:
-		Mesh(const char *name):name_(std::string(name)) { load(); }
-
-		void computeBox(std::vector<double> &, std::vector<double> &, const Vec *) const override;
-
-		bool intersect(const Ray &, Isect &) const override;
+		Mesh(const char *name):name_(std::string(name)) {
+			load();
+		}
 
 		void subdivide();
 
-		const Vec& color() const override { return Vec::One; }
-		bool emit() const override { return true; }
-		const Vec& emission() const override { return Vec::One; }
-		REFL refl() const override { return kDiffuse; }
+		bool intersect(const Ray &, Isect &) const override;
+
+		void computeBox(std::vector<double> &, std::vector<double> &, const Vec *) const override;
+
 		std::ostream& print(std::ostream &) const override;
 
 		Mesh(const Mesh &) = delete;
 		Mesh& operator=(const Mesh &) = delete;
+
 		~Mesh() { }
 
 	private:

@@ -12,6 +12,7 @@
 
 #include <vector>
 #include <memory>
+#include <map>
 #include <algorithm>
 
 #include "object.hpp"
@@ -24,6 +25,17 @@ class Box : public Object
 		const size_t size() const { return near_.size(); }
 
 		bool intersect(const Ray &, Isect &) const override;
+
+		void enclose(const std::vector<std::pair<Object *, Box *>> &boxes,
+			const size_t beg, const size_t end) {
+			for (size_t i = beg; i != end; ++i) {
+				const Box *box = boxes[i].second;
+				for (size_t j = 0, jEnd = box->size(); j != jEnd; ++j) {
+					if (box->near_[j] < near_[j]) near_[j] = box->near_[j];
+					if (box->far_[j] > far_[j]) 	far_[j] = box->far_[j];
+				}
+			}
+		}
 
 		Plane getSplitPlane() const {
 			double x = far_[0] - near_[0];
@@ -90,12 +102,18 @@ class BVHNode
 			return os;
 		}
 
-		void split(Box *, std::vector<Object*> &, std::vector<Box *> &);
+		void split(Box *, std::vector<std::pair<Object *, Box *>> &, const size_t, const size_t);
+
+		void release() {
+			if (left_) left_->release();
+			if (right_) right_->release();
+			delete obj_;
+		}
 
 		~BVHNode() { }
 
 	private:
-		std::shared_ptr<Object>	obj_;
+		Object*									 obj_;
 		std::shared_ptr<BVHNode> left_;
 		std::shared_ptr<BVHNode> right_;
 };
@@ -111,7 +129,7 @@ class BVH : public Object
 
 		void build(std::vector<Object *> &);
 
-		~BVH() { }
+		~BVH() { root_->release(); }
 
 	private:
 		std::shared_ptr<BVHNode> root_;

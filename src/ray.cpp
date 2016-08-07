@@ -9,11 +9,9 @@
 
 #include "ray.hpp"
 
-double Ray::A = 0;
-double Ray::B = 0;
+double Ray::Time = 0;
 
 Ray::Ray(const Vec &ori, const Vec &dir):ori_(ori), dir_(dir) {
-	fac_ = ++A / B;
 #ifdef AC
 	for (size_t i = 0; i != kNormalNumber; ++i) {
 		no_[i] = dot(ori_, NormalSet[i]);
