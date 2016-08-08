@@ -14,6 +14,8 @@
 #include <iomanip>
 #include <cassert>
 
+#include "vector.hpp"
+
 template <typename T>
 class Point2
 {
@@ -114,11 +116,17 @@ class Point3
 			return *this;
 		}
 
+		template <typename U>
+		Point3(const Vector3<U> &v):x_(v.x_), y_(v.y_), z_(v.z_) { }
+
 		bool operator==(const Point3<T> &p) const { return x_ == p.x_ && y_ == p.y_ && z_ == p.z_; }
 		bool operator!=(const Point3<T> &p) const { return !operator==(p); }
 
 		Point3<T> operator+(const Point3<T> &p) const {
 			return Point3<T>(x_ + p.x_, y_ + p.y_, z_ + p.z_);
+		}
+		Point3<T> operator+(const Vector3<T> &v) const {
+			return Point3<T>(x_ + v.x_, y_ + v.y_, z_ + v.z_);
 		}
 		Point3<T>& operator+=(const Point3<T> &p) {
 			x_ += p.x_;
@@ -126,13 +134,28 @@ class Point3
 			z_ += p.z_;
 			return *this;
 		}
-		Point3<T> operator-(const Point3<T> &p) const {
-			return Point3<T>(x_ - p.x_, y_ - p.y_, z_ - p.z_);
+		Point3<T>& operator+=(const Vector3<T> &v) {
+			x_ += v.x_;
+			y_ += v.y_;
+			z_ += v.z_;
+			return *this;
+		}
+		Vector3<T> operator-(const Point3<T> &p) const {
+			return Vector3<T>(x_ - p.x_, y_ - p.y_, z_ - p.z_);
+		}
+		Point3<T> operator-(const Vector3<T> &v) const {
+			return Point3<T>(x_ - v.x_, y_ - v.y_, z_ - v.z_);
 		}
 		Point3<T>& operator-=(const Point3<T> &p) {
 			x_ -= p.x_;
 			y_ -= p.y_;
 			z_ -= p.z_;
+			return *this;
+		}
+		Point3<T>& operator-=(const Vector3<T> &v) {
+			x_ -= v.x_;
+			y_ -= v.y_;
+			z_ -= v.z_;
 			return *this;
 		}
 
@@ -198,5 +221,10 @@ class Point3
 typedef Point3<double>	Point3d;
 typedef Point3<float> 	Point3f;
 typedef Point3<int> 		Point3i;
+
+template <typename T>
+inline double proj(const Point3<T> &p, const Vector3<T> &v) {
+	return p.x_ * v.x_ + p.y_ * v.y_ + p.z_ * v.z_;
+}
 
 #endif /* _POINT_HPP_ */

@@ -10,10 +10,10 @@
 #ifndef _PATHTRACER_HPP_
 #define _PATHTRACER_HPP_
 
-#include "random.hpp"
-#include "utility.hpp"
-#include "object.hpp"
-#include "ray.hpp"
+#include "../utility/random.hpp"
+#include "../utility/utility.hpp"
+#include "../object/object.hpp"
+#include "../math/ray.hpp"
 
 Vec trace(const Ray &, const std::vector<Object *> &, int);
 

@@ -13,9 +13,8 @@
 #include <iostream>
 #include <vector>
 
-#include "vector.hpp"
-#include "utility.hpp"
-#include "ray.hpp"
+#include "../math/ray.hpp"
+#include "../utility/utility.hpp"
 
 class Object
 {
@@ -25,16 +24,19 @@ class Object
 		virtual bool intersect(const Ray &, Isect &) const = 0;
 
 		virtual void computeBox(std::vector<double> &, std::vector<double> &,
-			const Vec *) const {
+			const Vector3d *) const {
 			std::cerr << "virtual function called in Object :(\n";
 			exit(-1);
 		}
 
 		virtual std::ostream& print(std::ostream &) const = 0;
 
+		friend std::ostream& operator<<(std::ostream &os, const Object *obj) {
+			obj->print(os);
+			return os;
+		}
+
 		virtual ~Object() { }
 };
-
-std::ostream& operator<<(std::ostream &, const Object *);
 
 #endif /* _OBJECT_HPP_ */

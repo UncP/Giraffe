@@ -10,8 +10,9 @@
 #ifndef _WINDOW_H_
 #define _WINDOW_H_
 
+#include <string>
 #include <stdlib.h>
-// #include <SDL/SDL.h>
+#include <SDL/SDL.h>
 #include <png.h>
 #include <fstream>
 #include <chrono>
@@ -25,28 +26,28 @@ class Window
 {
 	public:
 		Window() = default;
-		Window(const int width, const int height, const char *title)
-			:title_(const_cast<char*>(title)), width_(width), height_(height),
-			 pixels_(new Vec[width_*height_]), canvas_(new uint32_t[width_ * height_]) {
-			// if (!pixels_) {
-			// 	std::cerr << "颜色初始化失败 :(\n";
-			// 	exit(-1);
-			// }
+		Window(const char *title, const int width, const int height)
+			:title_(title), width_(width), height_(height),
+			 pixels_(new Vector3d[width_ * height_]) {
+			if (!pixels_) {
+				std::cerr << "颜色初始化失败 :(\n";
+				exit(-1);
+			}
 
-			// if (SDL_Init(SDL_INIT_VIDEO)) {
-			// 	std::cerr << "SDL_Init failed :(\n";
-			// 	exit(-1);
-			// }
+			if (SDL_Init(SDL_INIT_VIDEO)) {
+				std::cerr << "SDL_Init failed :(\n";
+				exit(-1);
+			}
 
-			// screen_ = SDL_SetVideoMode(width_, height_, 32, SDL_SWSURFACE);
-			// if (!screen_) {
-			// 	SDL_Quit();
-			// 	std::cerr << "SDL_SetVideoMode failed :(\n";
-			// 	exit(-1);
-			// }
-			// canvas_ = static_cast<uint32_t *>(screen_->pixels);
+			screen_ = SDL_SetVideoMode(width_, height_, 32, SDL_SWSURFACE);
+			if (!screen_) {
+				SDL_Quit();
+				std::cerr << "SDL_SetVideoMode failed :(\n";
+				exit(-1);
+			}
+			canvas_ = static_cast<uint32_t *>(screen_->pixels);
 
-			// SDL_WM_SetCaption(title, NULL);
+			SDL_WM_SetCaption(title, NULL);
 		}
 
 		void render(const Scene &, const int &);
@@ -59,12 +60,12 @@ class Window
 
 		~Window() { delete [] pixels_; }
 	private:
-		char*				 title_;
+		const char  *title_;
 		int 				 width_;
 		int					 height_;
-		Vec					*pixels_;
+		Vector3d		*pixels_;
 		uint32_t		*canvas_;
-		// SDL_Surface *screen_;
+		SDL_Surface *screen_;
 };
 
 #endif /* _WINDOW_H_ */

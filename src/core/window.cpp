@@ -14,7 +14,7 @@ void Window::render(const Scene &scene, const int &samples)
 	const Camera &camera = scene.camera();
 	const std::vector<Object *> &spheres = scene.objects();
 	double inv = 1.0 / samples;
-	Vec color;
+	Vector3d color;
 	auto beg = std::chrono::high_resolution_clock::now();
 	double ratio = 1.0 / width_;
 	#pragma omp parallel for schedule(dynamic, 1) private(color)
@@ -23,7 +23,7 @@ void Window::render(const Scene &scene, const int &samples)
 		fprintf(stderr,"\rprogress: %5.2f%%", 100 * (x / static_cast<float>(width_-1)));
 		for (int y = 0; y < height_; ++y) {
 			for (int sx = 0, i = x + y * width_; sx < 2; ++sx) {
-				for (int sy = 0; sy < 2; ++sy, color = Vec()) {
+				for (int sy = 0; sy < 2; ++sy, color = Vector3d()) {
 					for (int n = 0; n < samples; ++n) {
 						double a = Random(), b = Random();
 						Ray ray = camera.computeRay(x+(a+sx+0.5)*0.5, y+(b+sy+0.5)*0.5);

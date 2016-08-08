@@ -8,8 +8,3 @@
 **/
 
 #include "object.hpp"
-
-std::ostream& operator<<(std::ostream &os, const Object *obj) {
-	obj->print(os);
-	return os;
-}
