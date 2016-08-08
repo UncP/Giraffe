@@ -6,7 +6,7 @@ CPPFLAGS = -std=c++11 -Wall -O3 -fopenmp
 LDFLAGS  = -lpng
 AC 			 =
 
-OBJ = random.o vector.o vertex.o matrix.o mesh.o ray.o object.o bvh.o sphere.o \
+OBJ = random.o point.o vector.o ray.o vertex.o matrix.o mesh.o object.o bvh.o sphere.o \
 			camera.o scene.o pathTracer.o window.o
 
 ray_tracer:$(OBJ) ray_tracer.cpp

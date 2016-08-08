@@ -1,8 +1,9 @@
-###光线追踪器
+##光线追踪器
 ###特点
 * 漫反射
 * 镜面反射
 * 折射
+* Depth of field
 * Motion Blur
 * 反走样
 * 全局渲染
@@ -10,6 +11,7 @@
 * BVH
 	-	AABB (Axis-Aligned Bounding Box)
 	-	DOP	(Discrete Oriented Polytopes)
+
 
 ###Cornell Box
 ```4096 samples```
