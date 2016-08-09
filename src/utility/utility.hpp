@@ -10,7 +10,7 @@
 #ifndef _UITLITY_HPP_
 #define _UITLITY_HPP_
 
-#include "../math/math.hpp"
+#include "../math/constant.hpp"
 #include "../math/vector.hpp"
 #include "../math/point.hpp"
 

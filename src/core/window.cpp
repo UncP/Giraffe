@@ -16,17 +16,15 @@ void Window::render(const Scene &scene, const int &samples)
 	double inv = 1.0 / samples;
 	Vector3d color;
 	auto beg = std::chrono::high_resolution_clock::now();
-	double ratio = 1.0 / width_;
 	#pragma omp parallel for schedule(dynamic, 1) private(color)
 	for (int x = 0; x < width_; ++x) {
-		Ray::setTime(ratio * x);
 		fprintf(stderr,"\rprogress: %5.2f%%", 100 * (x / static_cast<float>(width_-1)));
 		for (int y = 0; y < height_; ++y) {
 			for (int sx = 0, i = x + y * width_; sx < 2; ++sx) {
 				for (int sy = 0; sy < 2; ++sy, color = Vector3d()) {
 					for (int n = 0; n < samples; ++n) {
 						double a = Random(), b = Random();
-						Ray ray = camera.computeRay(x+(a+sx+0.5)*0.5, y+(b+sy+0.5)*0.5);
+						Ray ray = camera.generateRay(x+(a+sx+0.5)*0.5, y+(b+sy+0.5)*0.5);
 						color += trace(ray, spheres, 0) * inv;
 					}
 					pixels_[i] += color * 0.25;
@@ -37,10 +35,10 @@ void Window::render(const Scene &scene, const int &samples)
 
 	auto end  = std::chrono::high_resolution_clock::now();
 	auto Time = std::chrono::duration<double, std::ratio<1>>(end - beg).count();
-	std::cout << "\ntime: " << setw(8) << Time << "  s\n";
+	std::cout << "\ntime: " << std::setw(8) << Time << "  s\n";
 
 	show();
-	save_png(title_);
+	save_png();
 }
 
 void Window::show() const {
@@ -55,9 +53,9 @@ void Window::show() const {
 	// getchar();
 }
 
-void Window::save_ppm(const char *name) const {
+void Window::save_ppm() const {
 	char file[32];
-	strcpy(file, name);
+	strcpy(file, title_.c_str());
 	strcat(file, ".png");
 	std::ofstream out(file, std::ios::out | std::ios::binary);
 	if (!out) { std::cerr << "ppm格式图片保存失败 :(\n"; return ; }
@@ -71,10 +69,10 @@ void Window::save_ppm(const char *name) const {
 	out.close();
 }
 
-bool Window::save_png(const char *name) const
+bool Window::save_png() const
 {
 	char file[32];
-	strcpy(file, name);
+	strcpy(file, title_.c_str());
 	strcat(file, ".png");
 	FILE *fp = fopen(file, "wb");
 	if (!fp) return false;

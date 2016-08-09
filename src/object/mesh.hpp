@@ -18,8 +18,8 @@
 #include <iterator>
 #include <cassert>
 
-#include "vertex.hpp"
-#include "object.hpp"
+#include "../math/vertex.hpp"
+#include "../object/object.hpp"
 
 class Mesh : public Object
 {
@@ -32,7 +32,7 @@ class Mesh : public Object
 
 		bool intersect(const Ray &, Isect &) const override;
 
-		void computeBox(std::vector<double> &, std::vector<double> &, const Vec *) const override;
+		void computeBox(std::vector<double> &, std::vector<double> &, const Vector3d *) const;
 
 		std::ostream& print(std::ostream &) const override;
 
@@ -42,9 +42,9 @@ class Mesh : public Object
 		~Mesh() { }
 
 	private:
-		std::string					name_;
-		std::vector<Vex> 		vertices_;
-		std::vector<uVec>		triangles_;
+		std::string							name_;
+		std::vector<Vertex> 		vertices_;
+		std::vector<Point3u>		triangles_;
 		void load();
 };
 

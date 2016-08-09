@@ -15,6 +15,6 @@
 #include "../object/object.hpp"
 #include "../math/ray.hpp"
 
-Vec trace(const Ray &, const std::vector<Object *> &, int);
+Vector3d trace(const Ray &, const std::vector<Object *> &, int);
 
 #endif /* _PATHTRACER_HPP_ */

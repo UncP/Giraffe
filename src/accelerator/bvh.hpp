@@ -15,7 +15,7 @@
 #include <map>
 #include <algorithm>
 
-#include "object.hpp"
+#include "../object/object.hpp"
 
 class Box : public Object
 {
@@ -47,10 +47,10 @@ class Box : public Object
 		std::ostream& print(std::ostream &os) const override {
 			os << "box\n";
 			for (size_t i = 0; i != near_.size(); ++i)
-				os << setw(8) << near_[i] << " ";
+				os << std::setw(8) << near_[i] << " ";
 			os << std::endl;
 			for (size_t i = 0; i != far_.size(); ++i)
-				os << setw(8) << far_[i] << " ";
+				os << std::setw(8) << far_[i] << " ";
 			os << std::endl;
 			return os;
 		}

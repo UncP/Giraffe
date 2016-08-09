@@ -9,8 +9,8 @@
 
 #include "bvh.hpp"
 
-static bool _intersect(const double &o, const double &f,
-	const double &s, const double &b, double &tmin, double &tmax)
+static bool _intersect(const double o, const double f, const double s, const double b,
+	double &tmin, double &tmax)
 {
 	double min, max;
 	min = (s - o) * f;
@@ -26,8 +26,13 @@ static bool _intersect(const double &o, const double &f,
 bool Box::intersect(const Ray &ray, Isect &isect) const
 {
 	double near = -kInfinity, far = kInfinity;
+	double no[near_.size()], nd[near_.size()];
 	for (size_t i = 0, end = near_.size(); i != end; ++i) {
-		if (!_intersect(ray.no_[i], ray.nd_[i], near_[i], far_[i], near, far))
+		no[i] = proj(ray.ori_, NormalSet[i]);
+		nd[i] = dot(ray.dir_, NormalSet[i]);
+	}
+	for (size_t i = 0, end = near_.size(); i != end; ++i) {
+		if (!_intersect(no[i], nd[i], near_[i], far_[i], near, far))
 			return false;
 	}
 	return true;

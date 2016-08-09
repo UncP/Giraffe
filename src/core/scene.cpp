@@ -11,20 +11,21 @@
 
 static const int screenWidth = 512, screenHeight = 512;
 // static const int screenWidth = 1024, screenHeight = 768;
-static Camera *cam1 = new PerspectiveCamera(Vec(0, 0, 0), 	\
-																						Vec(0, -0.07, -1.0),\
-																						Vec(0, 1.0, 0),		\
-																						screenWidth, screenHeight);
+static Camera *cam1 = new PerspectiveCamera(Point3d(0, 0, 0), 	\
+																						Vector3d(0, -0.07, -1.0),\
+																						Point2i(screenWidth, screenHeight), \
+																						Point2i(screenWidth, screenHeight), \
+																						60);
 static std::vector<Object *> obj1 = {
-	new Sphere(Vec(0, 1e5-40, -250),		1e5, 	Vec(0.75)),
-	new Sphere(Vec(0, 1e5+40, -250), 		1e5, 	Vec(0.75)),
-	new Sphere(Vec(0, 0, -1e5-300), 		1e5, 	Vec(0.75)),
-	new Sphere(Vec(0, 0, 1e5+50), 			1e5, 	Vec(0)),
-	new Sphere(Vec(-1e5-50, 0, -250), 	1e5, 	Vec(0.75, 0.25, 0.25)),
-	new Sphere(Vec(1e5+50, 0, -250),  	1e5, 	Vec(0.25, 0.75, 0.25)),
-	new Sphere(Vec(25.0, -24.5, -255.0),15.5,	Vec(0.999), 		Vec(), 		kReflect),
-	new Sphere(Vec(-20, -26.5, -215.0),	13.5,	Vec(0.999), 		Vec(), 		kRefract),
-	new Sphere(Vec(0, 839.8, -225.0), 	800, 	Vec(1.0), 			Vec(8, 8, 8))
+	new Sphere(Point3d(0, 1e5-40, -250),		1e5, 	Color(0.75)),
+	new Sphere(Point3d(0, 1e5+40, -250), 		1e5, 	Color(0.75)),
+	new Sphere(Point3d(0, 0, -1e5-300), 		1e5, 	Color(0.75)),
+	new Sphere(Point3d(0, 0, 1e5+50), 			1e5, 	Color(0)),
+	new Sphere(Point3d(-1e5-50, 0, -250), 	1e5, 	Color(0.75, 0.25, 0.25)),
+	new Sphere(Point3d(1e5+50, 0, -250),  	1e5, 	Color(0.25, 0.75, 0.25)),
+	new Sphere(Point3d(25.0, -24.5, -255.0),15.5,	Color(0.999), 		Vector3d(), 		kReflect),
+	new Sphere(Point3d(-20, -26.5, -215.0),	13.5,	Color(0.999), 		Vector3d(), 		kRefract),
+	new Sphere(Point3d(0, 839.8, -225.0), 	800, 	Color(1.0), 			Vector3d(8, 8, 8))
 };
 
 Scene Scene::CornellBox(Scene("cornell box", screenWidth, screenHeight, cam1, obj1));
@@ -72,6 +73,7 @@ static std::vector<Object *> obj3 = {
 
 Scene Scene::MotionBlur(Scene("motion blur", screenWidth, screenHeight, cam3, obj3));
 */
+
 void Scene::accelerate() {
 	BVH *bvh = new BVH();
 	if (!bvh) {
@@ -83,4 +85,10 @@ void Scene::accelerate() {
 	std::cout << bvh;
 	objects_.push_back(static_cast<Object *>(bvh));
 	accelerate_ = true;
+}
+
+Scene::~Scene() {
+	delete camera_;
+	if (!accelerate_)
+		std::for_each(objects_.begin(), objects_.end(), [](Object *obj) { delete obj; });
 }

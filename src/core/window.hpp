@@ -18,7 +18,7 @@
 #include <chrono>
 
 #include "scene.hpp"
-#include "ray.hpp"
+#include "../math/ray.hpp"
 #include "camera.hpp"
 #include "pathTracer.hpp"
 
@@ -26,9 +26,8 @@ class Window
 {
 	public:
 		Window() = default;
-		Window(const char *title, const int width, const int height)
-			:title_(title), width_(width), height_(height),
-			 pixels_(new Vector3d[width_ * height_]) {
+		Window(const std::string &title, const int width, const int height)
+			:title_(title), width_(width), height_(height), pixels_(new Vector3d[width_ * height_]) {
 			if (!pixels_) {
 				std::cerr << "颜色初始化失败 :(\n";
 				exit(-1);
@@ -47,20 +46,21 @@ class Window
 			}
 			canvas_ = static_cast<uint32_t *>(screen_->pixels);
 
-			SDL_WM_SetCaption(title, NULL);
+			SDL_WM_SetCaption(title_.c_str(), NULL);
 		}
 
 		void render(const Scene &, const int &);
 
 		void show() const;
-		void save_ppm(const char *file) const;
-		bool save_png(const char *file) const;
+		void save_ppm() const;
+		bool save_png() const;
 
 		Window& operator=(const Window &) = delete;
 
 		~Window() { delete [] pixels_; }
+
 	private:
-		const char  *title_;
+		std::string  title_;
 		int 				 width_;
 		int					 height_;
 		Vector3d		*pixels_;

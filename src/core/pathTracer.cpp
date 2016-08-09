@@ -15,7 +15,7 @@ Vector3d trace(const Ray &ray, const std::vector<Object *> &objects, int depth)
 	for (size_t i = 0, end = objects.size(); i != end; ++i)
 		objects[i]->intersect(ray, isect);
 
-	if (isect.miss()) return Vector3d::Zero;
+	if (isect.miss()) return Vector3d(0);
 
 	Vector3d &color 	= isect.color_;
 	double max = std::max(color.x_, std::max(color.y_, color.z_));

@@ -13,9 +13,9 @@
 #include <string>
 #include <vector>
 
-#include "sphere.hpp"
+#include "../object/sphere.hpp"
 #include "camera.hpp"
-#include "bvh.hpp"
+#include "../accelerator/bvh.hpp"
 
 class Scene
 {
@@ -26,7 +26,8 @@ class Scene
 
 		Scene(const char *name, const int width, const int height, Camera *camera,
 					const std::vector<Object *> &objects)
-		:name_(name), width_(width), height_(height), camera_(camera), objects_(objects) { }
+		:name_(name), width_(width), height_(height), accelerate_(false), camera_(camera),
+		 objects_(objects) { }
 
 		void accelerate();
 
@@ -36,16 +37,12 @@ class Scene
 		const int width() const  { return width_; }
 		const int height() const { return height_; }
 
-		~Scene() {
-			delete camera_;
-			if (!accelerate_)
-				std::for_each(objects_.begin(), objects_.end(), [](Object *obj) { delete obj; });
-		}
+		~Scene();
 
 	private:
 		std::string 					name_;
 		int 									width_, height_;
-		bool 									accelerate_ = false;
+		bool 									accelerate_;
 		Camera 							 *camera_;
 		std::vector<Object *> objects_;
 };

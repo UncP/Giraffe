@@ -10,7 +10,7 @@
 #ifndef _MATRIX_HPP_
 #define _MATRIX_HPP_
 
-#include "math.hpp"
+#include "constant.hpp"
 #include "point.hpp"
 #include "vector.hpp"
 #include "ray.hpp"
@@ -25,7 +25,7 @@ class Matrix
 			double _m[16];
 		};
 
-		Matrix();
+		Matrix() = default;
 		Matrix(	double m00, double m10, double m20, double m30, \
 						double m01, double m11, double m21, double m31, \
 						double m02, double m12, double m22, double m32, \

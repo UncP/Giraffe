@@ -3,11 +3,9 @@
 CPP 		 = g++
 CPPFLAGS = -std=c++11 -Wall -O3
 
-all:object.o sphere.o mesh.o
+all:bvh.o
 
-object.o:object.hpp object.cpp
-sphere.o:sphere.hpp sphere.cpp
-mesh.o:mesh.hpp mesh.cpp
+bvh.o:bvh.hpp bvh.cpp
 
 clean:
 	rm *.o

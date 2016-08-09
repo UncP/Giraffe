@@ -7,8 +7,8 @@
  *    > Created Time: 2016-08-08 17:43:50
 **/
 
-#ifndef _MATH_HPP_
-#define _MATH_HPP_
+#ifndef _CONSTANT_HPP_
+#define _CONSTANT_HPP_
 
 #include <cmath>
 #include <limits>
@@ -19,6 +19,6 @@ const double kInfinity = std::numeric_limits<double>::max();
 const double kRefractionRatio = 1.5;
 const double kEpsilon = 1e-4;
 
-double radian(const double &angle) { return angle * (PI / 180.0); }
+#define radian(angle) (angle * (PI / 180.0))
 
-#endif /* _MATH_HPP_ */
+#endif /* _CONSTANT_HPP_ */

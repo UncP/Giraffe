@@ -218,9 +218,10 @@ class Point3
 		}
 };
 
-typedef Point3<double>	Point3d;
-typedef Point3<float> 	Point3f;
-typedef Point3<int> 		Point3i;
+typedef Point3<double>					Point3d;
+typedef Point3<float> 					Point3f;
+typedef Point3<int> 						Point3i;
+typedef Point3<unsigned int> 		Point3u;
 
 template <typename T>
 inline double proj(const Point3<T> &p, const Vector3<T> &v) {

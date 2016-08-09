@@ -10,23 +10,22 @@
 #ifndef _CAMERA_HPP_
 #define _CAMERA_HPP_
 
-#include "random.hpp"
-#include "vector.hpp"
-#include "matrix.hpp"
-#include "ray.hpp"
+#include "../utility/random.hpp"
+#include "../math/matrix.hpp"
+#include "../math/ray.hpp"
 
 class Camera
 {
 	public:
-		Camera(const Vec &, const Vec &, const Vec & = Vec(0, 1, 0));
+		Camera(const Point3d &, const Vector3d &, const Vector3d & = Vector3d(0, 1, 0));
 
-		virtual Ray computeRay(const double &, const double &) const = 0;
+		virtual Ray generateRay(const double &, const double &) const = 0;
 
 		virtual ~Camera() { }
 
 	protected:
-		Vec ori_;
-		Vec dir_;
+		Point3d	 ori_;
+		Vector3d dir_;
 		Matrix worldToCamera_;
 		Matrix cameraToWorld_;
 };
@@ -34,9 +33,10 @@ class Camera
 class PerspectiveCamera : public Camera
 {
 	public:
-		PerspectiveCamera(const Vec &, const Vec &, const Vec2 &, const Vec2 &, double &);
+		PerspectiveCamera(const Point3d &, const Vector3d &,
+											const Point2i &, const Point2i &, const double);
 
-		Ray computeRay(const double &, const double &) const override;
+		Ray generateRay(const double &, const double &) const override;
 
 		~PerspectiveCamera() { }
 
@@ -47,16 +47,14 @@ class PerspectiveCamera : public Camera
 class OrthographicCamera : public Camera
 {
 	public:
-		OrthographicCamera(const Vec &, const Vec &, const Vec &up = Vec(0.0, 1.0, 0.0),
+		OrthographicCamera(const Vector3d &, const Vector3d &,
 			const int &w = 100, const int &h = 100, const int &width = 512, const int &height = 512);
 
-		Ray computeRay(const double &x, const double &y) const override;
+		Ray generateRay(const double &x, const double &y) const override;
 
 		~OrthographicCamera() { }
-	private:
-		Matrix rasterToWorld_;
-		Matrix worldToRaster_;
 
+	private:
 };
 
 #endif /* _CAMERA_HPP_ */

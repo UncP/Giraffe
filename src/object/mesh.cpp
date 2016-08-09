@@ -32,10 +32,10 @@ void Mesh::load()
 
 	static const char *formatVertexNormal = "%d//%d";
 
-	std::vector<Vec> 	pos;
-	std::vector<Vec>	norm;
+	std::vector<Point3d> 	pos;
+	std::vector<Vector3d>	norm;
 
-	struct Face { iVec v[3]; };
+	struct Face { Point3i v[3]; };
 	std::vector<Face> face;
 
 	ObjFormat format;
@@ -48,7 +48,7 @@ void Mesh::load()
 		++lineNum;
 
 		if (token == "v") {
-			Vec v;
+			Point3d v;
 			line >> v.x_ >> v.y_ >> v.z_;
 			if (line.fail()) {
 				std::cerr << "postion syntax error in line " << lineNum << std::endl;
@@ -56,7 +56,7 @@ void Mesh::load()
 			}
 			pos.push_back(v);
 		} else if (token == "vn") {
-			Vec n;
+			Vector3d n;
 			line >> n.x_ >> n.y_ >> n.z_;
 			if (line.fail()) {
 				std::cerr << "normal syntax error in line " << lineNum << std::endl;
@@ -89,7 +89,7 @@ void Mesh::load()
 
 			Face f;
 			for (size_t i = 0; i != 3; ++i) {
-				iVec vi;
+				Point3i vi;
 				switch (format) {
 					case VERTEX_NORMAL:
 						sscanf(face_tokens[i].c_str(), formatVertexNormal, &vi.x_, &vi.y_);
@@ -99,7 +99,8 @@ void Mesh::load()
 						exit(-1);
 						break;
 				}
-				f.v[i] = --vi;
+				--vi.x_, --vi.y_;
+				f.v[i] = vi;
 			}
 			face.push_back(f);
 		}
@@ -124,21 +125,21 @@ void Mesh::load()
 	triangles_.reserve(face.size());
 	vertices_.reserve(face.size() * 2);
 
-	std::map<iVec, unsigned int> map;
-	std::pair<std::map<iVec, unsigned int>::iterator, bool> insert;
+	std::map<Point3i, unsigned int> map;
+	std::pair<std::map<Point3i, unsigned int>::iterator, bool> insert;
 
 	unsigned int index = 0;
 
 	for (size_t i = 0, end = face.size(); i != end; ++i) {
 		const Face &f = face[i];
-		uVec tri;
+		Point3u tri;
 		for (size_t j = 0; j != 3; ++j) {
 			insert = map.insert({f.v[j], index});
 			if (insert.second) {
-				const iVec v = f.v[j];
+				const Point3i &v = f.v[j];
 				Vertex vertex;
 				vertex.position_ = pos[v[0]];
-				vertex.normal_ 	 = (v[1] == -1) ? Vec::Zero : norm[v[1]];
+				vertex.normal_ 	 = (v[1] == -1) ? Vector3d(0) : norm[v[1]];
 				vertices_.push_back(vertex);
 				++index;
 			}
@@ -151,11 +152,11 @@ void Mesh::load()
 }
 
 void Mesh::computeBox(std::vector<double> &near, std::vector<double> &far,
-	const Vec *normal) const
+	const Vector3d *normal) const
 {
 	for (size_t i = 0, iEnd = near.size(); i != iEnd; ++i)
 		for (size_t j = 0, jEnd = vertices_.size(); j != jEnd; ++j) {
-			double dis = dot(vertices_[j].position_, normal[i]);
+			double dis = proj(vertices_[j].position_, normal[i]);
 			if (dis < near[i]) near[i] = dis;
 			if (dis > far[i]) far[i] = dis;
 		}
@@ -165,16 +166,16 @@ bool Mesh::intersect(const Ray &ray, Isect &isect) const
 {
 	bool flag = false;
 	for (size_t i = 0, end = triangles_.size(); i != end; ++i) {
-		const Vec &a = vertices_[triangles_[i].x_].position_;
-		const Vec &b = vertices_[triangles_[i].y_].position_;
-		const Vec &c = vertices_[triangles_[i].z_].position_;
+		const Point3d &a = vertices_[triangles_[i].x_].position_;
+		const Point3d &b = vertices_[triangles_[i].y_].position_;
+		const Point3d &c = vertices_[triangles_[i].z_].position_;
 
-		Vec a_b	(a - b);
-		Vec a_c	(a - c);
-		Vec a_pos(a - ray.ori_);
+		Vector3d a_b	(a - b);
+		Vector3d a_c	(a - c);
+		Vector3d a_pos(a - ray.ori_);
 
-		Vec a_bCross_a_pos(cross(a_b, a_pos));
-		Vec a_cCross_dir	 (cross(a_c, ray.dir_));
+		Vector3d a_bCross_a_pos(cross(a_b, a_pos));
+		Vector3d a_cCross_dir	 (cross(a_c, ray.dir_));
 
 		double m = 1.0 / dot(a_b, a_cCross_dir);
 
@@ -188,10 +189,9 @@ bool Mesh::intersect(const Ray &ray, Isect &isect) const
 		if (v < 0.0 || v > (1.0 - u)) continue;
 
 		if (t < isect.dis_) {
-			Vec hitPos = ray.ori_;
-			hitPos += ray.dir_ * t;
-			isect.update(t, this, hitPos, vertices_[triangles_[i].x_].normal_, kDiffuse, Vec::One,
-				false, Vec::One);
+			Point3d hitPos(ray.ori_ + ray.dir_ * t);
+			isect.update(t, this, hitPos, vertices_[triangles_[i].x_].normal_, kDiffuse, Vector3d(1),
+				false, Vector3d(1));
 			flag = true;
 		}
 	}
