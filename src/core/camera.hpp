@@ -19,7 +19,7 @@ class Camera
 	public:
 		Camera(const Point3d &, const Vector3d &, const Vector3d & = Vector3d(0, 1, 0));
 
-		virtual Ray generateRay(const double &, const double &) const = 0;
+		virtual Ray generateRay(const Point2d &) const = 0;
 
 		virtual ~Camera() { }
 
@@ -36,7 +36,7 @@ class PerspectiveCamera : public Camera
 		PerspectiveCamera(const Point3d &, const Vector3d &,
 											const Point2i &, const Point2i &, const double);
 
-		Ray generateRay(const double &, const double &) const override;
+		Ray generateRay(const Point2d &) const override;
 
 		~PerspectiveCamera() { }
 
@@ -50,7 +50,7 @@ class OrthographicCamera : public Camera
 		OrthographicCamera(const Vector3d &, const Vector3d &,
 			const int &w = 100, const int &h = 100, const int &width = 512, const int &height = 512);
 
-		Ray generateRay(const double &x, const double &y) const override;
+		Ray generateRay(const Point2d &) const override;
 
 		~OrthographicCamera() { }
 

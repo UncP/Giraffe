@@ -165,18 +165,19 @@ Matrix inverse(const Matrix &m)
 	Matrix ret;
 	det = 1.0 / det;
 	for (int i = 0; i < 16; ++i)
-			ret._m[i] = inv[i] * det;
+		ret._m[i] = inv[i] * det;
 	return ret;
 }
 
-Matrix perspective(const double angle, const int n, const int f)
+Matrix perspective(const double angle, const double n, const double f)
 {
 	double fov = 1.0 / std::tan(radian(angle) * 0.5);
+	double n_f = n - f;
 
-	return Matrix(fov, 	0, 		0,				  0,
-								0, 	 fov,		0,		 		  0,
-								0, 		0, 	f/(n-f),     -1,
-								0, 		0, 	(f*n)/(n-f),  0);
+	return Matrix(fov, 	0, 		0,				0,
+								0, 	 fov,		0,		 		0,
+								0, 		0, 	f/n_f,     -1,
+								0, 		0, 	(f*n)/n_f,  0);
 }
 
 Matrix transform(const Vector3d &v)

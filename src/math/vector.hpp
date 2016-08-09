@@ -206,8 +206,14 @@ inline Vector3<T> cross(const Vector3<T> &lhs, const Vector3<T> &rhs) {
 }
 
 template <typename T>
-inline Vector3<T> normalize(Vector3<T> &v) {
-	return v / v.length();
+inline Vector3<T> normalize(const Vector3<T> &v) {
+	double len = v.length();
+	assert(len);
+	return v / len;
+}
+
+inline Color mult(const Color &a, const Color &b) {
+	return Color(a.x_ * b.x_, a.y_ * b.y_, a.z_ * b.z_);
 }
 
 #endif /* _VECTOR_H_ */

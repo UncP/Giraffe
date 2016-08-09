@@ -7,17 +7,17 @@
  *    > Created Time: 2016-06-30 08:52:52
 **/
 
-#include "core/scene.hpp"
-#include "core/window.hpp"
-#include "object/mesh.hpp"
+#include "../core/scene.hpp"
+#include "../core/window.hpp"
+#include "../object/mesh.hpp"
 
 void test(Scene &scene, int samples, bool accelerate)
 {
 
-	if (accelerate) scene.accelerate();
+	// if (accelerate) scene.accelerate();
 
-	// Window win(scene.name(), scene.width(), scene.height());
-	// win.render(scene, samples);
+	Window win(scene.name(), scene.width(), scene.height());
+	win.render(scene, samples);
 }
 
 int main(int argc, char **argv)

@@ -13,8 +13,8 @@ OBJ 		 = math/constant.o math/vector.o math/point.o math/ray.o math/vertex.o mat
 
 all:module ray_tracer
 
-ray_tracer:$(OBJ) ray_tracer.cpp
-	$(CPP) $(CPPFLAGS) ray_tracer $(OBJ) ray_tracer.cpp $(LDFLAGS)
+ray_tracer:$(OBJ) main/ray_tracer.cpp
+	$(CPP) $(CPPFLAGS) ray_tracer $(OBJ) main/ray_tracer.cpp $(LDFLAGS)
 
 module:
 	for dir in $(DIR); do \
@@ -28,4 +28,4 @@ clean:
 	for dir in $(DIR); do \
 		(cd $$dir && make clean) || continue ; \
 	done
-	rm ray_tracer .tags
+	rm ray_tracer *.png .tags

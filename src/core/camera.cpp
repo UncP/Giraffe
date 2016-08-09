@@ -32,24 +32,32 @@ PerspectiveCamera::PerspectiveCamera(	const Point3d  &ori,
 																			const double   fov)
 :Camera(ori, dir)
 {
-	Matrix cameraToScreen = perspective(fov, 0.01, 1000);
+	Matrix cameraToScreen = perspective(fov, 1, 1000);
 
-	Matrix screenToRaster =	scale(film.x_, film.y_, 1) *
-													scale(1.0/screen.x_, -1.0/screen.y_, 1) *
-													transform(Vector3d(0.5, -0.5, 0));
+	// std::cout << cameraToScreen;
+
+	Matrix screenToRaster =	scale(768.0, film.y_, 1)
+												* scale(1.0/screen.x_, -1.0/screen.y_, 1)
+												* transform(Vector3d(0.5, -0.5, 0));
 
 	Matrix cameraToRaster = cameraToScreen * screenToRaster;
 	rasterToCamera_ = inverse(cameraToRaster);
-	// Ray ray = generateRay(0, 0);
-	// std::cout << ray.ori_ << ray.dir_;
-	// Ray ray = generateRay(512, 512);
-	// std::cout << ray.ori_ << ray.dir_;
+	// std::cout << rasterToCamera_;
+
+	// Vector3d d1 = normalize(rasterToCamera_(Vector3d(0, 0, 0)));
+	// std::cout << d1;
+	// Vector3d d2 = normalize(rasterToCamera_(Vector3d(1, 0, 0)));
+	// std::cout << d2;
+	// Vector3d d3 = normalize(rasterToCamera_(Vector3d(0, 1, 0)));
+	// std::cout << d3;
+	// Vector3d d4 = normalize(rasterToCamera_(Vector3d(1, 1, 0)));
+	// std::cout << d4;
 }
 
-Ray PerspectiveCamera::generateRay(const double &x, const double &y) const
+Ray PerspectiveCamera::generateRay(const Point2d &sample) const
 {
-	Vector3d dir = rasterToCamera_(Vector3d(x, y, 0));
-	Ray ray(Point3d(0), normalize(dir));
+	Point3d dir(rasterToCamera_(Point3d(sample.x_, sample.y_, 0)));
+	Ray ray(Point3d(0), normalize(Vector3d(dir)));
 	return cameraToWorld_(ray);
 }
 

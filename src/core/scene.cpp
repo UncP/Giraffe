@@ -12,20 +12,20 @@
 static const int screenWidth = 512, screenHeight = 512;
 // static const int screenWidth = 1024, screenHeight = 768;
 static Camera *cam1 = new PerspectiveCamera(Point3d(0, 0, 0), 	\
-																						Vector3d(0, -0.07, -1.0),\
+																						Vector3d(0, 0, -1.0),\
 																						Point2i(screenWidth, screenHeight), \
 																						Point2i(screenWidth, screenHeight), \
-																						60);
+																						90);
 static std::vector<Object *> obj1 = {
-	new Sphere(Point3d(0, 1e5-40, -250),		1e5, 	Color(0.75)),
-	new Sphere(Point3d(0, 1e5+40, -250), 		1e5, 	Color(0.75)),
-	new Sphere(Point3d(0, 0, -1e5-300), 		1e5, 	Color(0.75)),
-	new Sphere(Point3d(0, 0, 1e5+50), 			1e5, 	Color(0)),
-	new Sphere(Point3d(-1e5-50, 0, -250), 	1e5, 	Color(0.75, 0.25, 0.25)),
-	new Sphere(Point3d(1e5+50, 0, -250),  	1e5, 	Color(0.25, 0.75, 0.25)),
-	new Sphere(Point3d(25.0, -24.5, -255.0),15.5,	Color(0.999), 		Vector3d(), 		kReflect),
-	new Sphere(Point3d(-20, -26.5, -215.0),	13.5,	Color(0.999), 		Vector3d(), 		kRefract),
-	new Sphere(Point3d(0, 839.8, -225.0), 	800, 	Color(1.0), 			Vector3d(8, 8, 8))
+	new Sphere(Point3d(0, 1e5-40, -125),		1e5, 	Color(0.75)),
+	new Sphere(Point3d(0, 1e5+40, -125), 		1e5, 	Color(0.75)),
+	new Sphere(Point3d(0, 0, -1e5-170), 		1e5, 	Color(0.75)),
+	new Sphere(Point3d(0, 0, 1e5+175), 			1e5, 	Color(0)),
+	new Sphere(Point3d(-1e5-50, 0, -125), 	1e5, 	Color(0.75, 0.25, 0.25)),
+	new Sphere(Point3d(1e5+50, 0, -125),  	1e5, 	Color(0.25, 0.75, 0.25)),
+	new Sphere(Point3d(-20, -24.5, -130.0),	15.5,	Color(0.999), 		Vector3d(), 		kReflect),
+	new Sphere(Point3d(25, -26.5, -90.0),		11.5,	Color(0.999), 		Vector3d(), 		kRefract),
+	new Sphere(Point3d(0, 839.8, -100.0), 	800, 	Color(1.0), 			Vector3d(8, 8, 8))
 };
 
 Scene Scene::CornellBox(Scene("cornell box", screenWidth, screenHeight, cam1, obj1));

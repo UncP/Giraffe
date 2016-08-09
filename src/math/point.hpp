@@ -119,6 +119,10 @@ class Point3
 		template <typename U>
 		Point3(const Vector3<U> &v):x_(v.x_), y_(v.y_), z_(v.z_) { }
 
+		template <typename U>
+		explicit operator Vector3<U>() const {
+			return Vector3<U>(x_, y_, z_);
+		}
 		bool operator==(const Point3<T> &p) const { return x_ == p.x_ && y_ == p.y_ && z_ == p.z_; }
 		bool operator!=(const Point3<T> &p) const { return !operator==(p); }
 

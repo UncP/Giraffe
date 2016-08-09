@@ -26,28 +26,8 @@ class Window
 {
 	public:
 		Window() = default;
-		Window(const std::string &title, const int width, const int height)
-			:title_(title), width_(width), height_(height), pixels_(new Vector3d[width_ * height_]) {
-			if (!pixels_) {
-				std::cerr << "颜色初始化失败 :(\n";
-				exit(-1);
-			}
 
-			if (SDL_Init(SDL_INIT_VIDEO)) {
-				std::cerr << "SDL_Init failed :(\n";
-				exit(-1);
-			}
-
-			screen_ = SDL_SetVideoMode(width_, height_, 32, SDL_SWSURFACE);
-			if (!screen_) {
-				SDL_Quit();
-				std::cerr << "SDL_SetVideoMode failed :(\n";
-				exit(-1);
-			}
-			canvas_ = static_cast<uint32_t *>(screen_->pixels);
-
-			SDL_WM_SetCaption(title_.c_str(), NULL);
-		}
+		Window(const std::string &, const int, const int);
 
 		void render(const Scene &, const int &);
 

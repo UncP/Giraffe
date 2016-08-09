@@ -17,12 +17,14 @@ class Sphere : public Object
 	public:
 		Sphere(	const Point3d &center,
 						const double 	radis,
-						const Vector3d &color 	 	= Vector3d(0),
-						const Vector3d &emission  = Vector3d(0),
+						const Vector3d &color 	 = Vector3d(0),
+						const Vector3d &emission = Vector3d(0),
 						const REFL &refl 		 = kDiffuse)
 		:c_(center), r_(radis), r2_(radis * radis), refl_(refl), color_(color), emission_(emission) {
-			if (emission_ == Vector3d(0)) emit_ = false;
-			else 											 emit_ = true;
+			if (emission_ == Vector3d(0))
+				emit_ = false;
+			else
+				emit_ = true;
 		}
 
 		void computeBox(std::vector<double> &near, std::vector<double> &far,
