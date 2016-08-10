@@ -89,7 +89,7 @@ void Mesh::load()
 
 			Face f;
 			for (size_t i = 0; i != 3; ++i) {
-				Point3i vi;
+				Point3i vi(0);
 				switch (format) {
 					case VERTEX_NORMAL:
 						sscanf(face_tokens[i].c_str(), formatVertexNormal, &vi.x_, &vi.y_);
@@ -99,7 +99,7 @@ void Mesh::load()
 						exit(-1);
 						break;
 				}
-				--vi.x_, --vi.y_;
+				--vi.x_, --vi.y_, --vi.z_;
 				f.v[i] = vi;
 			}
 			face.push_back(f);
@@ -190,7 +190,7 @@ bool Mesh::intersect(const Ray &ray, Isect &isect) const
 
 		if (t < isect.dis_) {
 			Point3d hitPos(ray.ori_ + ray.dir_ * t);
-			isect.update(t, this, hitPos, vertices_[triangles_[i].x_].normal_, kDiffuse, Vector3d(1),
+			isect.update(t, this, hitPos, vertices_[triangles_[i].x_].normal_, kDiffuse, Vector3d(.5),
 				false, Vector3d(1));
 			flag = true;
 		}

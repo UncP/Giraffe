@@ -106,7 +106,7 @@ class Vector3
 		T x_, y_, z_;
 
 		Vector3():x_(0), y_(0), z_(0) { }
-		Vector3(const T &t):x_(t), y_(t), z_(t) { }
+		explicit Vector3(const T &t):x_(t), y_(t), z_(t) { }
 		Vector3(const T &x, const T &y, const T &z):x_(x), y_(y), z_(z) { }
 		Vector3(const Vector3<T> &v):x_(v.x_), y_(v.y_), z_(v.z_) { }
 		Vector3<T>& operator=(const Vector3<T> &v) {

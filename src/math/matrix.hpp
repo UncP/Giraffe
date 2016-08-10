@@ -13,7 +13,7 @@
 #include "constant.hpp"
 #include "point.hpp"
 #include "vector.hpp"
-#include "ray.hpp"
+// #include "ray.hpp"
 
 class Matrix
 {
@@ -44,7 +44,7 @@ class Matrix
 		inline Vector3<T> operator()(const Vector3<T> &) const;
 		template <typename T>
 		inline Point3<T> 	operator()(const Point3<T> &) const;
-		inline Ray 	 			operator()(const Ray &) const;
+		// inline Ray 	 			operator()(const Ray &) const;
 
 		friend std::ostream& operator<<(std::ostream &os, const Matrix &m) {
 			os << "Matrix\n";
@@ -67,8 +67,7 @@ Matrix rotateZ(const double);
 Matrix perspective(const double, const double, const double);
 
 template <typename T>
-inline Vector3<T> Matrix::operator()(const Vector3<T> &p) const
-{
+inline Vector3<T> Matrix::operator()(const Vector3<T> &p) const {
 	double x = m_[0][0] * p.x_ + m_[1][0] * p.y_ + m_[2][0] * p.z_ + m_[3][0];
 	double y = m_[0][1] * p.x_ + m_[1][1] * p.y_ + m_[2][1] * p.z_ + m_[3][1];
 	double z = m_[0][2] * p.x_ + m_[1][2] * p.y_ + m_[2][2] * p.z_ + m_[3][2];
@@ -76,8 +75,7 @@ inline Vector3<T> Matrix::operator()(const Vector3<T> &p) const
 }
 
 template <typename T>
-inline Point3<T> Matrix::operator()(const Point3<T> &v) const
-{
+inline Point3<T> Matrix::operator()(const Point3<T> &v) const {
 	double x = m_[0][0] * v.x_ + m_[1][0] * v.y_ + m_[2][0] * v.z_ + m_[3][0];
 	double y = m_[0][1] * v.x_ + m_[1][1] * v.y_ + m_[2][1] * v.z_ + m_[3][1];
 	double z = m_[0][2] * v.x_ + m_[1][2] * v.y_ + m_[2][2] * v.z_ + m_[3][2];
@@ -90,11 +88,6 @@ inline Point3<T> Matrix::operator()(const Point3<T> &v) const
 		z *= invW;
 	}
 	return Point3<T>(x, y, z);
-}
-
-inline Ray Matrix::operator()(const Ray &ray) const
-{
-	return Ray((*this)(ray.ori_), (*this)(ray.dir_));
 }
 
 #endif /* _MATRIX_HPP_ */

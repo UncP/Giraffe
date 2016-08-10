@@ -26,8 +26,9 @@ static bool _intersect(const double o, const double f, const double s, const dou
 bool Box::intersect(const Ray &ray, Isect &isect) const
 {
 	double near = -kInfinity, far = kInfinity;
-	double no[near_.size()], nd[near_.size()];
-	for (size_t i = 0, end = near_.size(); i != end; ++i) {
+	size_t size = near_.size();
+	double no[size], nd[size];
+	for (size_t i = 0; i != size; ++i) {
 		no[i] = proj(ray.ori_, NormalSet[i]);
 		nd[i] = dot(ray.dir_, NormalSet[i]);
 	}

@@ -22,20 +22,17 @@ void test(Scene &scene, int samples, bool accelerate)
 
 int main(int argc, char **argv)
 {
-	// test(Scene::MotionBlur, argc >= 2 ? atoi(argv[1]) : 4, 0);
 	// test(Scene::DepthOfField, argc >= 2 ? atoi(argv[1]) : 4, argc == 3);
-	test(Scene::CornellBox, argc == 2 ? atoi(argv[1]) : 4, argc == 3);
-	return 0;
-	std::vector<Object *> obj = {
-		new Mesh("cube"),
-		// new Sphere(       Vec(0, 30, 0),  10,  Vec(1.0), Vec(4, 4, 4))
-	};
-/*
-	Camera *cam = new OrthographicCamera(Vec(10, 0, 10), Vec(-0.5, 0, -1), Vec(0, 1, 0),
-		5, 5, 512, 512);
+	// test(Scene::CornellBox, argc == 2 ? atoi(argv[1]) : 4, argc == 3);
+	// return 0;
+	Camera *cam = new PerspectiveCamera(Point3d(0, 0, 3), 	\
+																			Vector3d(0, 0, -1.0),\
+																			Point2i(512, 512), \
+																			Point2i(512, 512), \
+																			90);
+	std::vector<Object *> obj = { new Mesh("cube") };
 	Scene s("mesh", 512, 512, cam, obj);
-	// s.accelerate();
 	test(s, 4, 0);
-*/
+
 	return 0;
 }
