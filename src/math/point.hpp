@@ -94,9 +94,10 @@ class Point2
 		}
 };
 
-typedef Point2<double>	Point2d;
-typedef Point2<float>		Point2f;
-typedef Point2<int> 		Point2i;
+typedef Point2<double>				Point2d;
+typedef Point2<float>					Point2f;
+typedef Point2<int> 					Point2i;
+typedef Point2<unsigned int> 	Point2u;
 
 template <typename T>
 class Point3

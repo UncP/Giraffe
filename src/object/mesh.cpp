@@ -9,20 +9,20 @@
 
 #include "mesh.hpp"
 
-enum ObjFormat { VERTEX_ONLY = 0, VERTEX_UV, VERTEX_NORMAL, VERTEX_UV_NORMAL };
+enum ObjFormat { None, VERTEX_ONLY, VERTEX_UV, VERTEX_NORMAL, VERTEX_UV_NORMAL };
 
 std::ostream& Mesh::print(std::ostream &os) const
 {
-	os << "vertexes\n";
-	for (size_t i = 0; i != vertices_.size(); ++i)
-		os << vertices_[i];
+	os << "vertices\n";
+	for (size_t i = 0; i != vertexes_.size(); ++i)
+		os << vertexes_[i];
 	os << "triangles\n";
 	for (size_t i = 0; i != triangles_.size(); ++i)
 		os << triangles_[i];
 	return os;
 }
 
-void Mesh::load()
+void Mesh::_load()
 {
 	std::ifstream in(std::string("../models/" + name_ + ".obj").c_str());
 	if (!in.is_open()) {
@@ -30,15 +30,8 @@ void Mesh::load()
 		exit(-1);
 	}
 
-	static const char *formatVertexNormal = "%d//%d";
-
-	std::vector<Point3d> 	pos;
-	std::vector<Vector3d>	norm;
-
-	struct Face { Point3i v[3]; };
-	std::vector<Face> face;
-
-	ObjFormat format;
+	std::vector<Vector3d> normal;
+	ObjFormat format = None;
 
 	std::string buf, token;
 	uint32_t lineNum = 0;
@@ -54,7 +47,7 @@ void Mesh::load()
 				std::cerr << "postion syntax error in line " << lineNum << std::endl;
 				exit(-1);
 			}
-			pos.push_back(v);
+			vertexes_.push_back(Vertex(v));
 		} else if (token == "vn") {
 			Vector3d n;
 			line >> n.x_ >> n.y_ >> n.z_;
@@ -62,7 +55,7 @@ void Mesh::load()
 				std::cerr << "normal syntax error in line " << lineNum << std::endl;
 				exit(-1);
 			}
-			norm.push_back(n);
+			normal.push_back(n);
 		} else if (token == "f") {
 			std::vector<std::string> face_tokens;
 			while (true) {
@@ -72,7 +65,7 @@ void Mesh::load()
 				face_tokens.push_back(s);
 			}
 
-			if (!face.size()) {
+			if (!format) {
 				token = face_tokens[0];
 				if (token.find("//") != std::string::npos) {
 					format = VERTEX_NORMAL;
@@ -87,76 +80,49 @@ void Mesh::load()
 				exit(-1);
 			}
 
-			Face f;
+			Triangle tri;
+			Point3u p;
+			int n[3] = {0, 0, 0}, t[3] = {0, 0, 0};
 			for (size_t i = 0; i != 3; ++i) {
-				Point3i vi(0);
 				switch (format) {
 					case VERTEX_NORMAL:
-						sscanf(face_tokens[i].c_str(), formatVertexNormal, &vi.x_, &vi.y_);
+						sscanf(face_tokens[i].c_str(), "%d//%d", &p[i], &n[i]);
 						break;
 					default:
 						std::cerr << "face type not supported :(\n";
 						exit(-1);
 						break;
 				}
-				--vi.x_, --vi.y_, --vi.z_;
-				f.v[i] = vi;
+				--p[i], --n[i], --t[i];
 			}
-			face.push_back(f);
+			if (n[0] != n[1] || n[0] != n[2]) {
+				std::cerr << "invalid normal index in face :(\n";
+				exit(-1);
+			}
+			tri.setVertex(p);
+			tri.setNormal(normal[n[0]]);
+			triangles_.push_back(tri);
 		}
 		line.clear();
 		token.clear();
 	}
 
-	int vertexNum = pos.size();
-	int normalNum = norm.size();
-	for (size_t i = 0, end = face.size(); i != end; ++i) {
-		const Face &f = face[i];
-		for (size_t j = 0; j != 3; ++j) {
-			int vi = f.v[i][0];
-			int ni = f.v[i][1];
-			if (vi >= vertexNum || ni < -1 || ni >= normalNum) {
-				std::cerr << "invalid index in face :(\n";
-				exit(-1);
-			}
+	size_t max = vertexes_.size();
+	for (size_t i = 0, end = triangles_.size(); i != end; ++i) {
+		const Triangle &tri = triangles_[i];
+		if (tri.vex(0) >= max || tri.vex(1) >= max || tri.vex(2) >= max) {
+			std::cerr << "invalid vertice index :(\n";
+			exit(-1);
 		}
 	}
-
-	triangles_.reserve(face.size());
-	vertices_.reserve(face.size() * 2);
-
-	std::map<Point3i, unsigned int> map;
-	std::pair<std::map<Point3i, unsigned int>::iterator, bool> insert;
-
-	unsigned int index = 0;
-
-	for (size_t i = 0, end = face.size(); i != end; ++i) {
-		const Face &f = face[i];
-		Point3u tri;
-		for (size_t j = 0; j != 3; ++j) {
-			insert = map.insert({f.v[j], index});
-			if (insert.second) {
-				const Point3i &v = f.v[j];
-				Vertex vertex;
-				vertex.position_ = pos[v[0]];
-				vertex.normal_ 	 = (v[1] == -1) ? Vector3d(0) : norm[v[1]];
-				vertices_.push_back(vertex);
-				++index;
-			}
-			tri[j] = insert.first->second;
-		}
-		triangles_.push_back(tri);
-	}
-
-	assert(vertices_.size() == (2 * triangles_.size()));
 }
 
 void Mesh::computeBox(std::vector<double> &near, std::vector<double> &far,
 	const Vector3d *normal) const
 {
 	for (size_t i = 0, iEnd = near.size(); i != iEnd; ++i)
-		for (size_t j = 0, jEnd = vertices_.size(); j != jEnd; ++j) {
-			double dis = proj(vertices_[j].position_, normal[i]);
+		for (size_t j = 0, jEnd = vertexes_.size(); j != jEnd; ++j) {
+			double dis = proj(vertexes_[j].pos(), normal[i]);
 			if (dis < near[i]) near[i] = dis;
 			if (dis > far[i]) far[i] = dis;
 		}
@@ -166,9 +132,10 @@ bool Mesh::intersect(const Ray &ray, Isect &isect) const
 {
 	bool flag = false;
 	for (size_t i = 0, end = triangles_.size(); i != end; ++i) {
-		const Point3d &a = vertices_[triangles_[i].x_].position_;
-		const Point3d &b = vertices_[triangles_[i].y_].position_;
-		const Point3d &c = vertices_[triangles_[i].z_].position_;
+		const Triangle &tri = triangles_[i];
+		const Point3d &a = vertexes_[tri.vex(0)].pos();
+		const Point3d &b = vertexes_[tri.vex(1)].pos();
+		const Point3d &c = vertexes_[tri.vex(2)].pos();
 
 		Vector3d a_b	(a - b);
 		Vector3d a_c	(a - c);
@@ -190,7 +157,7 @@ bool Mesh::intersect(const Ray &ray, Isect &isect) const
 
 		if (t < isect.dis_) {
 			Point3d hitPos(ray.ori_ + ray.dir_ * t);
-			isect.update(t, this, hitPos, vertices_[triangles_[i].x_].normal_, kDiffuse, Vector3d(.5),
+			isect.update(t, this, hitPos, triangles_[i].norm(), kDiffuse, Vector3d(.5),
 				false, Vector3d(1));
 			flag = true;
 		}
@@ -198,7 +165,50 @@ bool Mesh::intersect(const Ray &ray, Isect &isect) const
 	return flag;
 }
 
+void Mesh::traverseOfVertex() const
+{
+	for (size_t i = 0; i != vertexes_.size(); ++i) {
+		Point2i p = vertexes_[i].tri();
+		std::cout << "i = " << i << std::endl;
+		Point2i pp = p;
+		for (;;) {
+			std::cout << pp.x_ << " " << pp.y_ << std::endl;
+			// pp = triangles_[p.x_].nbr(p.y_);
+			int32_t index = triangles_[pp.x_].nbr(pp.y_);
+			pp = Point2i(index, pp.y_);
+			if (pp == p) break;
+			getchar();
+		}
+		std::cout << std::endl;
+	}
+}
+
+void Mesh::_prepare()
+{
+	int count = 0, total = triangles_.size() * 3 / 2;
+	for (auto i = triangles_.begin(); i != triangles_.end(); ++i) {
+		for (size_t m = 0; m != 3; ++m) {
+			std::pair<unsigned int, unsigned int> p1(i->vex(m), i->vex((m+1)%3));
+			for (auto j = i + 1; j != triangles_.end(); ++j) {
+				for (size_t n = 0; n != 3; ++n) {
+					std::pair<unsigned int, unsigned int> p2(j->vex((n+1)%3), j->vex(n));
+					if (p1 == p2) {
+						vertexes_[i->vex(m)].setTriangle(std::distance(triangles_.begin(), i), m);
+						i->setNeighbor(std::distance(triangles_.begin(), j), m);
+						j->setNeighbor(std::distance(triangles_.begin(), i), n);
+						if (++count == total) goto end;
+					}
+				}
+			}
+		}
+	}
+end:
+	return ;
+}
+
 void Mesh::subdivide()
 {
-
+	_prepare();
+	std::cout << this;
+	traverseOfVertex();
 }
