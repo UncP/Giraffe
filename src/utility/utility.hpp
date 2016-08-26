@@ -13,52 +13,34 @@
 #include "../math/constant.hpp"
 #include "../math/vector.hpp"
 #include "../math/point.hpp"
-
-enum REFL { kDiffuse, kReflect, kRefract };
-
-enum Plane { Xaxis = 0, Yaxis, Zaxis};
-
-const uint8_t kNormalNumber = 7, kAABBNumber = 3, kDOPNumber = kNormalNumber;
-
-const Vector3d NormalSet[kNormalNumber] = {
-	Vector3d(1, 0, 0),
-	Vector3d(0, 1, 0),
-	Vector3d(0, 0, 1),
-	Vector3d( std::sqrt(3)/3.0,  std::sqrt(3)/3.0, std::sqrt(3)/3.0),
-	Vector3d(-std::sqrt(3)/3.0,  std::sqrt(3)/3.0, std::sqrt(3)/3.0),
-	Vector3d(-std::sqrt(3)/3.0, -std::sqrt(3)/3.0, std::sqrt(3)/3.0),
-	Vector3d( std::sqrt(3)/3.0, -std::sqrt(3)/3.0, std::sqrt(3)/3.0)
-};
-
-class Object;
+#include "../core/texture.hpp"
 
 class Isect
 {
 	public:
 		Isect():dis_(kInfinity) { }
 
-		inline void update(const double &d, const Object *o, const Point3d &p, const Vector3d &n,
-			const REFL &r, const Vector3d &c, const bool &emit, const Vector3d &e) {
+		inline void update(	const double &d, const Point3d &p, const Vector3d &n,
+												const Texture *t) {
 			dis_ 			= d;
-			object_ 	= o;
 			position_ = p;
 			normal_ 	= n;
-			refl_ 		= r;
-			color_ 		= c;
-			emit_ 		= emit;
-			emission_ = e;
+			texture_  = t;
 		}
 
-		bool miss() { return dis_ == kInfinity; }
+		bool miss() const { return dis_ == kInfinity; }
+		const double distance() { return dis_; }
+		const Point3d& position() const { return position_; }
+		const Vector3d& normal() const { return normal_; }
+		Vector3d evaluate() const { return texture_->evaluate(position_); }
+		REFL refl() const { return texture_->refl(); }
+		const Vector3d& emission() const { return texture_->emission(); }
 
-		double	dis_;
-		const Object *object_;
-		Point3d 		position_;
-		Vector3d 		normal_;
-		REFL 				refl_;
-		Vector3d 		color_;
-		bool 				emit_;
-		Vector3d 		emission_;
+	private:
+		double	       dis_;
+		Point3d 		   position_;
+		Vector3d 		   normal_;
+		const Texture *texture_;
 };
 
 #endif /* _UITLITY_HPP_ */

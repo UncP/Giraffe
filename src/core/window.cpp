@@ -79,7 +79,8 @@ void Window::show() const
 	getchar();
 }
 
-void Window::save_ppm() const {
+void Window::save_ppm() const
+{
 	char file[32];
 	strcpy(file, title_.c_str());
 	strcat(file, ".png");

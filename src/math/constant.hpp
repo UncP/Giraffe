@@ -19,6 +19,10 @@ const double kInfinity = std::numeric_limits<double>::max();
 const double kRefractionRatio = 1.5;
 const double kEpsilon = 1e-4;
 
+enum REFL { kDiffuse, kReflect, kRefract };
+
+enum Plane { Xaxis = 0, Yaxis, Zaxis};
+
 #define radian(angle) (angle * (PI / 180.0))
 
 #endif /* _CONSTANT_HPP_ */

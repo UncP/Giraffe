@@ -233,4 +233,9 @@ inline double proj(const Point3<T> &p, const Vector3<T> &v) {
 	return p.x_ * v.x_ + p.y_ * v.y_ + p.z_ * v.z_;
 }
 
+template <typename U, typename T>
+Point3<T> operator*(const U u, const Point3<T> &p) {
+	return p * u;
+}
+
 #endif /* _POINT_HPP_ */

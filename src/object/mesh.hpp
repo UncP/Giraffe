@@ -14,97 +14,96 @@
 #include <vector>
 #include <fstream>
 #include <sstream>
-#include <map>
-#include <iterator>
+#include <set>
 #include <cassert>
 
 #include "object.hpp"
 
-class Triangle
+class MeshTriangle;
+class MeshEdge;
+
+class MeshVertex
 {
 	public:
-		typedef std::vector<int32_t> Neighbor;
+		MeshVertex(const Point3f &pos):pos_(pos) { }
 
-		Triangle() { nbr_ = {0, 0, 0}; /* nbr_.reserve(3); */ }
+		const Point3f& pos() const { return pos_; }
 
-		const unsigned int vex(int i) const {
-			assert(i >= 0 && i < 3);
-			if (i == 0) return vex_[0];
-			if (i == 1) return vex_[1];
-			return vex_[2];
-		}
-		const Vector3d& norm() const { return norm_; }
-/*
-		const Point2i  nbr(int i) const {
-			assert(i >= 0 && i < 3);
-			return Point2i(nbr_[i] & 0x3FFFFFFF, (nbr_[i] >> 30) & 0x3);
-		}
-*/
-		const int32_t nbr(int i) const {
-			assert(i >= 0 && i < 3);
-			return nbr_[i];
-		}
+		void setEdge(MeshEdge *e) { edge_ = e; }
 
-		void setNormal(const Vector3d &norm) { norm_ = norm; }
-		void setVertex(const Point3u &vex) 	 { vex_ = vex; }
-		void setNeighbor(const int32_t triIndex, const int32_t seq) {
-			// nbr_.push_back(triIndex | (seq << 30));
-			assert(seq >= 0 && seq < 3);
-			nbr_[seq] = triIndex;
+		bool operator==(const MeshVertex &v) const {
+			return pos_ == v.pos_;
+		}
+		bool operator<(const MeshVertex &v) const {
+			return pos_ < v.pos_;
 		}
 
 	friend
-		std::ostream& operator<<(std::ostream &os, const Triangle &tri) {
-			return os << tri.vex_ << tri.nbr(0) << " " << tri.nbr(1) << " " << tri.nbr(2) << std::endl;
-			// return os << tri.vex_ << tri.nbr(0).x_ << " " << tri.nbr(0).y_ << "  "
-			// 											<< tri.nbr(1).x_ << " " << tri.nbr(1).y_ << "  "
-			// 											<< tri.nbr(2).x_ << " " << tri.nbr(2).y_ << std::endl;
+		std::ostream& operator<<(std::ostream &os, const MeshVertex &v) {
+			return os << v.pos_;
 		}
-
 	private:
-		Point3u 	vex_;
-		Vector3d	norm_;
-		Neighbor	nbr_;
+		Point3f 			pos_;
+		MeshEdge 		 *edge_ = nullptr;
 };
 
-class Vertex
+class MeshTriangle
 {
 	public:
-		Vertex(const Point3d &pos):pos_(pos), tri_(-1) { }
-		const Point3d& pos() const { return pos_; }
-		const Point2i tri() const {
-			return Point2i(tri_ & 0x3FFFFFFF, (tri_ >> 30) & 0x3);
-		}
-		void setTriangle(const int32_t triIndex, const int32_t index) {
-			if (tri_ != -1) return ;
-			tri_ = triIndex | (index << 30);
-		}
-	friend
-		std::ostream& operator<<(std::ostream &os, const Vertex &vex) {
-			return os << vex.pos_ << vex.tri().x_ << " " << vex.tri().y_ << std::endl;
-		}
+		MeshTriangle(const Vector3f &normal):normal_(normal){ }
+
+		void setEdge(MeshEdge *e) { edge_ = e; }
 
 	private:
-		Point3d  pos_;
-		int32_t	 tri_;
+		Vector3f 		 normal_;
+		MeshEdge 		 *edge_ = nullptr;
+};
+
+class MeshEdge
+{
+	public:
+		MeshEdge(MeshVertex *head, MeshVertex *tail):head_(head), tail_(tail) { }
+
+		void setFace(MeshTriangle *t) {
+			if (!left_) left_  = t;
+			else 				right_ = t; }
+
+		bool operator<(const MeshEdge &e) const {
+			if (*head_ == *e.head_) return *tail_ < *e.tail_;
+			return *head_ < *e.head_;
+		}
+
+		MeshEdge& operator=(const MeshEdge &e) {
+			lprev_ = e.lprev_, lnext_ = e.lnext_, rprev_ = e.rprev_, rnext_ = e.rnext_;
+			head_ = e.head_, tail_  = e.tail_;
+			left_ = e.left_, right_ = e.right_;
+			return *this;
+		}
+
+	friend
+		std::ostream& operator<<(std::ostream &os, const MeshEdge &edge) {
+			return os << "head " << *edge.head_ << "tail " << *edge.tail_;
+		}
+	private:
+		MeshEdge		 *lprev_ = nullptr, *lnext_ = nullptr, *rprev_ = nullptr, *rnext_ = nullptr;
+		MeshVertex	 *head_ = nullptr, *tail_ = nullptr;
+		MeshTriangle *left_ = nullptr, *right_ = nullptr;
 };
 
 class Mesh : public Object
 {
 	public:
 		Mesh(const char *name):name_(std::string(name)) {
-			_load();
+			load();
 		}
 
 		void subdivide();
 
 		bool intersect(const Ray &, Isect &) const override;
 
-		void computeBox(std::vector<double> &, std::vector<double> &, const Vector3d *) const;
+		// void computeBox(std::vector<double> &, std::vector<double> &, const Vector3d *) const;
 
 		std::ostream& print(std::ostream &) const override;
-
-		void traverseOfVertex() const;
 
 		Mesh(const Mesh &) = delete;
 		Mesh& operator=(const Mesh &) = delete;
@@ -112,11 +111,11 @@ class Mesh : public Object
 		~Mesh() { }
 
 	private:
-		std::string						name_;
-		std::vector<Vertex> 	vertexes_;
-		std::vector<Triangle>	triangles_;
-		void _load();
-		void _prepare();
+		std::string									name_;
+		std::vector<MeshVertex *> 	vertexes_;
+		std::vector<MeshTriangle *> triangles_;
+		std::set<MeshEdge> 					edges_;
+		void load();
 };
 
 #endif /* _MESH_HPP_ */

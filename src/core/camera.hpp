@@ -38,8 +38,6 @@ class PerspectiveCamera : public Camera
 
 		Ray generateRay(const Point2d &) const override;
 
-		~PerspectiveCamera() { }
-
 	private:
 		Matrix rasterToCamera_;
 };
@@ -51,8 +49,6 @@ class OrthographicCamera : public Camera
 			const int &w = 100, const int &h = 100, const int &width = 512, const int &height = 512);
 
 		Ray generateRay(const Point2d &) const override;
-
-		~OrthographicCamera() { }
 
 	private:
 };

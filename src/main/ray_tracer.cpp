@@ -7,31 +7,59 @@
  *    > Created Time: 2016-06-30 08:52:52
 **/
 
+#include <memory>
+
 #include "../core/scene.hpp"
 #include "../core/window.hpp"
 #include "../object/mesh.hpp"
 
-void test(Scene &scene, int samples, bool accelerate)
+void test(int samples)
 {
+	int screenWidth = 512, screenHeight = 512;
 
-	// if (accelerate) scene.accelerate();
+	Camera *cam = new PerspectiveCamera(Point3d(0, 0, 0), 	\
+																			Vector3d(0, 0, -1.0),\
+																			Point2i(screenWidth, screenHeight), \
+																			Point2i(screenWidth, screenHeight), \
+																			90);
 
-	Window win(scene.name(), scene.width(), scene.height());
-	win.render(scene, samples);
+	std::shared_ptr<Texture> wall1 = std::shared_ptr<Texture>(
+		new ConstantTexture(Color(0.75)));
+	std::shared_ptr<Texture> wall2 = std::shared_ptr<Texture>(
+		new ConstantTexture(Color(0)));
+	std::shared_ptr<Texture> wall3 = std::shared_ptr<Texture>(
+		new ConstantTexture(Color(0.75, 0.25, 0.25)));
+	std::shared_ptr<Texture> wall4 = std::shared_ptr<Texture>(
+		new ConstantTexture(Color(0.25, 0.75, 0.25)));
+	std::shared_ptr<Texture> sphere1 = std::shared_ptr<Texture>(
+		new NoiseTexture(Color(), Color(1), 0.1));
+		// new StripeTexture(Color(), Color(1), Yaxis, 6));
+	std::shared_ptr<Texture> sphere2 = std::shared_ptr<Texture>(
+		new NoiseTexture(Color(1, 0, 0), Color(0, 0, 1), 0.1));
+		// new StripeTexture(Color(), Color(1), Xaxis, 3));
+	std::shared_ptr<Texture> light = std::shared_ptr<Texture>(
+		new ConstantTexture(Color(0.999), Color(12, 12, 12)));
+
+	std::vector<Object *> obj = {
+		new Sphere(Point3d(0, 1e5-60, -160),		1e5, 	wall1),
+		new Sphere(Point3d(0, 1e5+60, -160), 		1e5, 	wall1),
+		new Sphere(Point3d(0, 0, -1e5-225), 		1e5, 	wall1),
+		new Sphere(Point3d(0, 0, 1e5+125), 			1e5, 	wall2),
+		new Sphere(Point3d(-1e5-70, 0, -175), 	1e5, 	wall3),
+		new Sphere(Point3d(1e5+70, 0, -175),  	1e5, 	wall4),
+		new Sphere(Point3d(-33, -40, -185.0),		20,		sphere1),
+		new Sphere(Point3d(37, -44, -145.0),		16,		sphere2),
+		new Sphere(Point3d(0, 959.8, -160.0), 	900, 	light)
+	};
+
+	Scene CornellBox("cornell box", cam, obj);
+
+	Window win(CornellBox.name(), screenWidth, screenHeight);
+	win.render(CornellBox, samples);
 }
 
 int main(int argc, char **argv)
 {
-	// test(Scene::DepthOfField, argc >= 2 ? atoi(argv[1]) : 4, argc == 3);
-	// test(Scene::CornellBox, argc == 2 ? atoi(argv[1]) : 4, argc == 3);
-	// return 0;
-
-	//Camera *cam = new PerspectiveCamera(Point3d(0, 0, 3), Vector3d(0, 0, -1.0), Point2i(512, 512),
-	//																		Point2i(512, 512), 90);
-	Mesh *mesh = new Mesh("cube");
-	mesh->subdivide();
-	// Scene s("mesh", 512, 512, cam, obj);
-	// test(s, 4, 0);
-
+	test(argc == 2 ? atoi(argv[1]) : 4);
 	return 0;
 }

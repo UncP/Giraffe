@@ -9,20 +9,21 @@
 
 #include "mesh.hpp"
 
+#define  NEXT(i) ((i+1)%3)
+#define  PREV(i) ((i+2)%3)
+
 enum ObjFormat { None, VERTEX_ONLY, VERTEX_UV, VERTEX_NORMAL, VERTEX_UV_NORMAL };
 
-std::ostream& Mesh::print(std::ostream &os) const
+std::ostream& Mesh::print(std::ostream & os) const
 {
-	os << "vertices\n";
-	for (size_t i = 0; i != vertexes_.size(); ++i)
-		os << vertexes_[i];
-	os << "triangles\n";
-	for (size_t i = 0; i != triangles_.size(); ++i)
-		os << triangles_[i];
+	os << "edge size: " << edges_.size() << std::endl;
+	for (auto &each : edges_) {
+		os << each;
+	}
 	return os;
 }
 
-void Mesh::_load()
+void Mesh::load()
 {
 	std::ifstream in(std::string("../models/" + name_ + ".obj").c_str());
 	if (!in.is_open()) {
@@ -30,7 +31,7 @@ void Mesh::_load()
 		exit(-1);
 	}
 
-	std::vector<Vector3d> normal;
+	std::vector<Vector3f> normal;
 	ObjFormat format = None;
 
 	std::string buf, token;
@@ -41,15 +42,15 @@ void Mesh::_load()
 		++lineNum;
 
 		if (token == "v") {
-			Point3d v;
+			Point3f v;
 			line >> v.x_ >> v.y_ >> v.z_;
 			if (line.fail()) {
 				std::cerr << "postion syntax error in line " << lineNum << std::endl;
 				exit(-1);
 			}
-			vertexes_.push_back(Vertex(v));
+			vertexes_.push_back(new MeshVertex(v));
 		} else if (token == "vn") {
-			Vector3d n;
+			Vector3f n;
 			line >> n.x_ >> n.y_ >> n.z_;
 			if (line.fail()) {
 				std::cerr << "normal syntax error in line " << lineNum << std::endl;
@@ -80,9 +81,8 @@ void Mesh::_load()
 				exit(-1);
 			}
 
-			Triangle tri;
-			Point3u p;
-			int n[3] = {0, 0, 0}, t[3] = {0, 0, 0};
+			int p[3] = {0, 0, 0};
+			int n[3] = {0, 0, 0};
 			for (size_t i = 0; i != 3; ++i) {
 				switch (format) {
 					case VERTEX_NORMAL:
@@ -93,32 +93,38 @@ void Mesh::_load()
 						exit(-1);
 						break;
 				}
-				--p[i], --n[i], --t[i];
+				--p[i], --n[i];
 			}
 			if (n[0] != n[1] || n[0] != n[2]) {
 				std::cerr << "invalid normal index in face :(\n";
 				exit(-1);
 			}
-			tri.setVertex(p);
-			tri.setNormal(normal[n[0]]);
-			triangles_.push_back(tri);
+			MeshTriangle *triangle = new MeshTriangle(normal[n[0]]);
+			triangles_.push_back(triangle);
+			for (size_t i = 0; i != 3; ++i) {
+				MeshVertex *h = vertexes_[p[i]], *t = vertexes_[p[(i+1)%3]];
+				if (h < t) std::swap(h, t);
+				MeshEdge edge(h, t);
+				auto iter = edges_.find(edge);
+				if (iter == edges_.end()) {
+					edges_.insert(edge);
+					edge.setFace(triangle);
+				} else {
+					edge = *iter;
+					edge.setFace(triangle);
+				}
+				if (!i) triangle->setEdge(&edge);
+			}
 		}
 		line.clear();
 		token.clear();
 	}
-
-	size_t max = vertexes_.size();
-	for (size_t i = 0, end = triangles_.size(); i != end; ++i) {
-		const Triangle &tri = triangles_[i];
-		if (tri.vex(0) >= max || tri.vex(1) >= max || tri.vex(2) >= max) {
-			std::cerr << "invalid vertice index :(\n";
-			exit(-1);
-		}
-	}
+	assert((3 * triangles_.size()) == (2 * edges_.size()));
 }
 
+/*
 void Mesh::computeBox(std::vector<double> &near, std::vector<double> &far,
-	const Vector3d *normal) const
+	const Vector3f *normal) const
 {
 	for (size_t i = 0, iEnd = near.size(); i != iEnd; ++i)
 		for (size_t j = 0, jEnd = vertexes_.size(); j != jEnd; ++j) {
@@ -127,22 +133,24 @@ void Mesh::computeBox(std::vector<double> &near, std::vector<double> &far,
 			if (dis > far[i]) far[i] = dis;
 		}
 }
+*/
 
 bool Mesh::intersect(const Ray &ray, Isect &isect) const
 {
+/*
 	bool flag = false;
 	for (size_t i = 0, end = triangles_.size(); i != end; ++i) {
-		const Triangle &tri = triangles_[i];
-		const Point3d &a = vertexes_[tri.vex(0)].pos();
-		const Point3d &b = vertexes_[tri.vex(1)].pos();
-		const Point3d &c = vertexes_[tri.vex(2)].pos();
+		const MeshTriangle &tri = triangles_[i];
+		const Point3f &a = vertexes_[tri.vex(0)].pos();
+		const Point3f &b = vertexes_[tri.vex(1)].pos();
+		const Point3f &c = vertexes_[tri.vex(2)].pos();
 
-		Vector3d a_b	(a - b);
-		Vector3d a_c	(a - c);
-		Vector3d a_pos(a - ray.ori_);
+		Vector3f a_b	(a - b);
+		Vector3f a_c	(a - c);
+		Vector3f a_pos(a - ray.ori_);
 
-		Vector3d a_bCross_a_pos(cross(a_b, a_pos));
-		Vector3d a_cCross_dir	 (cross(a_c, ray.dir_));
+		Vector3f a_bCross_a_pos(cross(a_b, a_pos));
+		Vector3f a_cCross_dir	 (cross(a_c, ray.dir_));
 
 		double m = 1.0 / dot(a_b, a_cCross_dir);
 
@@ -156,59 +164,18 @@ bool Mesh::intersect(const Ray &ray, Isect &isect) const
 		if (v < 0.0 || v > (1.0 - u)) continue;
 
 		if (t < isect.dis_) {
-			Point3d hitPos(ray.ori_ + ray.dir_ * t);
-			isect.update(t, this, hitPos, triangles_[i].norm(), kDiffuse, Vector3d(.5),
-				false, Vector3d(1));
+			Point3f hitPos(ray.ori_ + ray.dir_ * t);
+			isect.update(t, this, hitPos, triangles_[i].norm(), kDiffuse, Vector3f(.5),
+				false, Vector3f(1));
 			flag = true;
 		}
 	}
 	return flag;
-}
-
-void Mesh::traverseOfVertex() const
-{
-	for (size_t i = 0; i != vertexes_.size(); ++i) {
-		Point2i p = vertexes_[i].tri();
-		std::cout << "i = " << i << std::endl;
-		Point2i pp = p;
-		for (;;) {
-			std::cout << pp.x_ << " " << pp.y_ << std::endl;
-			// pp = triangles_[p.x_].nbr(p.y_);
-			int32_t index = triangles_[pp.x_].nbr(pp.y_);
-			pp = Point2i(index, pp.y_);
-			if (pp == p) break;
-			getchar();
-		}
-		std::cout << std::endl;
-	}
-}
-
-void Mesh::_prepare()
-{
-	int count = 0, total = triangles_.size() * 3 / 2;
-	for (auto i = triangles_.begin(); i != triangles_.end(); ++i) {
-		for (size_t m = 0; m != 3; ++m) {
-			std::pair<unsigned int, unsigned int> p1(i->vex(m), i->vex((m+1)%3));
-			for (auto j = i + 1; j != triangles_.end(); ++j) {
-				for (size_t n = 0; n != 3; ++n) {
-					std::pair<unsigned int, unsigned int> p2(j->vex((n+1)%3), j->vex(n));
-					if (p1 == p2) {
-						vertexes_[i->vex(m)].setTriangle(std::distance(triangles_.begin(), i), m);
-						i->setNeighbor(std::distance(triangles_.begin(), j), m);
-						j->setNeighbor(std::distance(triangles_.begin(), i), n);
-						if (++count == total) goto end;
-					}
-				}
-			}
-		}
-	}
-end:
-	return ;
+*/
+	return false;
 }
 
 void Mesh::subdivide()
 {
-	_prepare();
-	std::cout << this;
-	traverseOfVertex();
+
 }

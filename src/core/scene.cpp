@@ -9,27 +9,6 @@
 
 #include "scene.hpp"
 
-static const int screenWidth = 512, screenHeight = 512;
-// static const int screenWidth = 1024, screenHeight = 768;
-static Camera *cam1 = new PerspectiveCamera(Point3d(0, 0, 0), 	\
-																						Vector3d(0, 0, -1.0),\
-																						Point2i(screenWidth, screenHeight), \
-																						Point2i(screenWidth, screenHeight), \
-																						90);
-static std::vector<Object *> obj1 = {
-	new Sphere(Point3d(0, 1e5-40, -125),		1e5, 	Color(0.75)),
-	new Sphere(Point3d(0, 1e5+40, -125), 		1e5, 	Color(0.75)),
-	new Sphere(Point3d(0, 0, -1e5-170), 		1e5, 	Color(0.75)),
-	new Sphere(Point3d(0, 0, 1e5+175), 			1e5, 	Color(0)),
-	new Sphere(Point3d(-1e5-50, 0, -125), 	1e5, 	Color(0.75, 0.25, 0.25)),
-	new Sphere(Point3d(1e5+50, 0, -125),  	1e5, 	Color(0.25, 0.75, 0.25)),
-	new Sphere(Point3d(-20, -24.5, -130.0),	15.5,	Color(0.999), 		Vector3d(), 		kReflect),
-	new Sphere(Point3d(25, -26.5, -90.0),		11.5,	Color(0.999), 		Vector3d(), 		kRefract),
-	new Sphere(Point3d(0, 839.8, -100.0), 	800, 	Color(1.0), 			Vector3d(8, 8, 8))
-};
-
-Scene Scene::CornellBox(Scene("cornell box", screenWidth, screenHeight, cam1, obj1));
-
 /*
 static Camera *cam2 = new ThinLenCamera(Vec(0, 0, 0), \
 																				Vec(0, 0, -1), \
@@ -54,24 +33,6 @@ static std::vector<Object *> obj2 = {
 };
 
 Scene Scene::DepthOfField(Scene("depth of field", screenWidth, screenHeight, cam2, obj2));
-
-
-static Camera *cam3 = new ThinLenCamera(Vec(0, 0, 0), \
-																				Vec(0, 0, -1), \
-																				Vec(0, 1.0, 0), \
-																				10, 300, \
-																				screenWidth, screenHeight);
-static std::vector<Object *> obj3 = {
-	new DynamicSphere(Vec(0, 120,  -350),  10, Vec(100, -70, 60),  Vec(0.95, 0.7, 0.4)),
-	new DynamicSphere(Vec(-90, 30,  -290),  15, Vec(100, -60, 0),  Vec(0.95, 0.7, 0.4)),
-	new DynamicSphere(Vec(-80, -5,  -320), 8, Vec(140, -30, 0), Vec(1.0, 0.7, 0.4)),
-	new Sphere(       Vec(-30, 60, -300),  13, Vec(0.25, 0.75, 0.25)),
-	new Sphere(       Vec(45, 15, -300),  20, Vec(0.75, 0.25, 0.25)),
-	new Sphere(       Vec(0, -1e3-5, 0), 1e3, Vec(0.25, 0.25, 0.75)),
-	new Sphere(       Vec(0, 650, -300),  400,  Vec(1.0), Vec(4, 4, 4))
-};
-
-Scene Scene::MotionBlur(Scene("motion blur", screenWidth, screenHeight, cam3, obj3));
 */
 
 void Scene::accelerate() {
@@ -82,12 +43,13 @@ void Scene::accelerate() {
 	}
 	bvh->build(objects_);
 	objects_.clear();
-	std::cout << bvh;
+	// std::cout << bvh;
 	objects_.push_back(static_cast<Object *>(bvh));
 	accelerate_ = true;
 }
 
-Scene::~Scene() {
+Scene::~Scene()
+{
 	delete camera_;
 	if (!accelerate_)
 		std::for_each(objects_.begin(), objects_.end(), [](Object *obj) { delete obj; });

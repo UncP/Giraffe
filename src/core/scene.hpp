@@ -14,34 +14,25 @@
 #include <vector>
 
 #include "../object/sphere.hpp"
-#include "camera.hpp"
 #include "../accelerator/bvh.hpp"
+#include "camera.hpp"
 
 class Scene
 {
 	public:
-		static Scene CornellBox;
-		static Scene DepthOfField;
-		static Scene MotionBlur;
-
-		Scene(const char *name, const int width, const int height, Camera *camera,
-					const std::vector<Object *> &objects)
-		:name_(name), width_(width), height_(height), accelerate_(false), camera_(camera),
-		 objects_(objects) { }
+		Scene(const char *name, Camera *camera, const std::vector<Object *> &objects)
+		:name_(name), accelerate_(false), camera_(camera), objects_(objects) { }
 
 		void accelerate();
 
 		const std::string& name() const { return name_; }
 		const Camera& camera() const { return *camera_; };
 		const std::vector<Object *>& objects() const { return objects_; };
-		const int width() const  { return width_; }
-		const int height() const { return height_; }
 
 		~Scene();
 
 	private:
 		std::string 					name_;
-		int 									width_, height_;
 		bool 									accelerate_;
 		Camera 							 *camera_;
 		std::vector<Object *> objects_;

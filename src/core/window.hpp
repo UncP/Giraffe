@@ -17,8 +17,8 @@
 #include <fstream>
 #include <chrono>
 
-#include "scene.hpp"
 #include "../math/ray.hpp"
+#include "scene.hpp"
 #include "camera.hpp"
 #include "pathTracer.hpp"
 
