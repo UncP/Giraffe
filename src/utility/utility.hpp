@@ -13,6 +13,7 @@
 #include "../math/constant.hpp"
 #include "../math/vector.hpp"
 #include "../math/point.hpp"
+#include "../math/vertex.hpp"
 #include "../core/texture.hpp"
 
 class Isect
@@ -20,11 +21,12 @@ class Isect
 	public:
 		Isect():dis_(kInfinity) { }
 
-		inline void update(	const double &d, const Point3d &p, const Vector3d &n,
+		inline void update(	const double &d, const Point3d &p, const Vector3d &n, const Point2d &uv,
 												const Texture *t) {
 			dis_ 			= d;
 			position_ = p;
 			normal_ 	= n;
+			uv_				= uv;
 			texture_  = t;
 		}
 
@@ -32,13 +34,14 @@ class Isect
 		const double distance() { return dis_; }
 		const Point3d& position() const { return position_; }
 		const Vector3d& normal() const { return normal_; }
-		Vector3d evaluate() const { return texture_->evaluate(position_); }
+		Vector3d evaluate() const { return texture_->evaluate(Vertex(position_, normal_, uv_)); }
 		REFL refl() const { return texture_->refl(); }
 		const Vector3d& emission() const { return texture_->emission(); }
 
 	private:
 		double	       dis_;
 		Point3d 		   position_;
+		Point2d				 uv_;
 		Vector3d 		   normal_;
 		const Texture *texture_;
 };

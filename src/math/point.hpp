@@ -23,6 +23,7 @@ class Point2
 		T x_;
 		T y_;
 
+		Point2():x_(0), y_(0) { }
 		Point2(const T &t):x_(t), y_(t) { }
 		Point2(const T &x, const T &y):x_(x), y_(y) { }
 		Point2(const Point2<T> &p):x_(p.x_), y_(p.y_) { }

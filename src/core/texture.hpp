@@ -16,6 +16,7 @@
 #include "../math/constant.hpp"
 #include "../math/point.hpp"
 #include "../math/vector.hpp"
+#include "../math/vertex.hpp"
 
 class Noise
 {
@@ -44,7 +45,7 @@ class Texture
 
 		Texture(REFL refl, const Vector3d &emission):refl_(refl), emission_(emission) { }
 
-		virtual Vector3d evaluate(const Point3d &) const = 0;
+		virtual Vector3d evaluate(const Vertex &) const = 0;
 
 		REFL refl() const { return refl_; }
 		const Vector3d& emission() const { return emission_; }
@@ -62,7 +63,7 @@ class ConstantTexture : public Texture
 		ConstantTexture(const Vector3d &color, const Vector3d &emission = Vector3d(),
 										const REFL refl = kDiffuse):Texture(refl, emission), color_(color) { }
 
-		Vector3d evaluate(const Point3d &) const override { return color_; }
+		Vector3d evaluate(const Vertex &) const override { return color_; }
 
 	private:
 		Vector3d color_;
@@ -75,7 +76,7 @@ class StripeTexture : public Texture
 									const double &factor = 1.0)
 		:color1_(color1), color2_(color2), axis_(axis), factor_(1.0 / factor) { }
 
-		Vector3d evaluate(const Point3d &) const override;
+		Vector3d evaluate(const Vertex &) const override;
 
 	private:
 		Vector3d color1_;
@@ -90,7 +91,7 @@ class NoiseTexture : public Texture
 		NoiseTexture(const Vector3d &color1, const Vector3d &color2, const double &frequency = 0.1)
 		:color1_(color1), color2_(color2), frequency_(frequency) { }
 
-		Vector3d evaluate(const Point3d &) const override;
+		Vector3d evaluate(const Vertex &) const override;
 
 	private:
 		Vector3d color1_;
@@ -105,7 +106,7 @@ class MarbleTexture : public Texture
 									double frequency = 0.1)
 		:color1_(color1), color2_(color2), color3_(color3), frequency_(frequency) { }
 
-	Vector3d evaluate(const Point3d &) const override;
+	Vector3d evaluate(const Vertex &) const override;
 
 	private:
 		Vector3d color1_;
@@ -114,17 +115,27 @@ class MarbleTexture : public Texture
 		double   frequency_;
 };
 
-class WoodTexture : public Texture
+class BrickTexture : public Texture
 {
 	public:
-		WoodTexture(const Vector3d &color, double frequency = 0.1)
-		:color_(color), frequency_(frequency) { }
+		BrickTexture(	const Vector3d &color1, const Vector3d &color2, double width, double height,
+									double interval)
+		:color1_(color1), color2_(color2) {
+		 	bmwidth_ = width + interval;
+		 	bmheight_ = height + interval;
+		 	mwf_ = (interval * 0.5) / width;
+		 	mhf_ = (interval * 0.5) / height;
+		 }
 
-		Vector3d evaluate(const Point3d &) const override;
+		Vector3d evaluate(const Vertex &) const override;
 
 	private:
-		Vector3d color_;
-		double   frequency_;
+		Vector3d color1_;
+		Vector3d color2_;
+		double   bmwidth_;
+		double 	 bmheight_;
+		double   mwf_;
+		double   mhf_;
 };
 
 #endif /* _TEXTURE_HPP_ */

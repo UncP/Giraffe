@@ -8,7 +8,7 @@
 * Russian Roulette
 * 纹理
 	- 条纹
-* 科林噪声
+* 噪声
 	- 大理石
 * 加速数据结构
 	- BVH
@@ -17,6 +17,6 @@
 
 
 ###条纹
-```32768 samples```
+	```32768 samples```
 ![](./image/stripe.png)
 

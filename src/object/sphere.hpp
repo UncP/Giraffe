@@ -46,7 +46,10 @@ class Sphere : public Object
 
 			if (dis < isect.distance()) {
 				Point3d hitPos(r.origin() + r.direction() * dis);
-				isect.update(dis, hitPos, hitPos - c_, texture_.get());
+				Point2d uv((hitPos.x_-c_.x_+r_), (hitPos.y_-c_.y_+r_));
+				// Point2d uv((std::atan2(hitPos.y_-c_.y_, hitPos.x_-c_.x_) + DOU_PI) * DOU_PI_INV,
+									 // 1 - (std::acos((hitPos.z_-c_.z_) / r_) * PI_INV));
+				isect.update(dis, hitPos, hitPos - c_, uv, texture_.get());
 			}
 			return true;
 		}

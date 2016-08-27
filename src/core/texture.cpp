@@ -9,6 +9,16 @@
 
 #include "texture.hpp"
 
+inline double step(double a, double x)
+{
+	return x >= a;
+}
+
+inline Vector3d mix(const Vector3d &a, const Vector3d &b, double t)
+{
+	return a * t + (1 - t) * b;
+}
+
 static Noise noise;
 
 Noise::Noise()
@@ -90,34 +100,47 @@ double Noise::turbulence(const Point3d &p) const
 	return res;
 }
 
-Vector3d StripeTexture::evaluate(const Point3d &sample) const {
-	double var = axis_ == Xaxis ? sample.x_ : (axis_ == Yaxis ? sample.y_ : sample.z_);
+Vector3d StripeTexture::evaluate(const Vertex &v) const {
+	double var = axis_ == Xaxis ? v.position().x_ :
+																(axis_ == Yaxis ? v.position().y_ : v.position().z_);
 	double t = (1.0 + std::sin((var * PI) * factor_)) * 0.5;
-	return  t * color1_ + (1.0 - t) * color2_;
+	return mix(color1_, color2_, t);
 }
 
-Vector3d NoiseTexture::evaluate(const Point3d &p) const
+Vector3d NoiseTexture::evaluate(const Vertex &v) const
 {
-	double t = noise.noise(p * frequency_);
+	double t = noise.noise(v.position() * frequency_);
 	if (t < 0) t = 0;
 	if (t > 1) t = 1;
-	return t * color1_ + (1 - t) * color2_;
+	return mix(color1_, color2_, t);
 }
 
-Vector3d MarbleTexture::evaluate(const Point3d &p) const
+Vector3d MarbleTexture::evaluate(const Vertex &v) const
 {
-	double t = noise.turbulence(p * frequency_);
-	t = std::fabs(std::sin(t + p.z_ * frequency_)) * 2;
+	double t = noise.turbulence(v.position() * frequency_);
+	t = std::fabs(std::sin(t + v.position().z_ * frequency_)) * 2;
 
-	if (t < 1) return color2_ * t + (1 - t) * color3_;
+	if (t < 1) return mix(color2_, color3_, t);
 	t -= 1;
-	return color1_ * t + (1 - t) * color2_;
+	return mix(color1_, color2_, t);
 }
 
-Vector3d WoodTexture::evaluate(const Point3d &p) const
+Vector3d BrickTexture::evaluate(const Vertex &v) const
 {
-	double t = noise.noise(p * frequency_) * 10;
-	if (t < 0) t = 0;
-	if (t > 1) t = 1;
-	return color_ * (t - std::floor(t));
+	double ss = v.uv().x_ / bmwidth_;
+	double tt = v.uv().y_ / bmheight_;
+
+	if (std::fmod(tt * 0.5, 1.0) > 0.5)
+		ss += 0.5;
+
+	double sbrick = std::floor(ss);
+	double tbrick = std::floor(tt);
+
+	ss -= sbrick;
+	tt -= tbrick;
+
+	double w = step(mwf_, ss) - step(1 - mwf_, ss);
+	double h = step(mhf_, tt) - step(1 - mhf_, tt);
+
+	return mix(color1_, color2_, w * h);
 }

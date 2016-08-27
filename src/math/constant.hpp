@@ -14,7 +14,9 @@
 #include <limits>
 
 const double PI = 3.141592653589793238;
+const double PI_INV = 1.0 / PI;
 const double DOU_PI = 2.0 * PI;
+const double DOU_PI_INV = 1.0 / DOU_PI;
 const double kInfinity = std::numeric_limits<double>::max();
 const double kRefractionRatio = 1.5;
 const double kEpsilon = 1e-4;
