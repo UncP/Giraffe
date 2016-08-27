@@ -43,16 +43,6 @@ Vector3d trace(const Ray &ray, const std::vector<Object *> &objects, int depth)
 		double a = Random(), b = Random(), sini = std::sqrt(a), cosi = DOU_PI * b;
 		Vector3d dir((sini*std::cos(cosi)*u) + (sini*std::sin(cosi)*v) + (std::sqrt(1-a)*w));
 
-		// Vector3d c;
-		// for (int i = 0, end = objects.size(); i != end; ++i) {
-		// 	if (!objects[i]->emit() || objects[i] == obj) continue;
-		// 	Vector3d newDir(objects[i]->center() - obj->center());
-		// 	normalize(newDir);
-		// 	Object *obj;
-		// 	if (!(obj = Ray(pos, newDir).intersect(objects, near)) || obj == objects[i])
-		// 		c += objects[i]->emission() * color * std::max(0.0, dot(newDir, normal));
-		// }
-
 		return isect.emission() + mult(color, trace(Ray(reflPos, normalize(dir)), objects, depth));
 	}
 

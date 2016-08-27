@@ -23,6 +23,8 @@ Noise::Noise()
 		std::swap(permutationTable_[i], permutationTable_[j]);
 		permutationTable_[i + PerlinNumber] = permutationTable_[i];
 	}
+
+	octaves_ = 3;
 }
 
 double Noise::grad(int x, int y, int z, double dx, double dy, double dz) const
@@ -44,7 +46,7 @@ inline double lerp(double x, double y, double t)
 	return t * x + (1 - t) * y;
 }
 
-double Noise::evaluate(const Point3d &p) const
+double Noise::noise(const Point3d &p) const
 {
 	int ix = std::floor(p.x_), iy = std::floor(p.y_), iz = std::floor(p.z_);
 	double dx = p.x_ - ix, dy = p.y_ - iy, dz = p.z_ - iz;
@@ -53,14 +55,14 @@ double Noise::evaluate(const Point3d &p) const
 	iy &= Mask;
 	iz &= Mask;
 
-	double v000 = grad(ix, iy, iz, dx, dy, dz);
-	double v100 = grad(ix+1, iy, iz, dx-1, dy, dz);
-	double v010 = grad(ix, iy+1, iz, dx, dy-1, dz);
-	double v001 = grad(ix, iy, iz+1, dx, dy, dz-1);
+	double v000 = grad(ix,   iy,   iz,   dx,   dy,   dz);
+	double v100 = grad(ix+1, iy,   iz,   dx-1, dy,   dz);
+	double v010 = grad(ix,   iy+1, iz,   dx,   dy-1, dz);
+	double v001 = grad(ix,   iy,   iz+1, dx,   dy,   dz-1);
 
-	double v110 = grad(ix+1, iy+1, iz, dx-1, dy-1, dz);
-	double v101 = grad(ix+1, iy, iz+1, dx-1, dy, dz-1);
-	double v011 = grad(ix, iy+1, iz+1, dx, dy-1, dz-1);
+	double v110 = grad(ix+1, iy+1, iz,   dx-1, dy-1, dz);
+	double v101 = grad(ix+1, iy,   iz+1, dx-1, dy,   dz-1);
+	double v011 = grad(ix,   iy+1, iz+1, dx,   dy-1, dz-1);
 	double v111 = grad(ix+1, iy+1, iz+1, dx-1, dy-1, dz-1);
 
 	double wx = smoothStep(dx), wy = smoothStep(dy), wz = smoothStep(dz);
@@ -76,18 +78,46 @@ double Noise::evaluate(const Point3d &p) const
 	return lerp(v0, v1, wz);
 }
 
+double Noise::turbulence(const Point3d &p) const
+{
+	double res = 0;
+	double f = 1, a = 1;
+	for (int i = 0; i != octaves_; ++i) {
+		res += std::fabs(noise(p * f)) * a;
+		f *= 2.0;
+		a *= 0.5;
+	}
+	return res;
+}
+
 Vector3d StripeTexture::evaluate(const Point3d &sample) const {
-	double var = axis_ == Xaxis ? sample.x_ : sample.y_;
+	double var = axis_ == Xaxis ? sample.x_ : (axis_ == Yaxis ? sample.y_ : sample.z_);
 	double t = (1.0 + std::sin((var * PI) * factor_)) * 0.5;
 	return  t * color1_ + (1.0 - t) * color2_;
 }
 
 Vector3d NoiseTexture::evaluate(const Point3d &p) const
 {
-	double n = noise.evaluate(p * frequency_);
-	// if (n > 1) return color1_ * (n - 1);
-	// if (n < 0) return color2_ * (1 + n);
-	if (n <= 0.5) return color1_;
-	return color2_;
-	// return n * color1_ + (1 - n) * color2_;
+	double t = noise.noise(p * frequency_);
+	if (t < 0) t = 0;
+	if (t > 1) t = 1;
+	return t * color1_ + (1 - t) * color2_;
+}
+
+Vector3d MarbleTexture::evaluate(const Point3d &p) const
+{
+	double t = noise.turbulence(p * frequency_);
+	t = std::fabs(std::sin(t + p.z_ * frequency_)) * 2;
+
+	if (t < 1) return color2_ * t + (1 - t) * color3_;
+	t -= 1;
+	return color1_ * t + (1 - t) * color2_;
+}
+
+Vector3d WoodTexture::evaluate(const Point3d &p) const
+{
+	double t = noise.noise(p * frequency_) * 10;
+	if (t < 0) t = 0;
+	if (t > 1) t = 1;
+	return color_ * (t - std::floor(t));
 }

@@ -26,11 +26,14 @@ class Noise
 
 		Noise();
 
-		double evaluate(const Point3d &) const;
+		double noise(const Point3d &) const;
+
+		double turbulence(const Point3d &) const;
 
 		double grad(int, int, int, double, double, double) const;
 
 	private:
+		int octaves_;
 		int permutationTable_[2 * PerlinNumber];
 };
 
@@ -68,8 +71,8 @@ class ConstantTexture : public Texture
 class StripeTexture : public Texture
 {
 	public:
-		StripeTexture(const Vector3d &color1, const Vector3d &color2, const int axis,
-			const double factor = 1.0)
+		StripeTexture(const Vector3d &color1, const Vector3d &color2, int axis,
+									const double &factor = 1.0)
 		:color1_(color1), color2_(color2), axis_(axis), factor_(1.0 / factor) { }
 
 		Vector3d evaluate(const Point3d &) const override;
@@ -84,7 +87,7 @@ class StripeTexture : public Texture
 class NoiseTexture : public Texture
 {
 	public:
-		NoiseTexture(const Vector3d &color1, const Vector3d &color2, double frequency = 0.1)
+		NoiseTexture(const Vector3d &color1, const Vector3d &color2, const double &frequency = 0.1)
 		:color1_(color1), color2_(color2), frequency_(frequency) { }
 
 		Vector3d evaluate(const Point3d &) const override;
@@ -92,6 +95,35 @@ class NoiseTexture : public Texture
 	private:
 		Vector3d color1_;
 		Vector3d color2_;
+		double   frequency_;
+};
+
+class MarbleTexture : public Texture
+{
+	public:
+		MarbleTexture(const Vector3d &color1, const Vector3d &color2, const Vector3d &color3,
+									double frequency = 0.1)
+		:color1_(color1), color2_(color2), color3_(color3), frequency_(frequency) { }
+
+	Vector3d evaluate(const Point3d &) const override;
+
+	private:
+		Vector3d color1_;
+		Vector3d color2_;
+		Vector3d color3_;
+		double   frequency_;
+};
+
+class WoodTexture : public Texture
+{
+	public:
+		WoodTexture(const Vector3d &color, double frequency = 0.1)
+		:color_(color), frequency_(frequency) { }
+
+		Vector3d evaluate(const Point3d &) const override;
+
+	private:
+		Vector3d color_;
 		double   frequency_;
 };
 
