@@ -9,6 +9,23 @@
 
 #include "texture.hpp"
 
+#define CROO -0.5
+#define CR01  1.5
+#define CR02 -1.5
+#define CR03  0.5
+#define CR10  1.0
+#define CR11 -2.5
+#define CR12  2.0
+#define CR13 -0.5
+#define CR20 -0.5
+#define CR21  0.0
+#define CR22  0.5
+#define CR23  0.0
+#define CR30  0.0
+#define CR31  1.0
+#define CR32  0.0
+#define CR33  0.0
+
 inline double step(double a, double x)
 {
 	return x >= a;
@@ -19,6 +36,30 @@ inline Vector3d mix(const Vector3d &a, const Vector3d &b, double t)
 	return a * t + (1 - t) * b;
 }
 
+inline double clamp(double x, double a, double b)
+{
+	if (x < a) return a;
+	if (x > b) return b;
+	return x;
+}
+
+Vector3d spline(double x, int nknots, Vector3d *knot)
+{
+	int nspans = nknots - 3;
+	x = clamp(x, 0, 1) * nspans;
+	int span = (int) x;
+	if (span >= nknots - 3)
+		span = nknots - 3;
+	x -= span;
+	knot += span;
+	Vector3d c3 = CROO*knot[0] + CR01*knot[1] + CR02*knot[2] + CR03*knot[3];
+	Vector3d c2 = CR10*knot[0] + CR11*knot[1] + CR12*knot[2] + CR13*knot[3];
+	Vector3d c1 = CR20*knot[0] + CR21*knot[1] + CR22*knot[2] + CR23*knot[3];
+	Vector3d cO = CR30*knot[0] + CR31*knot[1] + CR32*knot[2] + CR33*knot[3];
+
+	return ((c3*x + c2)*x + c1)*x + cO;
+}
+
 static Noise noise;
 
 Noise::Noise()
@@ -27,23 +68,35 @@ Noise::Noise()
 		permutationTable_[i] = i;
 
 	std::default_random_engine generator(time(0));
-	std::uniform_int_distribution<int> distribution(0, PerlinNumber-1);
+	std::uniform_int_distribution<int> distribution1(0, PerlinNumber-1);
 	for (int i = 0; i != PerlinNumber; ++i) {
-		int j = distribution(generator);
+		int j = distribution1(generator);
 		std::swap(permutationTable_[i], permutationTable_[j]);
 		permutationTable_[i + PerlinNumber] = permutationTable_[i];
+	}
+
+	std::uniform_real_distribution<double> distribution2(0, 1);
+	for (int i = 0; i != 3 * PerlinNumber; i += 3) {
+		double j = 1 - 2 * distribution2(generator);
+		double r = std::sqrt(1 - j * j);
+		double theta = 2 * PI * distribution2(generator);
+		gradientTable_[i]   = r * std::cos(theta);
+		gradientTable_[i+1] = r * std::sin(theta);
+		gradientTable_[i+2] = j;
 	}
 
 	octaves_ = 3;
 }
 
-double Noise::grad(int x, int y, int z, double dx, double dy, double dz) const
+int Noise::index(int x, int y, int z) const
 {
-	int h = permutationTable_[permutationTable_[permutationTable_[x] + y] + z];
-	h &= 15;
-	double u = (h < 8 || h == 10 || h == 13) ? dx : dy;
-	double v = (h >= 8 || h == 2 || h == 5) ? dy : dz;
-	return ((h & 1) ? -u : u) + ((h & 2) ? -v : v);
+	return permutationTable_[permutationTable_[permutationTable_[x] + y] + z];
+}
+
+double Noise::glattice(int x, int y, int z, double dx, double dy, double dz) const
+{
+	const double *g = &gradientTable_[index(x, y, z) * 3];
+	return g[0] * dx + g[1] * dy + g[2] * dz;
 }
 
 inline double smoothStep(double t)
@@ -56,7 +109,7 @@ inline double lerp(double x, double y, double t)
 	return t * x + (1 - t) * y;
 }
 
-double Noise::noise(const Point3d &p) const
+double Noise::gnoise(const Point3d &p) const
 {
 	int ix = std::floor(p.x_), iy = std::floor(p.y_), iz = std::floor(p.z_);
 	double dx = p.x_ - ix, dy = p.y_ - iy, dz = p.z_ - iz;
@@ -65,15 +118,15 @@ double Noise::noise(const Point3d &p) const
 	iy &= Mask;
 	iz &= Mask;
 
-	double v000 = grad(ix,   iy,   iz,   dx,   dy,   dz);
-	double v100 = grad(ix+1, iy,   iz,   dx-1, dy,   dz);
-	double v010 = grad(ix,   iy+1, iz,   dx,   dy-1, dz);
-	double v001 = grad(ix,   iy,   iz+1, dx,   dy,   dz-1);
+	double v000 = glattice(ix,   iy,   iz,   dx,   dy,   dz);
+	double v100 = glattice(ix+1, iy,   iz,   dx-1, dy,   dz);
+	double v010 = glattice(ix,   iy+1, iz,   dx,   dy-1, dz);
+	double v001 = glattice(ix,   iy,   iz+1, dx,   dy,   dz-1);
 
-	double v110 = grad(ix+1, iy+1, iz,   dx-1, dy-1, dz);
-	double v101 = grad(ix+1, iy,   iz+1, dx-1, dy,   dz-1);
-	double v011 = grad(ix,   iy+1, iz+1, dx,   dy-1, dz-1);
-	double v111 = grad(ix+1, iy+1, iz+1, dx-1, dy-1, dz-1);
+	double v110 = glattice(ix+1, iy+1, iz,   dx-1, dy-1, dz);
+	double v101 = glattice(ix+1, iy,   iz+1, dx-1, dy,   dz-1);
+	double v011 = glattice(ix,   iy+1, iz+1, dx,   dy-1, dz-1);
+	double v111 = glattice(ix+1, iy+1, iz+1, dx-1, dy-1, dz-1);
 
 	double wx = smoothStep(dx), wy = smoothStep(dy), wz = smoothStep(dz);
 
@@ -93,7 +146,19 @@ double Noise::turbulence(const Point3d &p) const
 	double res = 0;
 	double f = 1, a = 1;
 	for (int i = 0; i != octaves_; ++i) {
-		res += std::fabs(noise(p * f)) * a;
+		res += std::fabs(gnoise(p * f)) * a;
+		f *= 2.0;
+		a *= 0.5;
+	}
+	return res;
+}
+
+double Noise::fractalSum(const Point3d &p) const
+{
+	double res = 0;
+	double f = 1, a = 1;
+	for (int i = 0; i != octaves_; ++i) {
+		res += (2 * gnoise(p * f) - 1) * a;
 		f *= 2.0;
 		a *= 0.5;
 	}
@@ -109,7 +174,7 @@ Vector3d StripeTexture::evaluate(const Vertex &v) const {
 
 Vector3d NoiseTexture::evaluate(const Vertex &v) const
 {
-	double t = noise.noise(v.position() * frequency_);
+	double t = noise.gnoise(v.position() * frequency_);
 	if (t < 0) t = 0;
 	if (t > 1) t = 1;
 	return mix(color1_, color2_, t);
@@ -117,12 +182,13 @@ Vector3d NoiseTexture::evaluate(const Vertex &v) const
 
 Vector3d MarbleTexture::evaluate(const Vertex &v) const
 {
-	double t = noise.turbulence(v.position() * frequency_);
-	t = std::fabs(std::sin(t + v.position().z_ * frequency_)) * 2;
+	double t = noise.fractalSum(v.position() * frequency_);
+	double tt = 2 * std::fabs(std::sin(v.position().z_ * frequency_ + t));
 
-	if (t < 1) return mix(color2_, color3_, t);
-	t -= 1;
-	return mix(color1_, color2_, t);
+	if (tt < 1)
+		return color2_ * tt + (1 - tt) * color3_;
+	tt -= 1;
+	return color1_ * tt + (1 - tt) * color2_;
 }
 
 Vector3d BrickTexture::evaluate(const Vertex &v) const
