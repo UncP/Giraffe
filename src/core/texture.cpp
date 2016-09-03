@@ -43,23 +43,6 @@ inline double clamp(double x, double a, double b)
 	return x;
 }
 
-Vector3d spline(double x, int nknots, Vector3d *knot)
-{
-	int nspans = nknots - 3;
-	x = clamp(x, 0, 1) * nspans;
-	int span = (int) x;
-	if (span >= nknots - 3)
-		span = nknots - 3;
-	x -= span;
-	knot += span;
-	Vector3d c3 = CROO*knot[0] + CR01*knot[1] + CR02*knot[2] + CR03*knot[3];
-	Vector3d c2 = CR10*knot[0] + CR11*knot[1] + CR12*knot[2] + CR13*knot[3];
-	Vector3d c1 = CR20*knot[0] + CR21*knot[1] + CR22*knot[2] + CR23*knot[3];
-	Vector3d cO = CR30*knot[0] + CR31*knot[1] + CR32*knot[2] + CR33*knot[3];
-
-	return ((c3*x + c2)*x + c1)*x + cO;
-}
-
 static Noise noise;
 
 Noise::Noise()
