@@ -9,23 +9,6 @@
 
 #include "texture.hpp"
 
-#define CROO -0.5
-#define CR01  1.5
-#define CR02 -1.5
-#define CR03  0.5
-#define CR10  1.0
-#define CR11 -2.5
-#define CR12  2.0
-#define CR13 -0.5
-#define CR20 -0.5
-#define CR21  0.0
-#define CR22  0.5
-#define CR23  0.0
-#define CR30  0.0
-#define CR31  1.0
-#define CR32  0.0
-#define CR33  0.0
-
 inline double step(double a, double x)
 {
 	return x >= a;
@@ -148,9 +131,11 @@ double Noise::fractalSum(const Point3d &p) const
 	return res;
 }
 
-Vector3d StripeTexture::evaluate(const Vertex &v) const {
+Vector3d StripeTexture::evaluate(const Vertex &v) const
+{
 	double var = axis_ == Xaxis ? v.position().x_ :
 																(axis_ == Yaxis ? v.position().y_ : v.position().z_);
+
 	double t = (1.0 + std::sin((var * PI) * factor_)) * 0.5;
 	return mix(color1_, color2_, t);
 }
@@ -192,4 +177,11 @@ Vector3d BrickTexture::evaluate(const Vertex &v) const
 	double h = step(mhf_, tt) - step(1 - mhf_, tt);
 
 	return mix(color1_, color2_, w * h);
+}
+
+Vector3d ImageTexture::evaluate(const Vertex &v) const
+{
+	int uu = static_cast<int>(std::fmod(v.uv().x_ * frequency_, 1.0) * (width_ - 1));
+	int vv = static_cast<int>(std::fmod(v.uv().y_ * frequency_, 1.0) * (height_ - 1));
+	return image_[uu + vv * width_];
 }

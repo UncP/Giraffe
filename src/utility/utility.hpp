@@ -34,9 +34,9 @@ class Isect
 		const double distance() { return dis_; }
 		const Point3d& position() const { return position_; }
 		const Vector3d& normal() const { return normal_; }
-		Vector3d evaluate() const { return texture_->evaluate(Vertex(position_, normal_, uv_)); }
+		Vector3d color() const { return texture_->color(Vertex(position_, normal_, uv_)); }
 		REFL refl() const { return texture_->refl(); }
-		const Vector3d& emission() const { return texture_->emission(); }
+		Vector3d emission() const { return texture_->emission(Vertex(position_, normal_, uv_)); }
 
 	private:
 		double	       dis_;

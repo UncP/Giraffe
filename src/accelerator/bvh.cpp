@@ -90,30 +90,13 @@ void BVHNode::split(Box *box, std::vector<std::pair<Object *, Box *>> &boxes,
 	int pos = _splitByPlane(boxes, beg, end, box->getSplitPlane());
 
 	left_  = std::shared_ptr<BVHNode>(new BVHNode());
-	if (!left_) {
-		std::cerr << "building BVH failed :(\n";
-		exit(-1);
-	}
-
 	right_ = std::shared_ptr<BVHNode>(new BVHNode());
-	if (!right_) {
-		std::cerr << "building BVH failed :(\n";
-		exit(-1);
-	}
 
 	Box *lBox = new AABB();
-	if (!lBox) {
-		std::cerr << "building BVH failed :(\n";
-		exit(-1);
-	}
 	lBox->enclose(boxes, beg, beg + pos);
 	left_	->split(lBox, boxes, beg, beg + pos);
 
 	Box *rBox = new AABB();
-	if (!rBox) {
-		std::cerr << "building BVH failed :(\n";
-		exit(-1);
-	}
 	rBox->enclose(boxes, beg + pos, end);
 	right_->split(rBox, boxes, beg + pos, end);
 }
@@ -122,10 +105,6 @@ void BVH::build(std::vector<Object *> &objects)
 {
 	std::vector<std::pair<Object *, Box *>> boxes(objects.size());
 	Box *tmp = new AABB[boxes.size()];
-	if (!tmp) {
-		std::cerr << "building BVH failed :(\n";
-		exit(-1);
-	}
 
 	for (size_t i = 0, end = boxes.size(); i != end; ++i) {
 		boxes[i].first 	= objects[i];
@@ -134,10 +113,6 @@ void BVH::build(std::vector<Object *> &objects)
 	}
 
 	Box *box = new AABB();
-	if (!box) {
-		std::cerr << "building BVH failed :(\n";
-		exit(-1);
-	}
 	box->enclose(boxes, 0, boxes.size());
 
 	root_->split(box, boxes, 0, boxes.size());
