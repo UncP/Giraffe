@@ -56,13 +56,11 @@ class Texture
 		REFL refl() const { return refl_; }
 
 		Vector3d color(const Vertex &v) const {
-			if (!emit_) return evaluate(v);
-			return Vector3d();
+			return !emit_ ? evaluate(v) : Vector3d();
 		}
 
 		Vector3d emission(const Vertex &v) const {
-			if (emit_) return evaluate(v);
-			return Vector3d();
+			return emit_ ? evaluate(v) : Vector3d();
 		}
 
 		virtual ~Texture() { }

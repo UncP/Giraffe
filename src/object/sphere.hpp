@@ -18,7 +18,7 @@ class Sphere : public Object
 {
 	public:
 		Sphere(	const Point3d &center, const double radis, const std::shared_ptr<Texture> &texture)
-		:c_(center), r_(radis), r2_(radis * radis), texture_(texture) { }
+		:c_(center), r_(radis), r2_(radis * radis), inv2r_(1.0 / (2 * r_)), texture_(texture) { }
 
 		void computeBox(std::vector<double> &near, std::vector<double> &far,
 			const Vector3d *normal) const override
@@ -46,7 +46,7 @@ class Sphere : public Object
 
 			if (dis < isect.distance()) {
 				Point3d hitPos(r.origin() + r.direction() * dis);
-				Point2d uv((hitPos.x_-c_.x_+r_), (hitPos.y_-c_.y_+r_));
+				Point2d uv((hitPos.x_-c_.x_+r_) * inv2r_, (-hitPos.y_+c_.y_+r_) * inv2r_);
 				// Point2d uv((std::atan2(hitPos.y_-c_.y_, hitPos.x_-c_.x_) + DOU_PI) * DOU_PI_INV,
 									 // 1 - (std::acos((hitPos.z_-c_.z_) / r_) * PI_INV));
 				isect.update(dis, hitPos, hitPos - c_, uv, texture_.get());
@@ -60,6 +60,7 @@ class Sphere : public Object
 		Point3d 	c_;
 		double 		r_;
 		double 		r2_;
+		double		inv2r_;
 		std::shared_ptr<Texture> texture_;
 };
 

@@ -44,7 +44,7 @@ void test(int samples)
 		// new BrickTexture(Color(0.1, 0.1, 0.5), Color(0.5), 25, 10, 2));
 
 	std::shared_ptr<Texture> sphere1 = std::shared_ptr<Texture>(
-		new ImageTexture("../stones.png", 0.005, true));
+		new ImageTexture("../earth.png", 1, true));
 		// new MarbleTexture(Color(1), Color(2, 2, 0.5), Color(0.5), 0.1, true));
 		// new MarbleTexture(Color(0.8), Color(0.8, 0.8, 0.2), Color(0.05), 0.1));
 		// new StripeTexture(Color(), Color(1), Yaxis, 5));
@@ -80,11 +80,11 @@ void test(int samples)
 		// new Sphere(Point3d(-33, -40, -185.0),		20,		sphere1),
 		// new Sphere(Point3d(37, -44, -145.0),		16,		sphere2),
 		// new Sphere(Point3d(0,  -30, -175.0),		30,		sphere1),
-		new Sphere(Point3d(-1,  -50, -185.0),		10,		sphere1),
+		new Sphere(Point3d(-1,  -50, -185.0),		10,		sphere3),
 		new Sphere(Point3d(-23,  -48, -185.0),	12,		sphere5),
 		new Sphere(Point3d(-50,  -45, -185.0),	15,		sphere6),
 		new Sphere(Point3d(-45,  -52, -130.0),	8,		sphere2),
-		new Sphere(Point3d(45,  -35, -200.0),		25,		sphere3),
+		new Sphere(Point3d(45,  -35, -200.0),		25,		sphere1),
 		new Sphere(Point3d(50,  -48, -135.0),		10,		sphere4)
 		// new Sphere(Point3d(0, 959.8, -160.0), 	900, 	light)
 	};

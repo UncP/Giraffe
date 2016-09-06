@@ -60,7 +60,7 @@ void Window::render(const Scene &scene, const int &samples)
 
 	auto end  = std::chrono::high_resolution_clock::now();
 	auto Time = std::chrono::duration<double, std::ratio<1>>(end - beg).count();
-	std::cout << "\ntime: " << std::setw(8) << Time << "  s\n";
+	std::cerr << "\ntime: " << std::setw(8) << Time << "  s\n";
 
 	show();
 	save_png();
@@ -76,7 +76,6 @@ void Window::show() const
 		canvas_[i] |= static_cast<uint8_t>(std::min(pixels_[i].z_, 1.0) * 255.0);
 	}
 	SDL_UpdateRect(screen_, 0, 0, 0, 0);
-	getchar();
 }
 
 void Window::save_ppm() const
@@ -98,11 +97,20 @@ void Window::save_ppm() const
 
 bool Window::save_png() const
 {
+	time_t t;
+	struct tm *tt;
+	tt = localtime(&t);
 	char file[32];
-	strcpy(file, title_.c_str());
+	strftime(file, 32, "%M-%S", tt);
 	strcat(file, ".png");
+	std::cerr << "save to: " << file << std::endl;
+	getchar();
+
 	FILE *fp = fopen(file, "wb");
-	if (!fp) return false;
+	if (!fp) {
+		std::cerr << "文件打开失败 :(\n";
+		return false;
+	}
 
 	png_structp png_ptr = png_create_write_struct(PNG_LIBPNG_VER_STRING, 0, 0, 0);
 	if (!png_ptr) {
