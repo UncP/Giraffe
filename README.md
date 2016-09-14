@@ -5,8 +5,9 @@
 * 反走样
 * 全局渲染
 * Russian Roulette
-* 纹理
-* 噪声
+* Procedural Texture
+* Perlin Noise
+* Depth of field
 * 加速数据结构
 	- BVH
 		+	AABB (Axis-Aligned Bounding Box)
