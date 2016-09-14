@@ -17,13 +17,16 @@
 class Camera
 {
 	public:
-		Camera(const Point3d &, const Vector3d &, const Vector3d & = Vector3d(0, 1, 0));
+		Camera(	const Point3d &, const Vector3d &, double radius = 0, double focal_distance = 0,
+						const Vector3d & = Vector3d(0, 1, 0));
 
 		virtual Ray generateRay(const Point2d &) const = 0;
 
 		virtual ~Camera() { }
 
 	protected:
+		double radius_;
+		double focal_distance_;
 		Point3d	 ori_;
 		Vector3d dir_;
 		Matrix worldToCamera_;

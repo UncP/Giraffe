@@ -9,8 +9,8 @@
 
 #include "camera.hpp"
 
-Camera::Camera(const Point3d &ori, const Vector3d &dir, const Vector3d &up)
-:ori_(ori), dir_(dir)
+Camera::Camera(const Point3d &ori, const Vector3d &dir, double radius, double focal_distance,
+	const Vector3d &up):radius_(radius), focal_distance_(focal_distance), ori_(ori), dir_(dir)
 {
 	Vector3d w = -dir_;
 	normalize(w);
@@ -57,8 +57,13 @@ PerspectiveCamera::PerspectiveCamera(	const Point3d  &ori,
 
 Ray PerspectiveCamera::generateRay(const Point2d &sample) const
 {
-	return Ray(	cameraToWorld_(Point3d(0)),
-							normalize(Vector3d(rasterToCamera_(Point3d(sample.x_, sample.y_, 0)))));
+	Ray r(cameraToWorld_(Point3d()),
+				normalize(Vector3d(rasterToCamera_(Point3d(sample.x_, sample.y_, 0)))));
+	if (focal_distance_ > 0) {
+		Point2d off = radis_ * Point2d(Random2(), Random2());
+		Point3d hit = ray.direction().z_ / focal_distance_;
+	}
+	return std::move(r);
 }
 
 /*

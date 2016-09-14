@@ -157,7 +157,6 @@ class BrickTexture : public Texture
 class ImageTexture : public Texture
 {
 	public:
-		// ImageTexture(const char *name, double frequency, bool emit, REFL refl);
 		ImageTexture(const char *name, double frequency = 0.01, bool emit=false, REFL refl=kDiffuse)
 		:Texture(refl, emit), frequency_(frequency) {
 			FILE *fp = fopen(name, "rb");

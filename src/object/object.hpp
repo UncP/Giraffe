@@ -1,7 +1,7 @@
 /**
  *    > Author:   UncP
  *    > Mail:     770778010@qq.com
- *    > Github:	  https://www.github.com/UncP
+ *    > Github:	  https://www.github.com/UncP/Mini_Ray_Tracer
  *    > Description:
  *
  *    > Created Time: 2016-07-31 11:54:14
@@ -11,7 +11,6 @@
 #define _OBJECT_HPP_
 
 #include <iostream>
-#include <vector>
 
 #include "../math/ray.hpp"
 #include "../utility/utility.hpp"
