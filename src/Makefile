@@ -9,8 +9,8 @@ OBJ 		 = math/constant.o math/vector.o math/point.o math/ray.o math/vertex.o mat
 					 accelerator/bvh.o \
 					 core/texture.o core/camera.o core/pathTracer.o core/scene.o core/window.o
 
-ray_tracer:$(OBJ) main/ray_tracer.cpp
-	$(CPP) $(CPPFLAGS) -o ray_tracer $(OBJ) main/ray_tracer.cpp $(LDFLAGS)
+Giraffe:$(OBJ) main/ray_tracer.cpp
+	$(CPP) $(CPPFLAGS) -o Giraffe $(OBJ) main/ray_tracer.cpp $(LDFLAGS)
 
 tag:
 	ctags -R --sort=yes -f .tags
@@ -19,4 +19,4 @@ clean:
 	for dir in $(DIR); do \
 		(cd $$dir && rm *.o) || continue ; \
 	done
-	rm ray_tracer *.png .tags
+	rm Giraffe *.png .tags

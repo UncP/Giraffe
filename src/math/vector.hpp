@@ -1,7 +1,7 @@
 /**
  *    > Author:   UncP
  *    > Mail:     770778010@qq.com
- *    > Github:   https://www.github.com/UncP/Mini_Ray_Tracer
+ *    > Github:   https://www.github.com/UncP/Giraffe
  *    > Description:
  *
  *    > Created Time: 2016-06-27 13:10:53

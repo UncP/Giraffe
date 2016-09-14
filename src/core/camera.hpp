@@ -1,7 +1,7 @@
 /**
  *    > Author:   UncP
  *    > Mail:     770778010@qq.com
- *    > Github:   https://www.github.com/UncP/Mini_Ray_Tracer
+ *    > Github:   https://www.github.com/UncP/Giraffe
  *    > Description:
  *
  *    > Created Time: 2016-07-25 23:16:00
@@ -17,7 +17,7 @@
 class Camera
 {
 	public:
-		Camera(	const Point3d &, const Vector3d &, double radius = 0, double focal_distance = 0,
+		Camera(	const Point3d &, const Vector3d &, double radius, double focal_distance,
 						const Vector3d & = Vector3d(0, 1, 0));
 
 		virtual Ray generateRay(const Point2d &) const = 0;
@@ -37,7 +37,7 @@ class PerspectiveCamera : public Camera
 {
 	public:
 		PerspectiveCamera(const Point3d &, const Vector3d &,
-											const Point2i &, const Point2i &, const double);
+											const Point2i &, const Point2i &, double, double = 0, double = 0);
 
 		Ray generateRay(const Point2d &) const override;
 

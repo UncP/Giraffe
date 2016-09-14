@@ -1,7 +1,7 @@
 /**
  *    > Author:   UncP
  *    > Mail:     770778010@qq.com
- *    > Github:   https://www.github.com/UncP/Mini_Ray_Tracer
+ *    > Github:   https://www.github.com/UncP/Giraffe
  *    > Description:
  *
  *    > Created Time: 2016-07-28 14:55:33
@@ -29,12 +29,12 @@ PerspectiveCamera::PerspectiveCamera(	const Point3d  &ori,
 																			const Vector3d &dir,
 																			const Point2i &screen,
 																			const Point2i &film,
-																			const double   fov)
-:Camera(ori, dir)
+																			double   fov,
+																			double   radius,
+																			double   focal_distance)
+:Camera(ori, dir, radius, focal_distance)
 {
 	Matrix cameraToScreen = perspective(fov, 1, 1000);
-
-	// std::cout << cameraToScreen;
 
 	Matrix screenToRaster =	scale(film.x_, film.y_, 1)
 												* scale(1.0/screen.x_, -1.0/screen.y_, 1)
@@ -57,13 +57,18 @@ PerspectiveCamera::PerspectiveCamera(	const Point3d  &ori,
 
 Ray PerspectiveCamera::generateRay(const Point2d &sample) const
 {
-	Ray r(cameraToWorld_(Point3d()),
-				normalize(Vector3d(rasterToCamera_(Point3d(sample.x_, sample.y_, 0)))));
+	Point3d ori(0);
+	Ray ray(ori, normalize(Vector3d(rasterToCamera_(Point3d(sample.x_, sample.y_, 0)))));
+
 	if (focal_distance_ > 0) {
-		Point2d off = radis_ * Point2d(Random2(), Random2());
-		Point3d hit = ray.direction().z_ / focal_distance_;
+		ori = Point3d(Random2(), Random2(), 0) * radius_;
+		double z = -(focal_distance_ / ray.direction().z_);
+		Point3d dir(normalize(ray.direction() * z));
+
+		ray.setDirection(Vector3d(dir));
 	}
-	return std::move(r);
+	ray.setOrigin(cameraToWorld_(ori));
+	return std::move(ray);
 }
 
 /*
