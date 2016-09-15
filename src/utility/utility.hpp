@@ -16,6 +16,8 @@
 #include "../math/vertex.hpp"
 #include "../core/texture.hpp"
 
+namespace Giraffe {
+
 class Isect
 {
 	public:
@@ -45,5 +47,7 @@ class Isect
 		Vector3d 		   normal_;
 		const Texture *texture_;
 };
+
+} // namespace Giraffe
 
 #endif /* _UITLITY_HPP_ */

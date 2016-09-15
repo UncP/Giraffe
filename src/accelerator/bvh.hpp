@@ -17,6 +17,8 @@
 
 #include "../object/object.hpp"
 
+namespace Giraffe {
+
 const uint8_t kNormalNumber = 7, kAABBNumber = 3, kDOPNumber = kNormalNumber;
 
 const Vector3d NormalSet[kNormalNumber] = {
@@ -146,5 +148,7 @@ class BVH : public Object
 	private:
 		std::shared_ptr<BVHNode> root_;
 };
+
+} // namespace Giraffe
 
 #endif /* _BVH_HPP_ */

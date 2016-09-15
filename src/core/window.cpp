@@ -9,6 +9,8 @@
 
 #include "window.hpp"
 
+namespace Giraffe {
+
 Window::Window(const std::string &title, const int width, const int height)
 :title_(title), width_(width), height_(height), pixels_(new Vector3d[width_*height_])
 {	// canvas_(new uint32_t[width_*height_])
@@ -172,3 +174,5 @@ bool Window::save_png() const
 	delete [] pic;
 	return true;
 }
+
+} // namespace Giraffe

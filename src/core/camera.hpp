@@ -14,6 +14,8 @@
 #include "../math/matrix.hpp"
 #include "../math/ray.hpp"
 
+namespace Giraffe {
+
 class Camera
 {
 	public:
@@ -45,6 +47,7 @@ class PerspectiveCamera : public Camera
 		Matrix rasterToCamera_;
 };
 
+/*
 class OrthographicCamera : public Camera
 {
 	public:
@@ -55,5 +58,8 @@ class OrthographicCamera : public Camera
 
 	private:
 };
+*/
+
+} // namespace Giraffe
 
 #endif /* _CAMERA_HPP_ */

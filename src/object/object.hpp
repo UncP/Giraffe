@@ -15,6 +15,8 @@
 #include "../math/ray.hpp"
 #include "../utility/utility.hpp"
 
+namespace Giraffe {
+
 class Object
 {
 	public:
@@ -37,5 +39,7 @@ class Object
 
 		virtual ~Object() { }
 };
+
+} // namespace Giraffe
 
 #endif /* _OBJECT_HPP_ */

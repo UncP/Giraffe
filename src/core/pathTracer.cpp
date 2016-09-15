@@ -9,6 +9,8 @@
 
 #include "pathTracer.hpp"
 
+namespace Giraffe {
+
 Vector3d trace(const Ray &ray, const std::vector<Object *> &objects, int depth)
 {
 	Isect isect;
@@ -73,3 +75,5 @@ Vector3d trace(const Ray &ray, const std::vector<Object *> &objects, int depth)
 		trace(Ray(reflPos, refl), objects, depth)*RP:trace(Ray(refrPos, refr), objects, depth)*TP):
 		trace(Ray(reflPos, refl), objects, depth)*Re+trace(Ray(refrPos, refr), objects, depth)*Tr));
 }
+
+} // namespace Giraffe

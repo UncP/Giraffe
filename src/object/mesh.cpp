@@ -9,6 +9,8 @@
 
 #include "mesh.hpp"
 
+namespace Giraffe {
+
 #define  NEXT(i) ((i+1)%3)
 #define  PREV(i) ((i+2)%3)
 
@@ -179,3 +181,5 @@ void Mesh::subdivide()
 {
 
 }
+
+} // namespace Giraffe

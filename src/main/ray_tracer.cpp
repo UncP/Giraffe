@@ -13,15 +13,17 @@
 #include "../core/window.hpp"
 #include "../object/mesh.hpp"
 
-void test(int samples)
+int main(int argc, char **argv)
 {
 	int screenWidth = 512, screenHeight = 512;
+
+	using namespace Giraffe;
 
 	Camera *cam = new PerspectiveCamera(Point3d(0, 0, 0), 	\
 																			Vector3d(0, 0, -1.0),\
 																			Point2i(screenWidth, screenHeight), \
 																			Point2i(screenWidth, screenHeight), \
-																			90, 2, 90);
+																			90, 12, 150);
 
 	std::shared_ptr<Texture> wall1 = std::shared_ptr<Texture>(
 		new ConstantTexture(Color(0.75)));
@@ -46,7 +48,8 @@ void test(int samples)
 		// new BrickTexture(Color(0.1, 0.1, 0.5), Color(0.5), 25, 10, 2));
 
 	std::shared_ptr<Texture> sphere1 = std::shared_ptr<Texture>(
-		new ImageTexture("../earth.png", 1, true));
+		new ConstantTexture(Color(0.25, 0.25, 0.75)));
+		// new ImageTexture("../earth.png", 1, true));
 		// new BrickTexture(Color(1, 1, 0), Color(0, 1, 1), 0.2, 0.08, 0.016, true));
 		// new MarbleTexture(Color(1), Color(2, 2, 0.5), Color(0.5), 0.1, true));
 		// new MarbleTexture(Color(0.8), Color(0.8, 0.8, 0.2), Color(0.05), 0.1));
@@ -82,23 +85,18 @@ void test(int samples)
 		// new Sphere(Point3d(-33, -40, -185.0),		20,		sphere1),
 		// new Sphere(Point3d(37, -44, -145.0),		16,		sphere2),
 		// new Sphere(Point3d(0,  -30, -175.0),		30,		sphere1),
-		new Sphere(Point3d(-1,  -50, -185.0),		10,		sphere3),
-		new Sphere(Point3d(-23,  -48, -185.0),	12,		sphere5),
-		new Sphere(Point3d(-50,  -45, -185.0),	15,		sphere6),
-		new Sphere(Point3d(-45,  -52, -130.0),	8,		sphere2),
-		new Sphere(Point3d(45,  -35, -200.0),		25,		sphere1),
-		new Sphere(Point3d(50,  -48, -135.0),		10,		sphere4)
-		// new Sphere(Point3d(0, 959.8, -160.0), 	900, 	light)
+		// new Sphere(Point3d(-1,  -50, -185.0),		10,		sphere3),
+		// new Sphere(Point3d(-23,  -48, -185.0),	12,		sphere5),
+		// new Sphere(Point3d(-50,  -45, -185.0),	15,		sphere6),
+		// new Sphere(Point3d(-45,  -52, -130.0),	8,		sphere2),
+		// new Sphere(Point3d(45,  -35, -200.0),		25,		sphere1),
+		// new Sphere(Point3d(50,  -48, -135.0),		10,		sphere4)
+		// new Sphere(Point3d(0, 959.8, -160.0), 	900, 	light),
 	};
 
 	Scene CornellBox("cornell box", cam, obj);
 
 	Window win(CornellBox.name(), screenWidth, screenHeight);
-	win.render(CornellBox, samples);
-}
-
-int main(int argc, char **argv)
-{
-	test(argc == 2 ? atoi(argv[1]) : 4);
+	win.render(CornellBox, argc == 2 ? atoi(argv[1]) : 4);
 	return 0;
 }

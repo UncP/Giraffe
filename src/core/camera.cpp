@@ -9,6 +9,8 @@
 
 #include "camera.hpp"
 
+namespace Giraffe {
+
 Camera::Camera(const Point3d &ori, const Vector3d &dir, double radius, double focal_distance,
 	const Vector3d &up):radius_(radius), focal_distance_(focal_distance), ori_(ori), dir_(dir)
 {
@@ -63,9 +65,9 @@ Ray PerspectiveCamera::generateRay(const Point2d &sample) const
 	if (focal_distance_ > 0) {
 		ori = Point3d(Random2(), Random2(), 0) * radius_;
 		double z = -(focal_distance_ / ray.direction().z_);
-		Point3d dir(normalize(ray.direction() * z));
+		Point3d hit(ray.direction() * z);
 
-		ray.setDirection(Vector3d(dir));
+		ray.setDirection(normalize(hit - ori));
 	}
 	ray.setOrigin(cameraToWorld_(ori));
 	return std::move(ray);
@@ -104,3 +106,5 @@ Ray OrthographicCamera::computeRay(const double &x, const double &y) const
 	return Ray(ori, dir);
 }
 */
+
+} // namespace Giraffe

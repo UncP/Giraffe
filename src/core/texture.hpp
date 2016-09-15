@@ -19,6 +19,8 @@
 #include "../math/vector.hpp"
 #include "../math/vertex.hpp"
 
+namespace Giraffe {
+
 class Noise
 {
 	public:
@@ -265,5 +267,7 @@ class ImageTexture : public Texture
 		double    frequency_;
 		Vector3d *image_;
 };
+
+} // namespace Giraffe
 
 #endif /* _TEXTURE_HPP_ */

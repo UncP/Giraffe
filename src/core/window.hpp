@@ -22,6 +22,8 @@
 #include "camera.hpp"
 #include "pathTracer.hpp"
 
+namespace Giraffe {
+
 class Window
 {
 	public:
@@ -47,5 +49,7 @@ class Window
 		uint32_t		*canvas_;
 		SDL_Surface *screen_;
 };
+
+} // namespace Giraffe
 
 #endif /* _WINDOW_H_ */

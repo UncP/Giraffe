@@ -9,6 +9,8 @@
 
 #include "matrix.hpp"
 
+namespace Giraffe {
+
 Matrix Matrix::Identity(1, 0, 0, 0,
 												0, 1, 0, 0,
 												0, 0, 1, 0,
@@ -226,3 +228,5 @@ Matrix rotateZ(const double angle)
 								0,  0, 1, 0,
 								0,  0, 0, 1);
 }
+
+} // namespace Giraffe

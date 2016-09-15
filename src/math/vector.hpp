@@ -15,6 +15,8 @@
 #include <cmath>
 #include <cassert>
 
+namespace Giraffe {
+
 template <typename T>
 class Vector2
 {
@@ -215,5 +217,7 @@ inline Vector3<T> normalize(const Vector3<T> &v) {
 inline Color mult(const Color &a, const Color &b) {
 	return Color(a.x_ * b.x_, a.y_ * b.y_, a.z_ * b.z_);
 }
+
+} // namespace Giraffe
 
 #endif /* _VECTOR_H_ */

@@ -9,6 +9,8 @@
 
 #include "texture.hpp"
 
+namespace Giraffe {
+
 inline double step(double a, double x)
 {
 	return x >= a;
@@ -185,3 +187,5 @@ Vector3d ImageTexture::evaluate(const Vertex &v) const
 	int vv = static_cast<int>(std::fmod(v.uv().y_ * frequency_, 1.0) * (height_ - 1));
 	return image_[uu + vv * width_];
 }
+
+} // namespace Giraffe

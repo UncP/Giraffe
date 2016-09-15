@@ -13,6 +13,8 @@
 #include "point.hpp"
 #include "vector.hpp"
 
+namespace Giraffe {
+
 class Ray
 {
 	public:
@@ -31,5 +33,7 @@ class Ray
 		return os << "ori " << ray.ori_ << "dir " << ray.dir_;
 	}
 };
+
+} // namespace Giraffe
 
 #endif /* _RAY_HPP_ */

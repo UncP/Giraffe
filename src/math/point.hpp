@@ -16,6 +16,8 @@
 
 #include "vector.hpp"
 
+namespace Giraffe {
+
 template <typename T>
 class Point2
 {
@@ -239,4 +241,5 @@ Point3<T> operator*(const U u, const Point3<T> &p) {
 	return p * u;
 }
 
+} // namespace Giraffe
 #endif /* _POINT_HPP_ */

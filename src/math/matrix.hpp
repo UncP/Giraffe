@@ -13,7 +13,8 @@
 #include "constant.hpp"
 #include "point.hpp"
 #include "vector.hpp"
-// #include "ray.hpp"
+
+namespace Giraffe {
 
 class Matrix
 {
@@ -89,5 +90,7 @@ inline Point3<T> Matrix::operator()(const Point3<T> &v) const {
 	}
 	return Point3<T>(x, y, z);
 }
+
+} // namespace Giraffe
 
 #endif /* _MATRIX_HPP_ */

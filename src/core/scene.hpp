@@ -17,6 +17,8 @@
 #include "../accelerator/bvh.hpp"
 #include "camera.hpp"
 
+namespace Giraffe {
+
 class Scene
 {
 	public:
@@ -37,5 +39,7 @@ class Scene
 		Camera 							 *camera_;
 		std::vector<Object *> objects_;
 };
+
+} // namespace Giraffe
 
 #endif /* _SCENE_HPP_ */

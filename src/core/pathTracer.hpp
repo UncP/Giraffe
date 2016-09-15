@@ -15,6 +15,10 @@
 #include "../object/object.hpp"
 #include "../math/ray.hpp"
 
+namespace Giraffe {
+
 Vector3d trace(const Ray &, const std::vector<Object *> &, int);
+
+} // namespace Giraffe
 
 #endif /* _PATHTRACER_HPP_ */

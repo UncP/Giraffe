@@ -19,6 +19,8 @@
 
 #include "object.hpp"
 
+namespace Giraffe {
+
 class MeshTriangle;
 class MeshEdge;
 
@@ -117,5 +119,7 @@ class Mesh : public Object
 		std::set<MeshEdge> 					edges_;
 		void load();
 };
+
+} // namespace Giraffe
 
 #endif /* _MESH_HPP_ */

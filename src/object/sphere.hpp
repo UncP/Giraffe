@@ -14,6 +14,8 @@
 
 #include "object.hpp"
 
+namespace Giraffe {
+
 class Sphere : public Object
 {
 	public:
@@ -63,5 +65,7 @@ class Sphere : public Object
 		double		inv2r_;
 		std::shared_ptr<Texture> texture_;
 };
+
+} // namespace Giraffe
 
 #endif /* _SPHERE_HPP_ */

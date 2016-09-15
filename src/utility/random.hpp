@@ -13,8 +13,12 @@
 #include <ctime>
 #include <random>
 
+namespace Giraffe {
+
 double Random();
 
 double Random2();
+
+} // namespace Giraffe
 
 #endif /* _RANDOM_HPP_ */

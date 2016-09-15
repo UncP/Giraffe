@@ -13,6 +13,8 @@
 #include <cmath>
 #include <limits>
 
+namespace Giraffe {
+
 const double PI = 3.141592653589793238;
 const double PI_INV = 1.0 / PI;
 const double DOU_PI = 2.0 * PI;
@@ -26,5 +28,7 @@ enum REFL { kDiffuse, kReflect, kRefract };
 enum Plane { Xaxis = 0, Yaxis, Zaxis};
 
 #define radian(angle) (angle * (PI / 180.0))
+
+} // namespace Giraffe
 
 #endif /* _CONSTANT_HPP_ */

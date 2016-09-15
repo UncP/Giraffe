@@ -9,6 +9,8 @@
 
 #include "bvh.hpp"
 
+namespace Giraffe {
+
 static bool _intersect(const double o, const double f, const double s, const double b,
 	double &tmin, double &tmax)
 {
@@ -119,3 +121,5 @@ void BVH::build(std::vector<Object *> &objects)
 
 	delete [] tmp;
 }
+
+} // namespace Giraffe

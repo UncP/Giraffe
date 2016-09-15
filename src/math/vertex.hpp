@@ -13,6 +13,8 @@
 #include "point.hpp"
 #include "vector.hpp"
 
+namespace Giraffe {
+
 class Vertex
 {
 	public:
@@ -40,5 +42,7 @@ class Vertex
 		Vector3d 	normal_;
 		Point2d   uv_;
 };
+
+} // namespace Giraffe
 
 #endif /* _VERTEX_HPP_ */
