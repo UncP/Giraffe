@@ -133,7 +133,7 @@ double Noise::fractalSum(const Point3d &p) const
 	return res;
 }
 
-Vector3d StripeTexture::evaluate(const Vertex &v) const
+Vector3d StripeTexture::evaluate(Vertex &v) const
 {
 	double var = axis_ == Xaxis ? v.position().x_ :
 																(axis_ == Yaxis ? v.position().y_ : v.position().z_);
@@ -142,7 +142,7 @@ Vector3d StripeTexture::evaluate(const Vertex &v) const
 	return mix(color1_, color2_, t);
 }
 
-Vector3d NoiseTexture::evaluate(const Vertex &v) const
+Vector3d NoiseTexture::evaluate(Vertex &v) const
 {
 	double t = noise.gnoise(v.position() * frequency_);
 	if (t < 0) t = 0;
@@ -150,7 +150,7 @@ Vector3d NoiseTexture::evaluate(const Vertex &v) const
 	return mix(color1_, color2_, t);
 }
 
-Vector3d MarbleTexture::evaluate(const Vertex &v) const
+Vector3d MarbleTexture::evaluate(Vertex &v) const
 {
 	double t = noise.fractalSum(v.position() * frequency_);
 	double tt = 2 * std::fabs(std::sin(v.position().z_ * frequency_ + t));
@@ -161,10 +161,10 @@ Vector3d MarbleTexture::evaluate(const Vertex &v) const
 	return color1_ * tt + (1 - tt) * color2_;
 }
 
-Vector3d BrickTexture::evaluate(const Vertex &v) const
+Vector3d BrickTexture::evaluate(Vertex &v) const
 {
-	double ss = v.uv().x_ / bmwidth_;
-	double tt = v.uv().y_ / bmheight_;
+	double ss = v.uv().x_ / width_;
+	double tt = v.uv().y_ / height_;
 
 	if (std::fmod(tt * 0.5, 1.0) > 0.5)
 		ss += 0.5;
@@ -175,17 +175,65 @@ Vector3d BrickTexture::evaluate(const Vertex &v) const
 	ss -= sbrick;
 	tt -= tbrick;
 
-	double w = step(mwf_, ss) - step(1 - mwf_, ss);
-	double h = step(mhf_, tt) - step(1 - mhf_, tt);
+	double w = step(wf_, ss) - step(1 - wf_, ss);
+	double h = step(hf_, tt) - step(1 - hf_, tt);
 
 	return mix(color1_, color2_, w * h);
 }
 
-Vector3d ImageTexture::evaluate(const Vertex &v) const
+Vector3d ImageTexture::evaluate(Vertex &v) const
 {
 	int uu = static_cast<int>(std::fmod(v.uv().x_ * frequency_, 1.0) * (width_ - 1));
 	int vv = static_cast<int>(std::fmod(v.uv().y_ * frequency_, 1.0) * (height_ - 1));
 	return image_[uu + vv * width_];
+}
+
+void BumpBrickTexture::generateHeightMap()
+{
+	int width_count  = static_cast<int>(static_cast<double>(map_len) * wf_ + 0.5);
+	int height_count = static_cast<int>(static_cast<double>(map_len) * hf_ + 0.5);
+	// std::cout << width_count << " " << height_count << std::endl;
+	int max_blank = std::max(width_count, height_count);
+	int max_fill  = max_blank + 1;
+
+
+
+	for (int i = width_count; i != map_len - width_count; ++i)
+		for (int j = height_count; j != map_len - height_count; ++j)
+			height_map_[i * map_len + j] = max_fill;
+	bool flag = true;
+	for (int i = 0; i != map_len; ++i) {
+		for (int j = 0; j != map_len; ++j) {
+			if((i <= 20 && (j <=20 || j >= 80)) || (i >= 80 && (j <= 20 || j >= 80))) {
+				std::cout << static_cast<int>(height_map_[i * map_len + j]) << " ";
+				flag = true;
+			} else {
+				flag = false;
+			}
+		}
+		if (flag)
+			std::cout << std::endl;
+	}
+}
+
+Vector3d BumpBrickTexture::evaluate(Vertex &v) const
+{
+	double ss = v.uv().x_ / width_;
+	double tt = v.uv().y_ / height_;
+
+	if (std::fmod(tt * 0.5, 1.0) > 0.5)
+		ss += 0.5;
+
+	double sbrick = std::floor(ss);
+	double tbrick = std::floor(tt);
+
+	ss -= sbrick;
+	tt -= tbrick;
+
+	double w = step(wf_, ss) - step(1 - wf_, ss);
+	double h = step(hf_, tt) - step(1 - hf_, tt);
+
+	return mix(color1_, color2_, w * h);
 }
 
 } // namespace Giraffe

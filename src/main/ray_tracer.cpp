@@ -22,7 +22,7 @@ int main(int argc, char **argv)
 																			Vector3d(0, 0, -1.0),\
 																			Point2i(screenWidth, screenHeight), \
 																			Point2i(screenWidth, screenHeight), \
-																			90, 12, 150);
+																			90);
 
 	std::shared_ptr<Texture> wall1 = std::shared_ptr<Texture>(
 		new ConstantTexture(Color(0.75)));
@@ -37,8 +37,8 @@ int main(int argc, char **argv)
 		// new MarbleTexture(Color(0.8), Color(0.25, 0.75, 0.25), Color(0.05), 0.1));
 		// new ConstantTexture(Color(0.25, 0.75, 0.25)));
 		// new ConstantTexture(Color(0.999), Color(), kReflect));
-	std::shared_ptr<Texture> wall5 = std::shared_ptr<Texture>(
-		new BrickTexture(Color(0.5, 0.1, 0.1), Color(0.5), 1.2e-4, 4.8e-5, 7.2e-6));
+	std::shared_ptr<Texture> wall5 = std::shared_ptr<Texture>( // 4.8e-5  7.2e-6
+		new BumpBrickTexture(Color(0.5, 0.1, 0.1), Color(0.5), 1.2e-4, 1.2e-4, 1.44e-5));
 		// new StripeTexture(Color(), Color(1), Xaxis, 3));
 	std::shared_ptr<Texture> wall6 = std::shared_ptr<Texture>(
 		// new MarbleTexture(Color(0.8), Color(0.25, 0.25, 0.75), Color(0.05), 0.1));
@@ -77,7 +77,7 @@ int main(int argc, char **argv)
 	std::vector<Object *> obj = {
 		new Sphere(Point3d(0, -1e5-60, -160),		1e5, 	wall1),
 		new Sphere(Point3d(0, 1e5+60, -160), 		1e5, 	wall1),
-		new Sphere(Point3d(0, 0, -1e5-225), 		1e5, 	wall1),
+		new Sphere(Point3d(0, 0, -1e5-225), 		1e5, 	wall5),
 		new Sphere(Point3d(0, 0, 1e5+125), 			1e5, 	wall2),
 		new Sphere(Point3d(-1e5-70, 0, -175), 	1e5, 	wall3),
 		new Sphere(Point3d(1e5+70, 0, -175),  	1e5, 	wall4),
@@ -90,9 +90,8 @@ int main(int argc, char **argv)
 		// new Sphere(Point3d(-45,  -52, -130.0),	8,		sphere2),
 		// new Sphere(Point3d(45,  -35, -200.0),		25,		sphere1),
 		// new Sphere(Point3d(50,  -48, -135.0),		10,		sphere4)
-		// new Sphere(Point3d(0, 959.8, -160.0), 	900, 	light),
+		new Sphere(Point3d(0, 959.8, -160.0), 	900, 	light)
 	};
-
 	Scene CornellBox("cornell box", cam, obj);
 
 	Window win(CornellBox.name(), screenWidth, screenHeight);

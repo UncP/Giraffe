@@ -10,6 +10,8 @@
 #ifndef _CUBE_HPP_
 #define _CUBE_HPP_
 
+#include <memory>
+
 #include "../math/ray.hpp"
 #include "../utility/utility.hpp"
 

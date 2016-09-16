@@ -13,6 +13,7 @@
 #include <ctime>
 #include <random>
 #include <png.h>
+#include <assert.h>
 
 #include "../math/constant.hpp"
 #include "../math/point.hpp"
@@ -53,15 +54,15 @@ class Texture
 
 		Texture(REFL refl, bool emit):refl_(refl), emit_(emit) { }
 
-		virtual Vector3d evaluate(const Vertex &) const = 0;
+		virtual Vector3d evaluate(Vertex &) const = 0;
 
 		REFL refl() const { return refl_; }
 
-		Vector3d color(const Vertex &v) const {
+		Vector3d color(Vertex &v) const {
 			return !emit_ ? evaluate(v) : Vector3d();
 		}
 
-		Vector3d emission(const Vertex &v) const {
+		Vector3d emission(Vertex &v) const {
 			return emit_ ? evaluate(v) : Vector3d();
 		}
 
@@ -78,7 +79,7 @@ class ConstantTexture : public Texture
 		ConstantTexture(const Vector3d &color, bool emit = false, REFL refl = kDiffuse)
 		:Texture(refl, emit), color_(color) { }
 
-		Vector3d evaluate(const Vertex &) const override { return color_; }
+		Vector3d evaluate(Vertex &) const override { return color_; }
 
 	private:
 		Vector3d color_;
@@ -92,7 +93,7 @@ class StripeTexture : public Texture
 		:Texture(refl, emit), color1_(color1), color2_(color2), axis_(axis),
 		 factor_(1.0 / factor) { }
 
-		Vector3d evaluate(const Vertex &) const override;
+		Vector3d evaluate(Vertex &) const override;
 
 	private:
 		Vector3d color1_;
@@ -108,7 +109,7 @@ class NoiseTexture : public Texture
 									bool emit = false, REFL refl = kDiffuse)
 		:Texture(refl, emit), color1_(color1), color2_(color2), frequency_(frequency) { }
 
-		Vector3d evaluate(const Vertex &) const override;
+		Vector3d evaluate(Vertex &) const override;
 
 	private:
 		Vector3d color1_;
@@ -124,7 +125,7 @@ class MarbleTexture : public Texture
 		:Texture(refl, emit), color1_(color1), color2_(color2), color3_(color3),
 		 frequency_(frequency) { }
 
-	Vector3d evaluate(const Vertex &) const override;
+	Vector3d evaluate(Vertex &) const override;
 
 	private:
 		Vector3d color1_;
@@ -139,21 +140,21 @@ class BrickTexture : public Texture
 		BrickTexture(	const Vector3d &color1, const Vector3d &color2, double width, double height,
 									double interval, bool emit = false, REFL refl = kDiffuse)
 		:Texture(refl, emit), color1_(color1), color2_(color2) {
-		 	bmwidth_ = width + interval;
-		 	bmheight_ = height + interval;
-		 	mwf_ = (interval * 0.5) / width;
-		 	mhf_ = (interval * 0.5) / height;
-		 }
+			width_  = width + interval;
+			height_ = height + interval;
+			wf_ = (interval * 0.5) / width;
+			hf_ = (interval * 0.5) / height;
+		}
 
-		Vector3d evaluate(const Vertex &) const override;
+		Vector3d evaluate(Vertex &) const override;
 
 	private:
 		Vector3d color1_;
 		Vector3d color2_;
-		double   bmwidth_;
-		double 	 bmheight_;
-		double   mwf_;
-		double   mhf_;
+		double   width_;
+		double 	 height_;
+		double   wf_;
+		double   hf_;
 };
 
 class ImageTexture : public Texture
@@ -260,12 +261,44 @@ class ImageTexture : public Texture
 
 		~ImageTexture() { delete [] image_; }
 
-		Vector3d evaluate(const Vertex &) const override;
+		Vector3d evaluate(Vertex &) const override;
 
 	private:
 		int       width_, height_;
 		double    frequency_;
 		Vector3d *image_;
+};
+
+class BumpBrickTexture : public Texture
+{
+	public:
+
+		static const int map_len = 100;
+
+		BumpBrickTexture(	const Vector3d &color1, const Vector3d &color2,
+											double width, double height,
+											double interval, bool emit = false, REFL refl = kDiffuse)
+		:Texture(refl, emit), color1_(color1), color2_(color2) {
+			assert(width > 0 && height > 0 && interval > 0);
+			width_  = width + interval;
+			height_ = height + interval;
+			wf_ = (interval * 0.5) / width;
+			hf_ = (interval * 0.5) / height;
+			generateHeightMap();
+		}
+
+		Vector3d evaluate(Vertex &) const override;
+
+	private:
+		Vector3d color1_;
+		Vector3d color2_;
+		double   width_;
+		double 	 height_;
+		double   wf_;
+		double   hf_;
+		unsigned char height_map_[map_len * map_len];
+
+		void generateHeightMap();
 };
 
 } // namespace Giraffe

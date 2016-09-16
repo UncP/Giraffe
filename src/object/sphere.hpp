@@ -13,6 +13,7 @@
 #include <memory>
 
 #include "object.hpp"
+#include "../math/vertex.hpp"
 
 namespace Giraffe {
 
@@ -51,7 +52,7 @@ class Sphere : public Object
 				Point2d uv((hitPos.x_-c_.x_+r_) * inv2r_, (-hitPos.y_+c_.y_+r_) * inv2r_);
 				// Point2d uv((std::atan2(hitPos.y_-c_.y_, hitPos.x_-c_.x_) + DOU_PI) * DOU_PI_INV,
 									 // 1 - (std::acos((hitPos.z_-c_.z_) / r_) * PI_INV));
-				isect.update(dis, hitPos, hitPos - c_, uv, texture_.get());
+				isect.update(dis, Vertex(hitPos, hitPos - c_, uv), texture_.get());
 			}
 			return true;
 		}

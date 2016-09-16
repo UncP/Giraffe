@@ -23,28 +23,23 @@ class Isect
 	public:
 		Isect():dis_(kInfinity) { }
 
-		inline void update(	const double &d, const Point3d &p, const Vector3d &n, const Point2d &uv,
-												const Texture *t) {
-			dis_ 			= d;
-			position_ = p;
-			normal_ 	= n;
-			uv_				= uv;
-			texture_  = t;
+		inline void update(	const double &d, const Vertex &vertex, const Texture *t) {
+			dis_ 		 = d;
+			vertex_  = vertex;
+			texture_ = t;
 		}
 
 		bool miss() const { return dis_ == kInfinity; }
 		const double distance() { return dis_; }
-		const Point3d& position() const { return position_; }
-		const Vector3d& normal() const { return normal_; }
-		Vector3d color() const { return texture_->color(Vertex(position_, normal_, uv_)); }
+		const Point3d& position() const { return vertex_.position(); }
+		const Vector3d& normal() const { return vertex_.normal(); }
+		Vector3d color() { return texture_->color(vertex_); }
 		REFL refl() const { return texture_->refl(); }
-		Vector3d emission() const { return texture_->emission(Vertex(position_, normal_, uv_)); }
+		Vector3d emission() { return texture_->emission(vertex_); }
 
 	private:
 		double	       dis_;
-		Point3d 		   position_;
-		Point2d				 uv_;
-		Vector3d 		   normal_;
+		Vertex         vertex_;
 		const Texture *texture_;
 };
 
