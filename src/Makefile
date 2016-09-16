@@ -5,7 +5,7 @@ LDFLAGS  = -lSDL -lSDLmain -lpng
 DIR 		 = math utility object accelerator core
 OBJ 		 = math/constant.o math/vector.o math/point.o math/ray.o math/vertex.o math/matrix.o \
 					 utility/random.o utility/utility.o \
-					 object/object.o object/sphere.o \
+					 object/object.o object/sphere.o object/cube.o \
 					 accelerator/bvh.o \
 					 core/texture.o core/camera.o core/pathTracer.o core/scene.o core/window.o
 

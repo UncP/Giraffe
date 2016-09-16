@@ -11,7 +11,6 @@
 
 #include "../core/scene.hpp"
 #include "../core/window.hpp"
-#include "../object/mesh.hpp"
 
 int main(int argc, char **argv)
 {
@@ -49,7 +48,7 @@ int main(int argc, char **argv)
 
 	std::shared_ptr<Texture> sphere1 = std::shared_ptr<Texture>(
 		new ConstantTexture(Color(0.25, 0.25, 0.75)));
-		// new ImageTexture("../earth.png", 1, true));
+		// new ImageTexture("../texture/earth.png", 1, true));
 		// new BrickTexture(Color(1, 1, 0), Color(0, 1, 1), 0.2, 0.08, 0.016, true));
 		// new MarbleTexture(Color(1), Color(2, 2, 0.5), Color(0.5), 0.1, true));
 		// new MarbleTexture(Color(0.8), Color(0.8, 0.8, 0.2), Color(0.05), 0.1));
