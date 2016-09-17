@@ -11,6 +11,14 @@
 
 #include "../core/scene.hpp"
 #include "../core/window.hpp"
+#include "../object/sphere.hpp"
+#include "../texture/constant.hpp"
+#include "../texture/stripe.hpp"
+#include "../texture/noise.hpp"
+#include "../texture/marble.hpp"
+#include "../texture/brick.hpp"
+#include "../texture/image.hpp"
+#include "../texture/bump_brick.hpp"
 
 int main(int argc, char **argv)
 {
@@ -38,7 +46,7 @@ int main(int argc, char **argv)
 		// new ConstantTexture(Color(0.25, 0.75, 0.25)));
 		// new ConstantTexture(Color(0.999), Color(), kReflect));
 	std::shared_ptr<Texture> wall5 = std::shared_ptr<Texture>( // 4.8e-5  7.2e-6
-		new BumpBrickTexture(Color(0.5, 0.1, 0.1), Color(0.5), 1.2e-4, 1.2e-4, 1.44e-5));
+		new BrickTexture(Color(0.5, 0.1, 0.1), Color(0.5), 1.2e-4, 1.2e-4, 1.44e-5));
 		// new StripeTexture(Color(), Color(1), Xaxis, 3));
 	std::shared_ptr<Texture> wall6 = std::shared_ptr<Texture>(
 		// new MarbleTexture(Color(0.8), Color(0.25, 0.25, 0.75), Color(0.05), 0.1));
@@ -93,6 +101,8 @@ int main(int argc, char **argv)
 		new Sphere(Point3d(0, 959.8, -160.0), 	900, 	light)
 	};
 	Scene CornellBox("cornell box", cam, obj);
+
+	// return 0;
 
 	Window win(CornellBox.name(), screenWidth, screenHeight);
 	win.render(CornellBox, argc == 2 ? atoi(argv[1]) : 4);

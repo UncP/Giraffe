@@ -4,10 +4,10 @@
  *    > Github:	  https://www.github.com/UncP/Giraffe
  *    > Description:
  *
- *    > Created Time: 2016-08-19 01:57:06
+ *    > Created Time: 2016-09-17 16:42:56
 **/
 
-#include "texture.hpp"
+#include "constant.hpp"
 
 namespace Giraffe {
 

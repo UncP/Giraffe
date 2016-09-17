@@ -13,7 +13,7 @@
 #include <string>
 #include <vector>
 
-#include "../object/sphere.hpp"
+#include "../object/object.hpp"
 #include "../accelerator/bvh.hpp"
 #include "camera.hpp"
 

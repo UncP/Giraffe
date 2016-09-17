@@ -11,6 +11,7 @@
 #define _OBJECT_HPP_
 
 #include <iostream>
+#include <vector>
 
 #include "../math/ray.hpp"
 #include "../utility/utility.hpp"

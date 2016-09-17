@@ -8,6 +8,7 @@
 * Procedural Texture
 * Perlin Noise
 * Depth of field
+* Bump Mapping
 * 加速数据结构
 	- BVH
 		+	AABB (Axis-Aligned Bounding Box)
