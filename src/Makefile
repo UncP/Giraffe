@@ -12,8 +12,8 @@ OBJ 		 = math/constant.o math/vector.o math/point.o math/ray.o math/vertex.o mat
 					 texture/brick.o texture/bump_brick.o texture/stripe.o texture/constant.o \
 					 texture/noise.o texture/marble.o texture/image.o
 
-Giraffe:$(OBJ) main/ray_tracer.cpp
-	$(CPP) $(CPPFLAGS) -o Giraffe $(OBJ) main/ray_tracer.cpp $(LDFLAGS)
+Giraffe:$(OBJ) main/Giraffe.cpp
+	$(CPP) $(CPPFLAGS) -o Giraffe $(OBJ) main/Giraffe.cpp $(LDFLAGS)
 
 tag:
 	ctags -R --sort=yes -f .tags

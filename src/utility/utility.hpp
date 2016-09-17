@@ -7,8 +7,8 @@
  *    > Created Time: 2016-08-01 16:25:28
 **/
 
-#ifndef _UITLITY_HPP_
-#define _UITLITY_HPP_
+#ifndef _UTILITY_UITLITY_HPP_
+#define _UTILITY_UITLITY_HPP_
 
 #include "../math/constant.hpp"
 #include "../math/vector.hpp"
@@ -45,4 +45,4 @@ class Isect
 
 } // namespace Giraffe
 
-#endif /* _UITLITY_HPP_ */
+#endif /* _UITLITY_UITLITY_HPP_ */
