@@ -15,6 +15,7 @@
 #include "../math/vector.hpp"
 #include "../math/vertex.hpp"
 #include "../math/utility.hpp"
+#include "../utility/intersection_info.hpp"
 #include "noise.hpp"
 
 namespace Giraffe {
@@ -26,16 +27,16 @@ class Texture
 
 		Texture(REFL refl, bool emit):refl_(refl), emit_(emit) { }
 
-		virtual Vector3d evaluate(Vertex &) const = 0;
+		virtual Vector3d evaluate(IntersectionInfo &) const = 0;
 
 		REFL refl() const { return refl_; }
 
-		Vector3d color(Vertex &v) const {
-			return !emit_ ? evaluate(v) : Vector3d();
+		Vector3d color(IntersectionInfo &surface) const {
+			return !emit_ ? evaluate(surface) : Vector3d();
 		}
 
-		Vector3d emission(Vertex &v) const {
-			return emit_ ? evaluate(v) : Vector3d();
+		Vector3d emission(IntersectionInfo &surface) const {
+			return emit_ ? evaluate(surface) : Vector3d();
 		}
 
 		virtual ~Texture() { }

@@ -21,7 +21,7 @@ class NoiseTexture : public Texture
 									bool emit = false, REFL refl = kDiffuse)
 		:Texture(refl, emit), color1_(color1), color2_(color2), frequency_(frequency) { }
 
-		Vector3d evaluate(Vertex &) const override;
+		Vector3d evaluate(IntersectionInfo &) const override;
 
 	private:
 		Vector3d color1_;

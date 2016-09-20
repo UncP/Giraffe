@@ -11,9 +11,9 @@
 
 namespace Giraffe {
 
-Vector3d NoiseTexture::evaluate(Vertex &v) const
+Vector3d NoiseTexture::evaluate(IntersectionInfo &surface) const
 {
-	double t = Noise::getNoise().gnoise(v.position() * frequency_);
+	double t = Noise::getNoise().gnoise(surface.position() * frequency_);
 	if (t < 0) t = 0;
 	if (t > 1) t = 1;
 	return mix(color1_, color2_, t);

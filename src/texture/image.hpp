@@ -120,7 +120,7 @@ class ImageTexture : public Texture
 
 		~ImageTexture() { delete [] image_; }
 
-		Vector3d evaluate(Vertex &) const override;
+		Vector3d evaluate(IntersectionInfo &) const override;
 
 	private:
 		int       width_, height_;

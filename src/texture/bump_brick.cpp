@@ -116,10 +116,10 @@ void BumpBrickTexture::generateHeightMap()
 			height_map_[i * map_len + j] = max_fill;
 }
 
-Vector3d BumpBrickTexture::evaluate(Vertex &v) const
+Vector3d BumpBrickTexture::evaluate(IntersectionInfo &surface) const
 {
-	double ss = v.uv().x_ / width_;
-	double tt = v.uv().y_ / height_;
+	double ss = surface.uv().x_ / width_;
+	double tt = surface.uv().y_ / height_;
 
 	if (std::fmod(tt * 0.5, 1.0) > 0.5)
 		ss += 0.5;

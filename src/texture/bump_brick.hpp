@@ -24,7 +24,7 @@ class BumpBrickTexture : public Texture
 											double width, double height,
 											double interval, bool emit = false, REFL refl = kDiffuse);
 
-		Vector3d evaluate(Vertex &) const override;
+		Vector3d evaluate(IntersectionInfo &) const override;
 
 	private:
 		Vector3d color1_;

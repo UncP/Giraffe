@@ -24,38 +24,9 @@ class Sphere : public Object
 		:c_(center), r_(radis), r2_(radis * radis), inv2r_(1.0 / (2 * r_)), texture_(texture) { }
 
 		void computeBox(std::vector<double> &near, std::vector<double> &far,
-			const Vector3d *normal) const override
-		{
-			for (size_t i = 0, end = near.size(); i != end; ++i) {
-				double p = proj(c_, normal[i]);
-				double n = p - r_;
-				double f = p + r_;
-				if (n < near[i]) near[i] = n;
-				if (f > far[i]) far[i] = f;
-			}
-		}
+			const Vector3d *normal) const override;
 
-		bool intersect(const Ray &r, Isect &isect) const override {
-			Vector3d l = c_ - r.origin();
-			double s = dot(l, r.direction());
-			double l2 = l.length2();
-			if (s < 0 && l2 > r2_)
-				return false;
-			double q2 = l2 - s * s;
-			if (q2 > r2_)
-				return false;
-			double q = std::sqrt(r2_ - q2);
-			double dis = l2 > r2_ ? (s - q) : (s + q);
-
-			if (dis < isect.distance()) {
-				Point3d hitPos(r.origin() + r.direction() * dis);
-				Point2d uv((hitPos.x_-c_.x_+r_) * inv2r_, (-hitPos.y_+c_.y_+r_) * inv2r_);
-				// Point2d uv((std::atan2(hitPos.y_-c_.y_, hitPos.x_-c_.x_) + DOU_PI) * DOU_PI_INV,
-									 // 1 - (std::acos((hitPos.z_-c_.z_) / r_) * PI_INV));
-				isect.update(dis, Vertex(hitPos, hitPos - c_, uv), texture_.get());
-			}
-			return true;
-		}
+		bool intersect(const Ray &r, Isect &isect) const override;
 
 		std::ostream& print(std::ostream &os) const override { return os << "sphere\n" << c_; }
 
