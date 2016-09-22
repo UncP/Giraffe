@@ -20,21 +20,22 @@ namespace Giraffe {
 class Sphere : public Object
 {
 	public:
-		Sphere(	const Point3d &center, const double radis, const std::shared_ptr<Texture> &texture)
-		:c_(center), r_(radis), r2_(radis * radis), inv2r_(1.0 / (2 * r_)), texture_(texture) { }
+		Sphere(const Point3d &center, const double radis, const std::shared_ptr<Texture> &texture)
+		:center_(center), radis_(radis), radis2_(radis * radis),
+		 inv2radis_(1.0 / (2 * radis_)), texture_(texture) { }
 
 		void computeBox(std::vector<double> &near, std::vector<double> &far,
 			const Vector3d *normal) const override;
 
 		bool intersect(const Ray &r, Isect &isect) const override;
 
-		std::ostream& print(std::ostream &os) const override { return os << "sphere\n" << c_; }
+		std::ostream& print(std::ostream &os) const override { return os << "sphere\n" << center_; }
 
 	private:
-		Point3d 	c_;
-		double 		r_;
-		double 		r2_;
-		double		inv2r_;
+		Point3d 	center_;
+		double 		radis_;
+		double 		radis2_;
+		double		inv2radis_;
 		std::shared_ptr<Texture> texture_;
 };
 

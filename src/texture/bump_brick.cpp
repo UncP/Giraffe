@@ -133,16 +133,16 @@ Vector3d BumpBrickTexture::evaluate(IntersectionInfo &surface) const
 	double w = step(wf_, ss) - step(1 - wf_, ss);
 	double h = step(hf_, tt) - step(1 - hf_, tt);
 	double interval = w * h;
-	if (interval == 0.0) {
-		int i = ss * (map_len - 1);
-		int j = tt * (map_len - 1);
-		int l = (i > 0) ? (i - 1) : i;
-		int r = (i < (map_len-1)) ? (i + 1) : i;
-		int du = height_map_[j * map_len + l] - height_map_[j * map_len + r];
-		int u = (j > 0) ? (j - 1) : j;
-		int d = (j < (map_len-1)) ? (j + 1) : j;
-		int dv = height_map_[u * map_len + i] - height_map_[d * map_len + i];
-	}
+	// if (interval == 0.0) {
+	// 	int i = ss * (map_len - 1);
+	// 	int j = tt * (map_len - 1);
+	// 	int l = (i > 0) ? (i - 1) : i;
+	// 	int r = (i < (map_len-1)) ? (i + 1) : i;
+	// 	int du = height_map_[j * map_len + l] - height_map_[j * map_len + r];
+	// 	int u = (j > 0) ? (j - 1) : j;
+	// 	int d = (j < (map_len-1)) ? (j + 1) : j;
+	// 	int dv = height_map_[u * map_len + i] - height_map_[d * map_len + i];
+	// }
 
 	return mix(color1_, color2_, interval);
 }
