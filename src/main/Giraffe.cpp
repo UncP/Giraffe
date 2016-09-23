@@ -12,6 +12,8 @@
 #include "../core/scene.hpp"
 #include "../core/window.hpp"
 #include "../object/sphere.hpp"
+#include "../object/triangle.hpp"
+#include "../object/cube.hpp"
 #include "../texture/constant.hpp"
 #include "../texture/stripe.hpp"
 #include "../texture/noise.hpp"
@@ -25,7 +27,6 @@ int main(int argc, char **argv)
 	int screenWidth = 512, screenHeight = 512;
 
 	using namespace Giraffe;
-
 	Camera *cam = new PerspectiveCamera(Point3d(0, 0, 0), 	\
 																			Vector3d(0, 0, -1.0),\
 																			Point2i(screenWidth, screenHeight), \
@@ -51,7 +52,6 @@ int main(int argc, char **argv)
 	std::shared_ptr<Texture> wall6 = std::shared_ptr<Texture>(
 		// new MarbleTexture(Color(0.8), Color(0.25, 0.25, 0.75), Color(0.05), 0.1));
 		new NoiseTexture(Color(0.8, 0.8, 0.2), Color(0.05), 0.1, false));
-
 		// new BrickTexture(Color(0.1, 0.1, 0.5), Color(0.5), 25, 10, 2));
 
 	std::shared_ptr<Texture> sphere1 = std::shared_ptr<Texture>(
@@ -83,12 +83,14 @@ int main(int argc, char **argv)
 		// new StripeTexture(Color(), Color(1), Xaxis, 0.1, Color(16)));
 
 	std::vector<Object *> obj = {
-		// new Sphere(Point3d(0, -1e5-60, -160),		1e5, 	wall1),
+		new Sphere(Point3d(0, -1e5-60, -160),		1e5, 	wall1),
 		new Sphere(Point3d(0, 1e5+60, -160), 		1e5, 	wall1),
-		new Sphere(Point3d(0, 0, -1e5-225), 		1e5, 	wall5),
+		new Sphere(Point3d(0, 0, -1e5-225), 		1e5, 	wall1),
 		new Sphere(Point3d(0, 0, 1e5+125), 			1e5, 	wall2),
-		// new Sphere(Point3d(-1e5-70, 0, -175), 	1e5, 	wall3),
-		// new Sphere(Point3d(1e5+70, 0, -175),  	1e5, 	wall4),
+		new Sphere(Point3d(-1e5-70, 0, -175), 	1e5, 	wall3),
+		new Sphere(Point3d(1e5+70, 0, -175),  	1e5, 	wall4),
+		// new Triangle(Point3d(0, -30, -150), Point3d(40, 0, -160), Point3d(0, 0, -150), sphere3),
+		new Cube(Point3d(0, 0, -150), 10, 20, 30, sphere2),
 		// new Sphere(Point3d(-33, -40, -185.0),		20,		sphere1),
 		// new Sphere(Point3d(37, -44, -145.0),		16,		sphere2),
 		// new Sphere(Point3d(0,  -30, -175.0),		30,		sphere1),

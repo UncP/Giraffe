@@ -46,8 +46,10 @@ bool Sphere::intersect(const Ray &ray, Isect &isect) const
 							 // 1 - (std::acos((hitPos.z_-center_.z_) / radis_) * PI_INV));
 
 		isect.update(dis, IntersectionInfo(hitPos, uv, hitPos-center_), texture_.get());
+		return true;
+	} else {
+		return false;
 	}
-	return true;
 }
 
 } // namespace Giraffe

@@ -1,9 +1,10 @@
-##光线追踪器
+##Giraffe 光线追踪器
+
 ###特点
 * 漫反射, 镜面反射
 * 折射
 * 反走样
-* 全局渲染
+* 全局光照
 * Russian Roulette
 * Procedural Texture
 * Perlin Noise
@@ -12,13 +13,17 @@
 	- BVH
 		+	AABB (Axis-Aligned Bounding Box)
 		+	DOP	(Discrete Oriented Polytopes)
+* 物体
+	- 三角形
+	- 球
+	- 四棱柱
 
 
-###反射折射
+####反射折射
 ![](./image/reflect_refract.png)
 
-###条纹纹理
+####条纹纹理
 ![](./image/stripe.png)
 
-###砖块纹理
+####砖块纹理
 ![](./image/brick.png)

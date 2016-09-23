@@ -21,7 +21,7 @@ class Isect
 	public:
 		Isect():dis_(kInfinity) { }
 
-		void update(	const double &d, const IntersectionInfo &surface, const Texture *t) {
+		void update(const double &d, const IntersectionInfo &surface, const Texture *t) {
 			dis_ 		 = d;
 			surface_ = surface;
 			texture_ = t;
