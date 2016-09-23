@@ -1,4 +1,5 @@
 ##Giraffe 光线追踪器
+[English Version of README](./README.en.md)
 
 ###特点
 * 漫反射, 镜面反射
