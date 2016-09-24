@@ -19,7 +19,7 @@ namespace Giraffe {
 class ImageTexture : public Texture
 {
 	public:
-		ImageTexture(const char *name, double frequency = 0.01, bool emit=false, REFL refl=kDiffuse)
+		ImageTexture(const char *name, double frequency = 1, bool emit=false, REFL refl=kDiffuse)
 		:Texture(refl, emit), frequency_(frequency) {
 			FILE *fp = fopen(name, "rb");
 			if (!fp) {

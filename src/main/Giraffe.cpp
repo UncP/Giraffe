@@ -9,6 +9,7 @@
 
 #include <memory>
 
+#include "../math/matrix.hpp"
 #include "../core/scene.hpp"
 #include "../core/window.hpp"
 #include "../object/sphere.hpp"
@@ -55,8 +56,8 @@ int main(int argc, char **argv)
 		// new BrickTexture(Color(0.1, 0.1, 0.5), Color(0.5), 25, 10, 2));
 
 	std::shared_ptr<Texture> sphere1 = std::shared_ptr<Texture>(
-		new ConstantTexture(Color(0.25, 0.25, 0.75)));
-		// new ImageTexture("../texture/earth.png", 1, true));
+		new ImageTexture("../texture/stones.png"));
+		// new ConstantTexture(Color(0.75, 0.75, 0.75)));
 		// new BrickTexture(Color(1, 1, 0), Color(0, 1, 1), 0.2, 0.08, 0.016, true));
 		// new MarbleTexture(Color(1), Color(2, 2, 0.5), Color(0.5), 0.1, true));
 		// new MarbleTexture(Color(0.8), Color(0.8, 0.8, 0.2), Color(0.05), 0.1));
@@ -82,6 +83,10 @@ int main(int argc, char **argv)
 		new ConstantTexture(Color(16), true));
 		// new StripeTexture(Color(), Color(1), Xaxis, 0.1, Color(16)));
 
+	Object *o = new Cube(Point3d(0, 0, -150), 10, 20, 30, sphere1, rotateY(45));
+	std::cout << o;
+	// return 0;
+
 	std::vector<Object *> obj = {
 		new Sphere(Point3d(0, -1e5-60, -160),		1e5, 	wall1),
 		new Sphere(Point3d(0, 1e5+60, -160), 		1e5, 	wall1),
@@ -90,7 +95,7 @@ int main(int argc, char **argv)
 		new Sphere(Point3d(-1e5-70, 0, -175), 	1e5, 	wall3),
 		new Sphere(Point3d(1e5+70, 0, -175),  	1e5, 	wall4),
 		// new Triangle(Point3d(0, -30, -150), Point3d(40, 0, -160), Point3d(0, 0, -150), sphere3),
-		new Cube(Point3d(0, 0, -150), 10, 20, 30, sphere2),
+		// new Cube(Point3d(0, 0, -150), 20, 20, 30, sphere1, rotateX(45)),
 		// new Sphere(Point3d(-33, -40, -185.0),		20,		sphere1),
 		// new Sphere(Point3d(37, -44, -145.0),		16,		sphere2),
 		// new Sphere(Point3d(0,  -30, -175.0),		30,		sphere1),

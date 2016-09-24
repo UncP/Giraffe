@@ -10,6 +10,8 @@
 #ifndef _MATRIX_HPP_
 #define _MATRIX_HPP_
 
+#include <memory.h>
+
 #include "constant.hpp"
 #include "point.hpp"
 #include "vector.hpp"
@@ -38,6 +40,13 @@ class Matrix
 			return *this;
 		}
 
+		bool operator==(const Matrix &that) const {
+			return memcmp(m_, that.m_, sizeof(double) * 16) == 0;
+		}
+		bool operator!=(const Matrix &that) const {
+			return !operator==(that);
+		}
+
 		Matrix  operator*(const Matrix &) const;
 		Matrix& operator*=(const Matrix &);
 
@@ -45,7 +54,6 @@ class Matrix
 		inline Vector3<T> operator()(const Vector3<T> &) const;
 		template <typename T>
 		inline Point3<T> 	operator()(const Point3<T> &) const;
-		// inline Ray 	 			operator()(const Ray &) const;
 
 		friend std::ostream& operator<<(std::ostream &os, const Matrix &m) {
 			os << "Matrix\n";
@@ -88,6 +96,7 @@ inline Point3<T> Matrix::operator()(const Point3<T> &v) const {
 		y *= invW;
 		z *= invW;
 	}
+
 	return Point3<T>(x, y, z);
 }
 

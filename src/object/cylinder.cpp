@@ -19,7 +19,7 @@ bool Cylinder::intersect(const Ray &ray, Isect &isect) const
 
 	if (dis > radis_) return false;
 
-
+	Vector3d
 
 	return false;
 }

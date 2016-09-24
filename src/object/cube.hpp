@@ -15,28 +15,23 @@
 #include <map>
 
 #include "object.hpp"
+#include "../math/matrix.hpp"
 
 namespace Giraffe {
 
 class Cube : public Object
 {
 	public:
-
 		typedef std::array<std::pair<double, double>, 3> box;
 
-		Cube(	const Point3d &center, int length, int width, int height,
-					const std::shared_ptr<Texture> &texture);
+		typedef std::array<int, 4> quad;
+
+		Cube( const Point3d &center, int length, int width, int height,
+					const std::shared_ptr<Texture> &texture, const Matrix &matrix = Matrix::Identity);
 
 		bool intersect(const Ray &, Isect &) const override;
 
-		std::ostream& print(std::ostream &os) const override {
-			for (auto e : vertices_) os << e;
-			for (auto e : normals_)  os << e;
-			for (auto each : bounds_)
-				for (auto e : each)
-					os << e.first << " " << e.second << std::endl;
-			return os;
-		}
+		std::ostream& print(std::ostream &os) const override;
 
 	private:
 		std::vector<Point3d>            vertices_;
@@ -44,7 +39,7 @@ class Cube : public Object
 		std::array<box, 6>              bounds_;
 		std::shared_ptr<Texture>        texture_;
 
-		static std::array<std::array<int, 4>, 6> indexes_;
+		static std::array<quad, 6> indexes_;
 
 		void computeNormals();
 		void computeBounds();

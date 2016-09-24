@@ -20,7 +20,7 @@ std::array<std::array<int, 4>, 6> Cube::indexes_ = {0, 1, 2, 3,
 																										4, 0, 3, 7};
 
 Cube::Cube(const Point3d &center, int length, int width, int height,
-	const std::shared_ptr<Texture> &texture):texture_(texture)
+	const std::shared_ptr<Texture> &texture, const Matrix &matrix):texture_(texture)
 {
 	/*
 		5	-------------- 6
@@ -43,17 +43,18 @@ Cube::Cube(const Point3d &center, int length, int width, int height,
 	width  /= 2;
 	height /= 2;
 
-	vertices_[0] = center + Point3d(-length, -height, width);
-	vertices_[1] = center + Point3d(-length,  height, width);
-	vertices_[2] = center + Point3d( length,  height, width);
-	vertices_[3] = center + Point3d( length, -height, width);
+	vertices_[0] = center + matrix(Vector3d(-length, -height, width));
+	vertices_[1] = center + matrix(Vector3d(-length,  height, width));
+	vertices_[2] = center + matrix(Vector3d( length,  height, width));
+	vertices_[3] = center + matrix(Vector3d( length, -height, width));
 
-	vertices_[4] = center + Point3d(-length, -height, -width);
-	vertices_[5] = center + Point3d(-length,  height, -width);
-	vertices_[6] = center + Point3d( length,  height, -width);
-	vertices_[7] = center + Point3d( length, -height, -width);
+	vertices_[4] = center + matrix(Vector3d(-length, -height, -width));
+	vertices_[5] = center + matrix(Vector3d(-length,  height, -width));
+	vertices_[6] = center + matrix(Vector3d( length,  height, -width));
+	vertices_[7] = center + matrix(Vector3d( length, -height, -width));
 
 	computeNormals();
+
 	computeBounds();
 }
 
@@ -83,6 +84,18 @@ void Cube::computeBounds()
 	}
 }
 
+std::ostream& Cube::print(std::ostream &os) const {
+	os << "cube\nvertices\n";
+	for (auto e : vertices_) os << e;
+	os << "normals\n";
+	for (auto e : normals_)  os << e;
+	os << "bounds\n";
+	for (auto each : bounds_)
+		for (auto e : each)
+			os << e.first << " " << e.second << std::endl;
+	return os;
+}
+
 bool Cube::intersect(const Ray &ray, Isect &isect) const
 {
 	bool hit = false;
@@ -90,7 +103,7 @@ bool Cube::intersect(const Ray &ray, Isect &isect) const
 		Vector3d ab(vertices_[indexes_[i][0]]-ray.origin());
 		double p_to_p = std::fabs(dot(ab, normals_[i]));
 		double dis = -p_to_p / dot(ray.direction(), normals_[i]);
-		if (dis < kEpsilon) return false;
+		if (dis < kEpsilon) continue;
 
 		Point3d hitPos(ray.origin() + ray.direction() * dis);
 		auto &bound = bounds_[i];

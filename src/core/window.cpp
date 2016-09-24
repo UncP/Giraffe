@@ -101,9 +101,10 @@ bool Window::save_png() const
 {
 	time_t t;
 	struct tm *tt;
+	time(&t);
 	tt = localtime(&t);
 	char file[32];
-	strftime(file, 32, "%M-%S", tt);
+	snprintf(file, 32, "%d-%d", tt->tm_min, tt->tm_sec);
 	strcat(file, ".png");
 	std::cerr << "save to: " << file << std::endl;
 	getchar();
