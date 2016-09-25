@@ -66,7 +66,6 @@ Ray PerspectiveCamera::generateRay(const Point2d &sample) const
 		ori = Point3d(Random2(), Random2(), 0) * radius_;
 		double z = -(focal_distance_ / ray.direction().z_);
 		Point3d hit(ray.direction() * z);
-
 		ray.setDirection(normalize(hit - ori));
 	}
 	ray.setOrigin(cameraToWorld_(ori));

@@ -15,6 +15,7 @@
 #include <map>
 
 #include "object.hpp"
+#include "../accelerator/bvh.hpp"
 #include "../math/matrix.hpp"
 
 namespace Giraffe {
@@ -33,11 +34,14 @@ class Cube : public Object
 
 		std::ostream& print(std::ostream &os) const override;
 
+		~Cube() { delete aabb_; }
+
 	private:
 		std::vector<Point3d>            vertices_;
 		std::vector<Vector3d>           normals_;
 		std::array<box, 6>              bounds_;
 		std::shared_ptr<Texture>        texture_;
+		Box                            *aabb_;
 
 		static std::array<quad, 6> indexes_;
 

@@ -47,7 +47,7 @@ void Window::render(const Scene &scene, const int &samples)
 		fprintf(stderr,"\rprogress: %5.2f%%", 100 * (x / static_cast<float>(width_-1)));
 		for (int y = 0; y < height_; ++y) {
 			for (int sx = 0, i = x + y * width_; sx < 2; ++sx) {
-				for (int sy = 0; sy < 2; ++sy, color = Vector3d(0)) {
+				for (int sy = 0; sy < 2; ++sy, color = Vector3d()) {
 					for (int n = 0; n < samples; ++n) {
 						double a = Random(), b = Random();
 						Point2d sample((x+(a+sx+0.5)*0.5)/width_, (y+(b+sy+0.5)*0.5)/height_);

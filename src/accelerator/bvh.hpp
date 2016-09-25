@@ -69,6 +69,16 @@ class Box : public Object
 			return os;
 		}
 
+		double& near(size_t i) {
+			assert(i < size());
+			return near_[i];
+		}
+
+		double& far(size_t i) {
+			assert(i < size());
+			return far_[i];
+		}
+
 		~Box() { }
 
 		std::vector<double> near_;

@@ -14,14 +14,16 @@ namespace Giraffe {
 
 std::array<std::array<int, 4>, 6> Cube::indexes_ = {0, 1, 2, 3,
 																										3, 2, 6, 7,
-																										7, 4, 5, 6,
+																										7, 6, 5, 4,
 																										4, 5, 1, 0,
 																										1, 5, 6, 2,
-																										4, 0, 3, 7};
+																										4, 0, 7, 3};
 
 Cube::Cube(const Point3d &center, int length, int width, int height,
-	const std::shared_ptr<Texture> &texture, const Matrix &matrix):texture_(texture)
+	const std::shared_ptr<Texture> &texture, const Matrix &matrix)
+:texture_(texture), aabb_(new AABB())
 {
+	assert(aabb_);
 	/*
 		5	-------------- 6
 		 /|           /|
@@ -77,6 +79,8 @@ void Cube::computeBounds()
 			for (int k = 0; k != 4; ++k) {
 				if (vertices_[idx[k]][j] < s) s = vertices_[idx[k]][j];
 				if (vertices_[idx[k]][j] > m) m = vertices_[idx[k]][j];
+				if (vertices_[idx[k]][j] < aabb_->near(j)) aabb_->near(j) = vertices_[idx[k]][j];
+				if (vertices_[idx[k]][j] > aabb_->far(j)) aabb_->far(j) = vertices_[idx[k]][j];
 			}
 			bounds_[i][j].first  = s;
 			bounds_[i][j].second = m;
@@ -84,7 +88,8 @@ void Cube::computeBounds()
 	}
 }
 
-std::ostream& Cube::print(std::ostream &os) const {
+std::ostream& Cube::print(std::ostream &os) const
+{
 	os << "cube\nvertices\n";
 	for (auto e : vertices_) os << e;
 	os << "normals\n";
@@ -99,10 +104,13 @@ std::ostream& Cube::print(std::ostream &os) const {
 bool Cube::intersect(const Ray &ray, Isect &isect) const
 {
 	bool hit = false;
+
+	if (!aabb_->intersect(ray, isect)) return hit;
+
 	for (int i = 0; i != 6; ++i) {
 		Vector3d ab(vertices_[indexes_[i][0]]-ray.origin());
-		double p_to_p = std::fabs(dot(ab, normals_[i]));
-		double dis = -p_to_p / dot(ray.direction(), normals_[i]);
+		double p_to_p = dot(ab, normals_[i]);
+		double dis = p_to_p / dot(ray.direction(), normals_[i]);
 		if (dis < kEpsilon) continue;
 
 		Point3d hitPos(ray.origin() + ray.direction() * dis);
