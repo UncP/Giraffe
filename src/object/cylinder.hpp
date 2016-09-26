@@ -22,11 +22,7 @@ class Cylinder : public Object
 {
 	public:
 		Cylinder(	const Point3d &center1, const Point3d &center2, const double radis,
-							const std::shared_ptr<Texture> &texture)
-		:center1_(center1), center2_(center2), radis_(radis), texture_(texture) {
-			assert(center1_ != center2_);
-			axis_ = normalize(center1_ - center2_);
-		}
+							const std::shared_ptr<Texture> &texture);
 
 		bool intersect(const Ray &, Isect &) const override;
 
@@ -38,6 +34,8 @@ class Cylinder : public Object
 		Point3d  center1_;
 		Point3d  center2_;
 		double   radis_;
+		double   radis2_;
+		double   inv2radis_;
 		Vector3d axis_;
 		std::shared_ptr<Texture> texture_;
 };

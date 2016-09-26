@@ -19,7 +19,7 @@
 
 namespace Giraffe {
 
-const uint8_t kNormalNumber = 7, kAABBNumber = 3, kDOPNumber = kNormalNumber;
+const int kNormalNumber = 7, kAABBNumber = 3, kDOPNumber = kNormalNumber;
 
 const Vector3d NormalSet[kNormalNumber] = {
 	Vector3d(1, 0, 0),
@@ -95,7 +95,6 @@ class AABB : public Box
 				far_.push_back(-kInfinity);
 			}
 		}
-		~AABB() { }
 };
 
 // Discrete Oriented Polytopes
@@ -108,7 +107,6 @@ class DOP : public Box
 				far_.push_back(-kInfinity);
 			}
 		}
-		~DOP() { }
 };
 
 class BVHNode

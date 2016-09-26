@@ -12,12 +12,12 @@
 
 namespace Giraffe {
 
-std::array<std::array<int, 4>, 6> Cube::indexes_ = {0, 1, 2, 3,
-																										3, 2, 6, 7,
-																										7, 6, 5, 4,
-																										4, 5, 1, 0,
-																										1, 5, 6, 2,
-																										4, 0, 7, 3};
+const std::array<std::array<int, 4>, 6> Cube::indexes_ = {0, 1, 2, 3,
+																													3, 2, 6, 7,
+																													7, 6, 5, 4,
+																													4, 5, 1, 0,
+																													1, 5, 6, 2,
+																													4, 0, 7, 3};
 
 Cube::Cube(const Point3d &center, int length, int width, int height,
 	const std::shared_ptr<Texture> &texture, const Matrix &matrix)
@@ -73,7 +73,7 @@ void Cube::computeNormals()
 void Cube::computeBounds()
 {
 	for (int i = 0; i != 6; ++i) {
-		std::array<int, 4> &idx = indexes_[i];
+		const quad &idx = indexes_[i];
 		for (int j = 0; j != 3; ++j) {
 			double s = kInfinity, m = -kInfinity;
 			for (int k = 0; k != 4; ++k) {
@@ -103,31 +103,58 @@ std::ostream& Cube::print(std::ostream &os) const
 
 bool Cube::intersect(const Ray &ray, Isect &isect) const
 {
+	if (!aabb_->intersect(ray, isect)) return false;
+
 	bool hit = false;
-
-	if (!aabb_->intersect(ray, isect)) return hit;
-
+	double dis;
 	for (int i = 0; i != 6; ++i) {
-		Vector3d ab(vertices_[indexes_[i][0]]-ray.origin());
-		double p_to_p = dot(ab, normals_[i]);
-		double dis = p_to_p / dot(ray.direction(), normals_[i]);
-		if (dis < kEpsilon) continue;
+		const quad &idx = indexes_[i];
+		bool in = false;
+		for (int j = 1; j != 3; ++j) {
+			Vector3d a_b	(vertices_[idx[0]] - vertices_[idx[j]]);
+			Vector3d a_c	(vertices_[idx[0]] - vertices_[idx[j+1]]);
+			Vector3d a_pos(vertices_[idx[0]] - ray.origin());
 
-		Point3d hitPos(ray.origin() + ray.direction() * dis);
-		auto &bound = bounds_[i];
-		bool in = true;
-		for (int j = 0; j != 3; ++j) {
-			double s = bound[j].first, b = bound[j].second;
-			if (s != b) {
-				double tmp = hitPos[j];
-				if (tmp < s || tmp > b) {
-					in = false;
-					break;
-				}
-			}
+			Vector3d a_bCross_a_pos(cross(a_b, a_pos));
+			Vector3d a_cCross_dir	 (cross(a_c, ray.direction()));
+
+			double m = 1.0 / dot(a_b, a_cCross_dir);
+
+			dis = dot(a_c, a_bCross_a_pos) * (-m);
+			if (dis < kEpsilon) continue;
+
+			double u = dot(a_pos, a_cCross_dir) * m;
+			if (u < 0.0 || u > 1.0) continue;
+
+			double v = dot(ray.direction(), a_bCross_a_pos) * m;
+			if (v < 0.0 || v > (1.0 - u)) continue;
+			in = true;
+			break;
 		}
+		// 判断直线是否与平面相交
+		// Vector3d ab(vertices_[indexes_[i][0]]-ray.origin());
+		// double p_to_p = dot(ab, normals_[i]);
+		// double dis = p_to_p / dot(ray.direction(), normals_[i]);
+		// if (dis < kEpsilon) continue;
+		// Point3d hitPos(ray.origin() + ray.direction() * dis);
+
+		// auto &bound = bounds_[i];
+		// bool in = true;
+		// for (int j = 0; j != 3; ++j) {
+		// 	double s = bound[j].first, b = bound[j].second;
+		// 	if (s != b) {
+		// 		double tmp = hitPos[j];
+		// 		if (tmp < s || tmp > b) {
+		// 			in = false;
+		// 			break;
+		// 		}
+		// 	}
+		// }
+
 		if (in && dis < isect.distance()) {
+			Point3d hitPos(ray.origin() + ray.direction() * dis);
 			Point2d uv;
+			const box &bound = bounds_[i];
 			for (int j = 0, k = 0; j != 3 && k != 2; ++j) {
 				double s = bound[j].first, b = bound[j].second;
 				if (s != b)

@@ -11,23 +11,9 @@
 
 namespace Giraffe {
 
-static bool _intersect(const double o, const double f, const double s, const double b,
-	double &tmin, double &tmax)
-{
-	double min, max;
-	min = (s - o) * f;
-	max = (b - o) * f;
-	if (f < 0) std::swap(min, max);
-	if (max < 0) return false;
-	if (min > tmin) tmin = min;
-	if (max < tmax) tmax = max;
-	if (tmin > tmax) return false;
-	return true;
-}
-
 bool Box::intersect(const Ray &ray, Isect &isect) const
 {
-	double near = -kInfinity, far = kInfinity;
+	double tmin = -kInfinity, tmax = kInfinity;
 	size_t size = near_.size();
 	double no[size], nd[size];
 	for (size_t i = 0; i != size; ++i) {
@@ -35,8 +21,17 @@ bool Box::intersect(const Ray &ray, Isect &isect) const
 		nd[i] = 1.0 / dot(ray.direction(), NormalSet[i]);
 	}
 	for (size_t i = 0, end = near_.size(); i != end; ++i) {
-		if (!_intersect(no[i], nd[i], near_[i], far_[i], near, far))
-			return false;
+		double min, max;
+		// if ((std::fabs(nd[i]) < 1e-20) && ((no[i] - near_[i] < 0) || (far_[i] - no[i] < 0)))
+			// return false;
+		// nd[i] = 1.0 / nd[i];
+		min = (near_[i] - no[i]) * nd[i];
+		max = (far_[i]  - no[i]) * nd[i];
+		if (nd[i] < 0) std::swap(min, max);
+		if (max < 0) return false;
+		if (min > tmin) tmin = min;
+		if (max < tmax) tmax = max;
+		if (tmin > tmax) return false;
 	}
 	return true;
 }

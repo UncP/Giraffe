@@ -43,7 +43,7 @@ class Cube : public Object
 		std::shared_ptr<Texture>        texture_;
 		Box                            *aabb_;
 
-		static std::array<quad, 6> indexes_;
+		const static std::array<quad, 6> indexes_;
 
 		void computeNormals();
 		void computeBounds();
