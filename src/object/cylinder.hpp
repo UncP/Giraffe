@@ -36,6 +36,7 @@ class Cylinder : public Object
 		double   radis_;
 		double   radis2_;
 		double   inv2radis_;
+		double   tmax_;
 		Vector3d axis_;
 		std::shared_ptr<Texture> texture_;
 };

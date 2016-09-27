@@ -86,14 +86,14 @@ int main(int argc, char **argv)
 		// new StripeTexture(Color(), Color(1), Xaxis, 0.1, Color(16)));
 
 	// Matrix a = rotateX(45);
-	Matrix b = rotateY(45);
+	// Matrix b = rotateY(45);
 	// Vector3d o(a(Vector3d(0, 1, 0)));
 	// std::cout << o;
 	// return 0;
 
 	std::vector<Object *> obj = {
 		// new Cube(Point3d(20, -45, -170), 20, 20, 30, tex1, b),
-		new Cylinder(Point3d(-20, -45, -150), Point3d(20, -45, -175), 15, tex1),
+		new Cylinder(Point3d(-20, -45, -150), Point3d(20, -25, -175), 15, tex1),
 		// new Triangle(Point3d(0, -30, -150), Point3d(40, 0, -160), Point3d(0, 0, -150), tex3),
 		// new Sphere(Point3d(-33, -40, -185.0),		20,		tex1),
 		// new Sphere(Point3d(37, -44, -145.0),		16,		tex2),

@@ -3,10 +3,10 @@
 
 
 ###Features
-* diffuse reflection, mirror reflection
-* refraction
-* anti-aliasing
-* global illumination
+* Diffuse reflection, Mirror reflection
+* Refraction
+* Anti-aliasing
+* Global illumination
 * Russian Roulette
 * Procedural Texture
 * Perlin Noise
@@ -19,6 +19,7 @@
 	- Triangle
 	- Sphere
 	- Quad
+	- Cylinder
 
 
 ####Reflection & Refraction
