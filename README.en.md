@@ -20,6 +20,8 @@
 	- Sphere
 	- Quad
 	- Cylinder
+	- Disk
+
 
 
 ####Reflection & Refraction
