@@ -38,6 +38,19 @@ class Object
 			return os;
 		}
 
+		virtual bool emit() const {
+			return false;
+		}
+
+		virtual const Point3d& center() const {
+			static Point3d c;
+			return c;
+		}
+
+		virtual double radis2() const { return 0; }
+
+		// virtual Vector3d emission() const { return Vector3d(); }
+
 		virtual ~Object() { }
 };
 

@@ -35,21 +35,20 @@ bool Cylinder::intersect(const Ray &ray, Isect &isect) const
 	double fac = 1.0 / ad;
 	double t1 = dot(center1_ - ray.origin(), axis_) * fac;
 	double t2 = dot(center2_ - ray.origin(), axis_) * fac;
-	if (t1 < kEpsilon) t1 = kInfinity;
-	if (t2 < kEpsilon) t2 = kInfinity;
+	if (t1 < 0) t1 = kInfinity;
+	if (t2 < 0) t2 = kInfinity;
 
 	if (t1 == t2) return false;
 
 	bool flag = t1 < t2;
-	if (!flag) std::swap(t1, t2);
-	double dis = t1;
+	double dis = flag ? t1 : t2;
 	const Point3d &c = flag ? center1_ : center2_;
 
 	Point3d hitPos(ray.origin() + ray.direction() * dis);
 
 	// 判断光线是否与底面相交
 	Vector3d v(hitPos - c);
-	if (dot(v, v) <= radis2_ && dis < isect.distance()) {
+	if (v.length2() <= radis2_ && dis < isect.distance()) {
 		Point2d uv;
 		// Point2d uv((ori.x_-c.x_+radis_) * inv2radis_,
 		// 					 (-ori.y_+c.y_+radis_) * inv2radis_);
@@ -61,10 +60,11 @@ bool Cylinder::intersect(const Ray &ray, Isect &isect) const
 	// t` = (t * dot(a, d) - dot(c-o, a)) / dot(a, a)
 	// (t * (dot(a, d) / dot(a, a) * a - d) + (c-o) - dot(c-o, a) / dot(a, a) * a)^2 = r^2
 
-	double aa = dot(axis_, axis_);
+	double aa = 1.0 / dot(axis_, axis_);
 	Vector3d co(center1_ - ray.origin());
-	Vector3d M = (ad / aa) * axis_ - ray.direction();
-	Vector3d N = co - (dot(co, axis_) / aa * axis_);
+	Vector3d M = (ad * aa) * axis_ - ray.direction();
+	double coa = dot(co, axis_);
+	Vector3d N = co - ((coa * aa) * axis_);
 
 	double A = dot(M, M);
 	double C = dot(N, N) - radis2_;
@@ -72,28 +72,29 @@ bool Cylinder::intersect(const Ray &ray, Isect &isect) const
 	double delta = B * B - A * C;
 	if (delta < 0) return false;
 
-	double d1 = (-B + std::sqrt(delta)) / A;
-	double d2 = (-B - std::sqrt(delta)) / A;
-	if (d1 < kEpsilon) return false;
-	if (d2 < kEpsilon)
+	B = -B;
+	A = 1.0 / A;
+	delta = std::sqrt(delta);
+	double d1 = (B + delta) * A;
+	double d2 = (B - delta) * A;
+	if (d1 < 0) return false;
+	if (d2 < 0)
 		dis = d1;
 	else
 		dis = d2;
 
-	// if (dis < t1 || dis > t2) return false;
+	double t = (dis * ad - coa) * aa;
+	// if (tmax_ < 0 && t > 0) return false;
+	// if (tmax_ > 0 && t < 0) return false;
+	if ((tmax_ * t) < 0 || std::fabs(t) > tmax_) return false;
 
-	double t = (dis * ad - dot(co, axis_)) / aa;
-	if (tmax_ > 0 && t < 0) return false;
-	if (tmax_ < 0 && t > 0) return false;
-	if (std::fabs(t) > tmax_) return false;
-
-	Point3d cc(center1_ + t * axis_);
-	if (dis > kEpsilon && dis < isect.distance()) {
+	if (dis < isect.distance()) {
 		hitPos = ray.origin() + ray.direction() * dis;
+		Point3d cc(center1_ + t * axis_);
 		Point2d uv;
 		isect.update(dis, IntersectionInfo(hitPos, uv, hitPos-cc), texture_.get());
+		return true;
 	}
-
 	return false;
 }
 

@@ -30,6 +30,8 @@ class Cylinder : public Object
 			return os << "cylinder\n" << center1_ << center2_ << radis_ << std::endl;
 		}
 
+		bool emit() const override { return texture_->emit(); }
+
 	private:
 		Point3d  center1_;
 		Point3d  center2_;

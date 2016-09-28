@@ -31,6 +31,8 @@ class Texture
 
 		REFL refl() const { return refl_; }
 
+		bool emit() const { return emit_; }
+
 		Vector3d color(IntersectionInfo &surface) const {
 			return !emit_ ? evaluate(surface) : Vector3d();
 		}

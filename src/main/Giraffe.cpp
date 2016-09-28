@@ -16,6 +16,7 @@
 #include "../object/triangle.hpp"
 #include "../object/cube.hpp"
 #include "../object/cylinder.hpp"
+#include "../object/disk.hpp"
 #include "../texture/constant.hpp"
 #include "../texture/stripe.hpp"
 #include "../texture/noise.hpp"
@@ -70,13 +71,16 @@ int main(int argc, char **argv)
 		// new NoiseTexture(Color(0.8, 0.8, 0.2), Color(0.05), 0.1, true));
 		// new ImageTexture("../texture/earth.png"));
 	std::shared_ptr<Texture> tex1 = std::shared_ptr<Texture>(
-		new ConstantTexture(Color(0.25, 0.25, 0.75)));
+		new ConstantTexture(Color(0.9, 0.15, 0.04)));
 	std::shared_ptr<Texture> tex2 = std::shared_ptr<Texture>(
-		new ConstantTexture(Color(0.999), false, kReflect));
+		new ConstantTexture(Color(0.15, 0.04, 0.9)));
+		// new ConstantTexture(Color(0.999), false, kReflect));
 	std::shared_ptr<Texture> tex3 = std::shared_ptr<Texture>(
-		new MarbleTexture(Color(1), Color(0.6, 0.5, 2), Color(0.5), 0.1));
+		new ConstantTexture(Color(0.04, 0.9, 0.15)));
+		// new MarbleTexture(Color(1), Color(0.6, 0.5, 2), Color(0.5), 0.1));
 	std::shared_ptr<Texture> tex4 = std::shared_ptr<Texture>(
-		new MarbleTexture(Color(1), Color(0.2, 1.7, 0.5), Color(0.5), 0.1, true));
+		new ConstantTexture(Color(0.8, 0.8, 0.2)));
+		// new MarbleTexture(Color(1), Color(0.2, 1.7, 0.5), Color(0.5), 0.1, true));
 	std::shared_ptr<Texture> tex5 = std::shared_ptr<Texture>(
 		new StripeTexture(Color(0.4, 0.2, 0.1), Color(2), Yaxis, 3, true));
 	std::shared_ptr<Texture> tex6 = std::shared_ptr<Texture>(
@@ -87,13 +91,26 @@ int main(int argc, char **argv)
 
 	// Matrix a = rotateX(45);
 	// Matrix b = rotateY(45);
-	// Vector3d o(a(Vector3d(0, 1, 0)));
+	// Point3d o(a(Point3d(0, 0, 1)));
 	// std::cout << o;
 	// return 0;
 
 	std::vector<Object *> obj = {
-		// new Cube(Point3d(20, -45, -170), 20, 20, 30, tex1, b),
-		new Cylinder(Point3d(-20, -45, -150), Point3d(20, -25, -175), 15, tex1),
+		// new Disk(Point3d(0, 0, -160), 5.0, 5.0, Vector3d(1, 1, 1), tex1),
+		// new Cylinder(Point3d(-45, -60, -160), Point3d(-45, -40, -160), 12, tex1),
+		// new Cylinder(Point3d(-15, -60, -160), Point3d(-15, -40, -160), 12, tex1),
+		// new Cylinder(Point3d(15, -60, -160), Point3d(15, -40, -160), 12, tex1),
+		// new Cylinder(Point3d(45, -60, -160), Point3d(45, -40, -160), 12, tex1),
+
+		// new Cylinder(Point3d(-30, -40, -160), Point3d(-30, -20, -160), 12, tex2),
+		// new Cylinder(Point3d(0, -40, -160), Point3d(0, -20, -160), 12, tex2),
+		// new Cylinder(Point3d(30, -40, -160), Point3d(30, -20, -160), 12, tex2),
+
+		// new Cylinder(Point3d(-15, -20, -160), Point3d(-15, 0, -160), 12, tex3),
+		// new Cylinder(Point3d(15, -20, -160), Point3d(15, 0, -160), 12, tex3),
+
+		// new Cylinder(Point3d(0, 0, -160), Point3d(0, 20, -160), 12, tex4),
+
 		// new Triangle(Point3d(0, -30, -150), Point3d(40, 0, -160), Point3d(0, 0, -150), tex3),
 		// new Sphere(Point3d(-33, -40, -185.0),		20,		tex1),
 		// new Sphere(Point3d(37, -44, -145.0),		16,		tex2),
