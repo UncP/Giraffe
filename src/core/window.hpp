@@ -12,7 +12,6 @@
 
 #include <string>
 #include <stdlib.h>
-#include <SDL/SDL.h>
 #include <png.h>
 #include <fstream>
 #include <chrono>
@@ -33,13 +32,14 @@ class Window
 
 		void render(const Scene &, const int &);
 
-		void show() const;
 		void save_ppm() const;
 		bool save_png() const;
 
+		void show_png(const char *) const;
+
 		Window& operator=(const Window &) = delete;
 
-		~Window() { delete [] pixels_; }
+		~Window() { delete [] pixels_; delete [] canvas_; }
 
 	private:
 		std::string  title_;
@@ -47,7 +47,6 @@ class Window
 		int					 height_;
 		Vector3d		*pixels_;
 		uint32_t		*canvas_;
-		SDL_Surface *screen_;
 };
 
 } // namespace Giraffe

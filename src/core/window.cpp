@@ -12,27 +12,9 @@
 namespace Giraffe {
 
 Window::Window(const std::string &title, const int width, const int height)
-:title_(title), width_(width), height_(height), pixels_(new Vector3d[width_*height_])
-{	// canvas_(new uint32_t[width_*height_])
-	if (!pixels_) {
-		std::cerr << "像素初始化失败 :(\n";
-		exit(-1);
-	}
+:title_(title), width_(width), height_(height), pixels_(new Vector3d[width_*height_]),
+ canvas_(new uint32_t[width_*height_]) {
 
-	if (SDL_Init(SDL_INIT_VIDEO)) {
-		std::cerr << "SDL_Init failed :(\n";
-		exit(-1);
-	}
-
-	screen_ = SDL_SetVideoMode(width_, height_, 32, SDL_SWSURFACE);
-	if (!screen_) {
-		SDL_Quit();
-		std::cerr << "SDL_SetVideoMode failed :(\n";
-		exit(-1);
-	}
-	canvas_ = static_cast<uint32_t *>(screen_->pixels);
-
-	SDL_WM_SetCaption(title_.c_str(), NULL);
 }
 
 void Window::render(const Scene &scene, const int &samples)
@@ -64,27 +46,23 @@ void Window::render(const Scene &scene, const int &samples)
 	auto Time = std::chrono::duration<double, std::ratio<1>>(end - beg).count();
 	std::cerr << "\ntime: " << std::setw(8) << Time << "  s\n";
 
-	show();
 	save_png();
 }
 
-void Window::show() const
+void Window::show_png(const char *file) const
 {
-	for (int i = 0, end = width_ * height_; i < end; ++i) {
-		canvas_[i] = 0;
-		canvas_[i] |= 0xFF << 24;
-		canvas_[i] |= static_cast<uint8_t>(std::min(pixels_[i].x_, 1.0) * 255.0) << 16;
-		canvas_[i] |= static_cast<uint8_t>(std::min(pixels_[i].y_, 1.0) * 255.0) << 8;
-		canvas_[i] |= static_cast<uint8_t>(std::min(pixels_[i].z_, 1.0) * 255.0);
-	}
-	SDL_UpdateRect(screen_, 0, 0, 0, 0);
+	execve()
 }
 
 void Window::save_ppm() const
 {
+	time_t t;
+	struct tm *tt;
+	time(&t);
+	tt = localtime(&t);
 	char file[32];
-	strcpy(file, title_.c_str());
-	strcat(file, ".png");
+	snprintf(file, 32, "%d-%d-%d", tt->tm_hour, tt->tm_min, tt->tm_sec);
+	strcat(file, ".ppm");
 	std::ofstream out(file, std::ios::out | std::ios::binary);
 	if (!out) { std::cerr << "ppm格式图片保存失败 :(\n"; return ; }
 	out << "P3\n" << width_ << " " << height_ << "\n255\n";
@@ -171,6 +149,7 @@ bool Window::save_png() const
 
 	png_destroy_write_struct(&png_ptr, &info_ptr);
 	fclose(fp);
+	show(file);
 	delete [] row_pointers;
 	delete [] pic;
 	return true;

@@ -1,6 +1,6 @@
 CPP 		 = g++
 CPPFLAGS = -std=c++11 -Wall -O3 -fopenmp
-LDFLAGS  = -lSDL -lSDLmain -lpng
+LDFLAGS  = -lpng
 
 DIR 		 = math utility object accelerator core texture
 OBJ 		 = math/constant.o math/vector.o math/point.o math/ray.o math/vertex.o math/matrix.o \
