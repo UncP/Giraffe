@@ -16,6 +16,7 @@
 #include <algorithm>
 
 #include "../object/object.hpp"
+#include "../math/constant.hpp"
 
 namespace Giraffe {
 

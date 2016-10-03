@@ -7,6 +7,8 @@
  *    > Created Time: 2016-07-30 17:18:13
 **/
 
+#include <unistd.h>
+
 #include "window.hpp"
 
 namespace Giraffe {
@@ -49,11 +51,6 @@ void Window::render(const Scene &scene, const int &samples)
 	save_png();
 }
 
-void Window::show_png(const char *file) const
-{
-	execve()
-}
-
 void Window::save_ppm() const
 {
 	time_t t;
@@ -85,7 +82,6 @@ bool Window::save_png() const
 	snprintf(file, 32, "%d-%d-%d", tt->tm_hour, tt->tm_min, tt->tm_sec);
 	strcat(file, ".png");
 	std::cerr << "save to: " << file << std::endl;
-	getchar();
 
 	FILE *fp = fopen(file, "wb");
 	if (!fp) {
@@ -149,10 +145,15 @@ bool Window::save_png() const
 
 	png_destroy_write_struct(&png_ptr, &info_ptr);
 	fclose(fp);
-	show(file);
+	show_png(file);
 	delete [] row_pointers;
 	delete [] pic;
 	return true;
+}
+
+void Window::show_png(const char *file) const
+{
+	execlp("eog", "eog", file, NULL);
 }
 
 } // namespace Giraffe
