@@ -15,7 +15,6 @@ Vector3d StripeTexture::evaluate(IntersectionInfo &surface) const
 {
 	double var = axis_ == Xaxis ? surface.position().x_ :
 																(axis_ == Yaxis ? surface.position().y_ : surface.position().z_);
-
 	double t = (1.0 + std::sin((var * PI) * factor_)) * 0.5;
 	return mix(color1_, color2_, t);
 }

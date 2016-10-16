@@ -25,7 +25,7 @@ Noise::Noise()
 	for (int i = 0; i != PerlinNumber; ++i)
 		permutationTable_[i] = i;
 
-	std::default_random_engine generator(time(0));
+	std::default_random_engine generator(1);
 	std::uniform_int_distribution<int> distribution1(0, PerlinNumber-1);
 	for (int i = 0; i != PerlinNumber; ++i) {
 		int j = distribution1(generator);
@@ -89,6 +89,11 @@ double Noise::gnoise(const Point3d &p) const
 	return lerp(v0, v1, wz);
 }
 
+double Noise::snoise(const Point3d &p) const
+{
+	return 2 * gnoise(p) - 1;
+}
+
 double Noise::turbulence(const Point3d &p) const
 {
 	double res = 0;
@@ -106,7 +111,7 @@ double Noise::fractalSum(const Point3d &p) const
 	double res = 0;
 	double f = 1, a = 1;
 	for (int i = 0; i != octaves_; ++i) {
-		res += (2 * gnoise(p * f) - 1) * a;
+		res += snoise(p * f) * a;
 		f *= 2.0;
 		a *= 0.5;
 	}

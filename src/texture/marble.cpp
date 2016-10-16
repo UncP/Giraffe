@@ -17,9 +17,21 @@ Vector3d MarbleTexture::evaluate(IntersectionInfo &surface) const
 	double tt = 2 * std::fabs(std::sin(surface.position().z_ * frequency_ + t));
 
 	if (tt < 1)
-		return color2_ * tt + (1 - tt) * color3_;
-	tt -= 1;
-	return color1_ * tt + (1 - tt) * color2_;
+		return mix(color2_, color3_, tt);
+	else {
+		tt -= 1;
+		return mix(color1_, color2_, tt);
+	}
+	// static Vector3d color[13] = {Vector3d(0.25, 0.25, 0.35), Vector3d(0.25, 0.25, 0.35),
+	// 														 Vector3d(0.1, 0.1, 0.3), Vector3d(0.1, 0.1, 0.3),
+	// 														 Vector3d(0.1, 0.1, 0.3),
+	// 														 Vector3d(0.25, 0.25, 0.35), Vector3d(0.25, 0.25, 0.35),
+	// 														 Vector3d(0.05, 0.05, 0.26), Vector3d(0.05, 0.05, 0.26),
+	// 														 Vector3d(0.03, 0.03, 0.20), Vector3d(0.03, 0.03, 0.20),
+	// 														 Vector3d(0.25, 0.25, 0.35), Vector3d(0.03, 0.03, 0.20)
+	// 													  };
+	// double t = Noise::getNoise().fractalSum(surface.position() * frequency_);
+	// return spline(clamp(2 * t + 0.75, 0, 1), 12, color);
 }
 
 } // namespace Giraffe

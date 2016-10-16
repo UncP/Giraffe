@@ -27,7 +27,9 @@ enum REFL { kDiffuse, kReflect, kRefract };
 
 enum Plane { Xaxis = 0, Yaxis, Zaxis};
 
-#define radian(angle) (angle * (PI / 180.0))
+inline double radian(double angle) {
+	return angle * (PI / 180.0);
+}
 
 } // namespace Giraffe
 

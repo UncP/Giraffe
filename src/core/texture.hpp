@@ -14,7 +14,6 @@
 #include "../math/point.hpp"
 #include "../math/vector.hpp"
 #include "../math/vertex.hpp"
-#include "../math/utility.hpp"
 #include "../utility/intersection_info.hpp"
 #include "noise.hpp"
 
