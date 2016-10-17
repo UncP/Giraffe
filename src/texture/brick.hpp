@@ -10,6 +10,7 @@
 #ifndef _BRICK_TEXTURE_HPP_
 #define _BRICK_TEXTURE_HPP_
 
+#include "../math/matrix.hpp"
 #include "../core/texture.hpp"
 
 namespace Giraffe {
@@ -18,8 +19,9 @@ class BrickTexture : public Texture
 {
 	public:
 		BrickTexture(	const Vector3d &color1, const Vector3d &color2, double width, double height,
-									double interval, bool emit = false, REFL refl = kDiffuse)
-		:Texture(refl, emit), color1_(color1), color2_(color2) {
+									double interval, const Matrix2 &transform = Matrix2::Identity,
+									bool emit = false, REFL refl = kDiffuse)
+		:Texture(refl, emit), color1_(color1), color2_(color2), transform_(transform) {
 			width_  = width + interval;
 			height_ = height + interval;
 			wf_ = (interval * 0.5) / width;
@@ -35,6 +37,7 @@ class BrickTexture : public Texture
 		double 	 height_;
 		double   wf_;
 		double   hf_;
+		Matrix2  transform_;
 };
 
 } // namespace Giraffe

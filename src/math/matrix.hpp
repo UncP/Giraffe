@@ -18,6 +18,36 @@
 
 namespace Giraffe {
 
+class Matrix2
+{
+	public:
+		static Matrix2 Identity;
+
+		template <typename T>
+		inline Point2<T> 	operator()(const Point2<T> &) const;
+
+		Matrix2(double m00, double m10, double m01, double m11) {
+			m_[0][0] = m00;
+			m_[1][0] = m10;
+			m_[0][1] = m01;
+			m_[1][1] = m11;
+		}
+
+	private:
+		double m_[2][2];
+};
+
+Matrix2 rotate2(const double);
+Matrix2 shear2X(const double);
+Matrix2 shear2Y(const double);
+
+template <typename T>
+inline Point2<T> Matrix2::operator()(const Point2<T> &v) const {
+	double x = m_[0][0] * v.x_ + m_[1][0] * v.y_;
+	double y = m_[0][1] * v.x_ + m_[1][1] * v.y_;
+	return Point2<T>(x, y);
+}
+
 class Matrix
 {
 	public:
@@ -34,10 +64,12 @@ class Matrix
 						double m02, double m12, double m22, double m32, \
 						double m03, double m13, double m23, double m33  \
 		);
-		Matrix& operator=(const Matrix &m) {
-			for (int i = 0; i < 16; ++i)
-				_m[i] = m._m[i];
+		Matrix& operator=(const Matrix &that) {
+			memcpy(this->m_, that.m_, 16 * sizeof(double));
 			return *this;
+		}
+		Matrix(const Matrix &that) {
+			memcpy(this->m_, that.m_, 16 * sizeof(double));
 		}
 
 		bool operator==(const Matrix &that) const {
@@ -96,7 +128,6 @@ inline Point3<T> Matrix::operator()(const Point3<T> &v) const {
 		y *= invW;
 		z *= invW;
 	}
-
 	return Point3<T>(x, y, z);
 }
 

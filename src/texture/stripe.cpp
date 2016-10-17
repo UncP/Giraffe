@@ -13,8 +13,8 @@ namespace Giraffe {
 
 Vector3d StripeTexture::evaluate(IntersectionInfo &surface) const
 {
-	double var = axis_ == Xaxis ? surface.position().x_ :
-																(axis_ == Yaxis ? surface.position().y_ : surface.position().z_);
+	Point3d p(transform_(surface.position()));
+	double var = axis_ == Xaxis ? p.x_ : (axis_ == Yaxis ? p.y_ : p.z_);
 	double t = (1.0 + std::sin((var * PI) * factor_)) * 0.5;
 	return mix(color1_, color2_, t);
 }

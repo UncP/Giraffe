@@ -11,6 +11,16 @@
 
 namespace Giraffe {
 
+static const Vector3d NormalSet[kNormalNumber] = {
+	Vector3d(1, 0, 0),
+	Vector3d(0, 1, 0),
+	Vector3d(0, 0, 1),
+	Vector3d( std::sqrt(3)/3.0,  std::sqrt(3)/3.0, std::sqrt(3)/3.0),
+	Vector3d(-std::sqrt(3)/3.0,  std::sqrt(3)/3.0, std::sqrt(3)/3.0),
+	Vector3d(-std::sqrt(3)/3.0, -std::sqrt(3)/3.0, std::sqrt(3)/3.0),
+	Vector3d( std::sqrt(3)/3.0, -std::sqrt(3)/3.0, std::sqrt(3)/3.0)
+};
+
 bool Box::intersect(const Ray &ray, Isect &isect) const
 {
 	double tmin = -kInfinity, tmax = kInfinity;

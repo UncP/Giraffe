@@ -72,9 +72,9 @@ int main(int argc, char **argv)
 		// new ConstantTexture(Color(0.9, 0.15, 0.04)));
 		// new StripeTexture(Color(), Color(1), Yaxis, 5));
 		// new MarbleTexture(Color(0.08, 0.08, 0.3), Color(0.5), Color(0.02, 0.02, 0.2), 0.1));
+		// new BrickTexture(Color(1, 1, 0), Color(0, 1, 1), 0.2, 0.08, 0.016));
 	std::shared_ptr<Texture> tex1 = std::shared_ptr<Texture>(
-		new BrickTexture(Color(1, 1, 0), Color(0, 1, 1), 0.2, 0.08, 0.016));
-
+		new StripeTexture(Color(), Color(1), Xaxis, 0.2, rotateY(45)));
 
 	std::shared_ptr<Texture> tex2 = std::shared_ptr<Texture>(
 		new ConstantTexture(Color(0.15, 0.04, 0.9)));
@@ -86,18 +86,12 @@ int main(int argc, char **argv)
 		new ConstantTexture(Color(0.8, 0.8, 0.2)));
 		// new MarbleTexture(Color(1), Color(0.2, 1.7, 0.5), Color(0.5), 0.1, true));
 	std::shared_ptr<Texture> tex5 = std::shared_ptr<Texture>(
-		new StripeTexture(Color(0.4, 0.2, 0.1), Color(2), Yaxis, 3, true));
+		new StripeTexture(Color(0.4, 0.2, 0.1), Color(2), Yaxis, 0.3));
 	std::shared_ptr<Texture> tex6 = std::shared_ptr<Texture>(
 		new MarbleTexture(Color(1), Color(4, 1, 2), Color(0.5), 0.2, true));
 	std::shared_ptr<Texture> light = std::shared_ptr<Texture>(
 		new ConstantTexture(Color(16), true));
 		// new StripeTexture(Color(), Color(1), Xaxis, 0.1, Color(16)));
-
-	// Matrix a = rotateX(45);
-	// Matrix b = rotateY(45);
-	// Point3d o(a(Point3d(0, 0, 1)));
-	// std::cout << o;
-	// return 0;
 
 	std::vector<Object *> obj = {
 		// new Disk(Point3d(0, 0, -160), 5.0, 5.0, Vector3d(1, 1, 1), tex1),
@@ -109,11 +103,11 @@ int main(int argc, char **argv)
 		// new Sphere(Point3d(-23,  -48, -185.0),	12,		tex5),
 		// new Sphere(Point3d(-50,  -45, -185.0),	15,		tex6),
 		// new Sphere(Point3d(-45,  -52, -130.0),	8,		tex2),
-		// new Sphere(Point3d(-40,  -40, -180.0),	20,		tex1),
-		// new Sphere(Point3d(30,  -45, -150.0),		15,		tex1),
+		new Sphere(Point3d(-40,  -40, -180.0),	20,		tex1),
+		new Sphere(Point3d(30,  -45, -150.0),		15,		tex1),
 		new Sphere(Point3d(0, -1e5-60, -160),		1e5, 	wall1),
 		new Sphere(Point3d(0, 1e5+60, -160), 		1e5, 	wall1),
-		new Sphere(Point3d(0, 0, -1e5-225), 		1e5, 	wall1),
+		new Sphere(Point3d(0, 0, -1e5-225), 		1e5, 	wall6),
 		new Sphere(Point3d(0, 0, 1e5+125), 			1e5, 	wall2),
 		new Sphere(Point3d(-1e5-70, 0, -175), 	1e5, 	wall3),
 		new Sphere(Point3d(1e5+70, 0, -175),  	1e5, 	wall4),
@@ -123,5 +117,6 @@ int main(int argc, char **argv)
 
 	Window win(CornellBox.name(), screenWidth, screenHeight);
 	win.render(CornellBox, argc == 2 ? atoi(argv[1]) : 4);
+
 	return 0;
 }

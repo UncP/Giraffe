@@ -118,6 +118,13 @@ void BumpBrickTexture::generateHeightMap()
 
 Vector3d BumpBrickTexture::evaluate(IntersectionInfo &surface) const
 {
+	Vector3d u, v, w(surface.normal());
+	if (std::fabs(w.x_) > 0.1)
+		u = normalize(cross(Vector3d(0, 1, 0), w));
+	else
+		u = normalize(cross(Vector3d(1, 0, 0), w));
+	v = normalize(cross(w, u));
+
 	double ss = surface.uv().x_ / width_;
 	double tt = surface.uv().y_ / height_;
 

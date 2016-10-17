@@ -10,6 +10,7 @@
 #ifndef _STRIPE_TEXTURE_HPP_
 #define _STRIPE_TEXTURE_HPP_
 
+#include "../math/matrix.hpp"
 #include "../core/texture.hpp"
 
 namespace Giraffe {
@@ -18,15 +19,17 @@ class StripeTexture : public Texture
 {
 	public:
 		StripeTexture(const Vector3d &color1, const Vector3d &color2, int axis,
-									const double &factor = 1.0, bool emit = false, REFL refl = kDiffuse)
-		:Texture(refl, emit), color1_(color1), color2_(color2), axis_(axis),
-		 factor_(1.0 / factor) { }
+									const double &factor = 0.1, const Matrix &transform = Matrix::Identity,
+									bool emit = false, REFL refl = kDiffuse)
+		:Texture(refl, emit), color1_(color1), color2_(color2), transform_(transform), axis_(axis),
+		 factor_(factor) { }
 
 		Vector3d evaluate(IntersectionInfo &) const override;
 
 	private:
 		Vector3d color1_;
 		Vector3d color2_;
+		Matrix   transform_;
 		int      axis_;
 		double 	 factor_;
 };

@@ -13,8 +13,9 @@ namespace Giraffe {
 
 Vector3d BrickTexture::evaluate(IntersectionInfo &surface) const
 {
-	double ss = surface.uv().x_ / width_;
-	double tt = surface.uv().y_ / height_;
+	Point2d uv(transform_(surface.uv()));
+	double ss = uv.x_ / width_;
+	double tt = uv.y_ / height_;
 
 	if (std::fmod(tt * 0.5, 1.0) > 0.5)
 		ss += 0.5;

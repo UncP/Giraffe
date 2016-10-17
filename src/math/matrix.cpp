@@ -11,6 +11,35 @@
 
 namespace Giraffe {
 
+Matrix2 Matrix2::Identity(1, 0, 0, 1);
+
+Matrix2 rotate2(const double angle)
+{
+	double c = std::cos(radian(angle));
+	double s = std::sin(radian(angle));
+
+	return Matrix2(c, s,
+								-s, c);
+}
+
+Matrix2 shear2X(const double angle)
+{
+	double c = std::cos(radian(angle));
+	double s = std::sin(radian(angle));
+
+	return Matrix2(1, s,
+								 0, c);
+}
+
+Matrix2 shear2Y(const double angle)
+{
+	double c = std::cos(radian(angle));
+	double s = std::sin(radian(angle));
+
+	return Matrix2(c, 0,
+								 s, 1);
+}
+
 Matrix Matrix::Identity(1, 0, 0, 0,
 												0, 1, 0, 0,
 												0, 0, 1, 0,
