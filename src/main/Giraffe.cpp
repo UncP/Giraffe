@@ -55,7 +55,7 @@ int main(int argc, char **argv)
 	std::shared_ptr<Texture> wall6 = std::shared_ptr<Texture>(
 		// new MarbleTexture(Color(0.8), Color(0.25, 0.25, 0.75), Color(0.05), 0.1));
 		// new NoiseTexture(Color(0.8, 0.8, 0.2), Color(0.05), 0.1, false));
-		new BrickTexture(Color(0.1, 0.1, 0.5), Color(0.5), 1.2e-4, 4.8e-5, 7.2e-6));
+		new BrickTexture(Color(0.1, 0.1, 0.5), Color(0.5), 1.2e-4, 4.8e-5, 7.2e-6, shear2X(45)));
 
 		// new BrickTexture(Color(0.5, 0.1, 0.1), Color(0.5), 0.2, 0.08, 0.016, true));
 		// new MarbleTexture(Color(1), Color(0.5, 2, 2), Color(0.5), 0.1, true));
@@ -74,7 +74,7 @@ int main(int argc, char **argv)
 		// new MarbleTexture(Color(0.08, 0.08, 0.3), Color(0.5), Color(0.02, 0.02, 0.2), 0.1));
 		// new BrickTexture(Color(1, 1, 0), Color(0, 1, 1), 0.2, 0.08, 0.016));
 	std::shared_ptr<Texture> tex1 = std::shared_ptr<Texture>(
-		new StripeTexture(Color(), Color(1), Xaxis, 0.2, rotateY(45)));
+		new StripeTexture(Color(), Color(1), Xaxis, 0.2, rotateX(45)));
 
 	std::shared_ptr<Texture> tex2 = std::shared_ptr<Texture>(
 		new ConstantTexture(Color(0.15, 0.04, 0.9)));

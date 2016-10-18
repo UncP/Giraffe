@@ -64,12 +64,12 @@ class Matrix
 						double m02, double m12, double m22, double m32, \
 						double m03, double m13, double m23, double m33  \
 		);
+		Matrix(const Matrix &that) {
+			memcpy(this->m_, that.m_, 16 * sizeof(double));
+		}
 		Matrix& operator=(const Matrix &that) {
 			memcpy(this->m_, that.m_, 16 * sizeof(double));
 			return *this;
-		}
-		Matrix(const Matrix &that) {
-			memcpy(this->m_, that.m_, 16 * sizeof(double));
 		}
 
 		bool operator==(const Matrix &that) const {
