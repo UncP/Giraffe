@@ -14,7 +14,7 @@
 #include <memory>
 
 #include "../math/point.hpp"
-#include "object.hpp"
+#include "../core/object.hpp"
 
 namespace Giraffe {
 

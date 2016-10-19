@@ -103,7 +103,7 @@ std::ostream& Cube::print(std::ostream &os) const
 
 bool Cube::intersect(const Ray &ray, Isect &isect) const
 {
-	if (!aabb_->intersect(ray, isect)) return false;
+	if (!aabb_->hit(ray)) return false;
 
 	bool hit = false;
 	double dis;

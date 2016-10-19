@@ -10,14 +10,20 @@
 #ifndef _PATHTRACER_HPP_
 #define _PATHTRACER_HPP_
 
-#include "../utility/random.hpp"
-#include "../utility/utility.hpp"
-#include "../object/object.hpp"
 #include "../math/ray.hpp"
+#include "object.hpp"
+#include "light.hpp"
 
 namespace Giraffe {
 
-Vector3d trace(const Ray &, const std::vector<Object *> &, int);
+class PathTracer
+{
+	public:
+		static Vector3d trace(const Ray &,
+													const std::vector<Object *> &,
+													const std::vector<Light *> &,
+													int);
+};
 
 } // namespace Giraffe
 

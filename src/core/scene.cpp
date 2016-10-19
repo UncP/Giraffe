@@ -11,15 +11,11 @@
 
 namespace Giraffe {
 
-void Scene::accelerate() {
+void Scene::accelerate()
+{
 	BVH *bvh = new BVH();
-	if (!bvh) {
-		std::cerr << "acceleration failed :(\n";
-		return ;
-	}
 	bvh->build(objects_);
 	objects_.clear();
-	// std::cout << bvh;
 	objects_.push_back(static_cast<Object *>(bvh));
 	accelerate_ = true;
 }

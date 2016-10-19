@@ -12,7 +12,7 @@
 
 #include <memory>
 
-#include "object.hpp"
+#include "../core/object.hpp"
 #include "../math/vertex.hpp"
 
 namespace Giraffe {
@@ -29,13 +29,9 @@ class Sphere : public Object
 
 		bool intersect(const Ray &r, Isect &isect) const override;
 
+		bool hit(const Ray &r) const override;
+
 		bool emit() const override { return texture_->emit(); }
-
-		double radis2() const override { return radis_; }
-
-		const Point3d& center() const override { return center_; }
-
-		// Vector3d emission() const override { return texture_.emission(); }
 
 		std::ostream& print(std::ostream &os) const override { return os << "sphere\n" << center_; }
 

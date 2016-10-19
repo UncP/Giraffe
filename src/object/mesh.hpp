@@ -17,7 +17,7 @@
 #include <set>
 #include <cassert>
 
-#include "object.hpp"
+#include "../core/object.hpp"
 
 namespace Giraffe {
 

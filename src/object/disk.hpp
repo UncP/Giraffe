@@ -12,7 +12,7 @@
 
 #include <memory>
 
-#include "object.hpp"
+#include "../core/object.hpp"
 #include "../math/point.hpp"
 #include "../math/matrix.hpp"
 

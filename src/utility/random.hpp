@@ -15,6 +15,14 @@
 
 namespace Giraffe {
 
+class RandomGenerator
+{
+
+	public:
+
+	private:
+};
+
 double Random();
 
 double Random2();

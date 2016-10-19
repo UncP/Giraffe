@@ -14,7 +14,7 @@
 #include <array>
 #include <map>
 
-#include "object.hpp"
+#include "../core/object.hpp"
 #include "../accelerator/bvh.hpp"
 #include "../math/matrix.hpp"
 

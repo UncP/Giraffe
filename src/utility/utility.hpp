@@ -13,7 +13,6 @@
 #include "../math/constant.hpp"
 #include "intersection_info.hpp"
 #include "../core/texture.hpp"
-
 namespace Giraffe {
 
 class Isect

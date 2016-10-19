@@ -23,7 +23,9 @@ class Object
 	public:
 		Object() = default;
 
-		virtual bool intersect(const Ray &, Isect &) const = 0;
+		virtual bool intersect(const Ray &, Isect &) const { return false; }
+
+		virtual bool hit(const Ray &) const { return false; }
 
 		virtual void computeBox(std::vector<double> &, std::vector<double> &,
 			const Vector3d *) const {
@@ -41,15 +43,6 @@ class Object
 		virtual bool emit() const {
 			return false;
 		}
-
-		virtual const Point3d& center() const {
-			static Point3d c;
-			return c;
-		}
-
-		virtual double radis2() const { return 0; }
-
-		// virtual Vector3d emission() const { return Vector3d(); }
 
 		virtual ~Object() { }
 };

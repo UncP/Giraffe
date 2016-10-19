@@ -21,7 +21,7 @@ static const Vector3d NormalSet[kNormalNumber] = {
 	Vector3d( std::sqrt(3)/3.0, -std::sqrt(3)/3.0, std::sqrt(3)/3.0)
 };
 
-bool Box::intersect(const Ray &ray, Isect &isect) const
+bool Box::hit(const Ray &ray) const
 {
 	double tmin = -kInfinity, tmax = kInfinity;
 	size_t size = near_.size();

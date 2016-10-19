@@ -17,9 +17,17 @@ namespace Giraffe {
 class PointLight : public Light
 {
 	public:
+		PointLight(const Point3d &position, const Vector3d &intensity)
+		:position_(position), intensity_(intensity) { }
+
+		Vector3d illuminate(const Isect &isect) const override;
+
+		Vector3d computeLight(const Point3d &position, const Vector3d &normal) const override;
 
 	private:
 
+		Point3d  position_;
+		Vector3d intensity_;
 };
 
 } // namespace Giraffe

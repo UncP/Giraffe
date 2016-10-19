@@ -15,7 +15,7 @@
 #include <map>
 #include <algorithm>
 
-#include "../object/object.hpp"
+#include "../core/object.hpp"
 #include "../math/constant.hpp"
 
 namespace Giraffe {
@@ -29,7 +29,7 @@ class Box : public Object
 
 		const size_t size() const { return near_.size(); }
 
-		bool intersect(const Ray &, Isect &) const override;
+		bool hit(const Ray &) const override;
 
 		void enclose(const std::vector<std::pair<Object *, Box *>> &boxes,
 			const size_t beg, const size_t end) {

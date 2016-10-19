@@ -7,11 +7,18 @@
  *    > Created Time: 2016-08-06 18:24:38
 **/
 
+#include "../utility/random.hpp"
+#include "../utility/utility.hpp"
+
 #include "pathTracer.hpp"
 
 namespace Giraffe {
 
-Vector3d trace(const Ray &ray, const std::vector<Object *> &objects, int depth)
+Vector3d PathTracer::trace(
+	const Ray &ray,
+	const std::vector<Object *> &objects,
+	const std::vector<Light *> &lights,
+	int depth)
 {
 	Isect isect;
 	for (size_t i = 0, end = objects.size(); i != end; ++i)
@@ -37,6 +44,22 @@ Vector3d trace(const Ray &ray, const std::vector<Object *> &objects, int depth)
 	REFL mat = isect.refl();
 
 	if (mat == kDiffuse) {
+		size_t lend = lights.size(), oend = objects.size();
+		for (size_t i = 0; i != lend; ++i) {
+			bool flag = true;
+			Vector3d dir(lights[i]->computeLight(reflPos, normal));
+			if (dot(dir, normal) < 0) continue;
+			for (size_t j = 0; j != oend; ++j) {
+				if (objects[j]->hit(Ray(reflPos, dir))) {
+					flag = false;
+					break;
+				}
+			}
+			if (flag) {
+				emission += lights[i]->illuminate(isect);
+			}
+		}
+
 		Vector3d u, v, w(normal);
 		if (std::fabs(w.x_) > 0.1)
 			u = normalize(cross(Vector3d(0, 1, 0), w));
@@ -46,6 +69,7 @@ Vector3d trace(const Ray &ray, const std::vector<Object *> &objects, int depth)
 		double a = Random(), b = Random(), sini = std::sqrt(a), cosi = DOU_PI * b;
 		Vector3d dir((sini*std::cos(cosi)*u) + (sini*std::sin(cosi)*v) + (std::sqrt(1-a)*w));
 
+		return emission + mult(color, trace(Ray(reflPos, normalize(dir)), objects, lights, depth));
 		// Vector3d e;
 		// for (size_t i = 0, end = objects.size(); i != end; ++i) {
 		// 	if (!objects[i]->emit()) continue;
@@ -70,14 +94,12 @@ Vector3d trace(const Ray &ray, const std::vector<Object *> &objects, int depth)
 		// 		e += mult(color, isect.emission() * dot(d, normal) * omega) * PI_INV;
 		// 	}
 		// }
-
-		return emission + mult(color, trace(Ray(reflPos, normalize(dir)), objects, depth));
 	}
 
 	Vector3d refl = normalize(ray.direction() - 2 * dot(ray.direction(), normal) * normal);
 
 	if (mat == kReflect)
-		return emission + mult(color, trace(Ray(reflPos, refl), objects, depth));
+		return emission + mult(color, trace(Ray(reflPos, refl), objects, lights, depth));
 
 	double etai = 1.0, etat = kRefractionRatio;
 	double ior;
@@ -86,7 +108,7 @@ Vector3d trace(const Ray &ray, const std::vector<Object *> &objects, int depth)
 
 	double cos1 = -dot(ray.direction(), normal), cos2;
 	if ((cos2 = (1 - ior * ior * (1.0 - cos1 * cos1))) < 0.0)
-		return emission + mult(color, trace(Ray(reflPos, refl), objects, depth));
+		return emission + mult(color, trace(Ray(reflPos, refl), objects, lights, depth));
 
 	Vector3d refr = normalize(ray.direction() * ior + normal * (ior * cos1 - std::sqrt(cos2)));
 	Point3d refrPos = isect.position() - normal * kEpsilon;
@@ -97,8 +119,10 @@ Vector3d trace(const Ray &ray, const std::vector<Object *> &objects, int depth)
 
 	double P = 0.25 + 0.5 * Re, RP = Re / P, TP = Tr / (1 - P);
 	return emission + mult(color, (depth > 2 ? (Random() < P ?
-		trace(Ray(reflPos, refl), objects, depth)*RP:trace(Ray(refrPos, refr), objects, depth)*TP):
-		trace(Ray(reflPos, refl), objects, depth)*Re+trace(Ray(refrPos, refr), objects, depth)*Tr));
+		trace(Ray(reflPos, refl), objects, lights, depth)*RP:
+		trace(Ray(refrPos, refr), objects, lights, depth)*TP):
+		trace(Ray(reflPos, refl), objects, lights, depth)*Re+
+		trace(Ray(refrPos, refr), objects, lights, depth)*Tr));
 }
 
 } // namespace Giraffe

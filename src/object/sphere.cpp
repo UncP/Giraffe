@@ -23,6 +23,22 @@ void Sphere::computeBox(std::vector<double> &near, std::vector<double> &far,
 	}
 }
 
+bool Sphere::hit(const Ray &ray) const
+{
+	Vector3d l = center_ - ray.origin();
+	double s = dot(l, ray.direction());
+	double l2 = l.length2();
+	if (s < 0 && l2 > radis2_)
+		return false;
+	double q2 = l2 - s * s;
+	if (q2 > radis2_)
+		return false;
+	double q = std::sqrt(radis2_ - q2);
+	double dis = l2 > radis2_ ? (s - q) : (s + q);
+
+	return true;
+}
+
 bool Sphere::intersect(const Ray &ray, Isect &isect) const
 {
 	Vector3d l = center_ - ray.origin();

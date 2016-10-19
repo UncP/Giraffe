@@ -10,11 +10,20 @@
 #ifndef _LIGHT_HPP_
 #define _LIGHT_HPP_
 
+#include "../math/point.hpp"
+#include "../math/vector.hpp"
+#include "../utility/utility.hpp"
+
 namespace Giraffe {
 
 class Light
 {
 	public:
+		virtual Vector3d illuminate(const Isect &isect) const = 0;
+
+		virtual Vector3d computeLight(const Point3d &position, const Vector3d &normal) const = 0;
+
+		~Light() { }
 
 	private:
 

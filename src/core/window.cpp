@@ -22,7 +22,8 @@ Window::Window(const std::string &title, const int width, const int height)
 void Window::render(const Scene &scene, const int &samples)
 {
 	const Camera &camera = scene.camera();
-	const std::vector<Object *> &spheres = scene.objects();
+	const std::vector<Object *> &objects = scene.objects();
+	const std::vector<Light *> &lights = scene.lights();
 	double inv = 1.0 / samples;
 	Vector3d color;
 	auto beg = std::chrono::high_resolution_clock::now();
@@ -36,7 +37,7 @@ void Window::render(const Scene &scene, const int &samples)
 						double a = Random(), b = Random();
 						Point2d sample((x+(a+sx+0.5)*0.5)/width_, (y+(b+sy+0.5)*0.5)/height_);
 						Ray ray = camera.generateRay(sample);
-						color += trace(ray, spheres, 0) * inv;
+						color += PathTracer::trace(ray, objects, lights, 0) * inv;
 					}
 					pixels_[i] += color * 0.25;
 				}

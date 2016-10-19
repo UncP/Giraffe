@@ -13,23 +13,26 @@
 #include <string>
 #include <vector>
 
-#include "../object/object.hpp"
 #include "../accelerator/bvh.hpp"
 #include "camera.hpp"
+#include "object.hpp"
+#include "light.hpp"
 
 namespace Giraffe {
 
 class Scene
 {
 	public:
-		Scene(const char *name, Camera *camera, const std::vector<Object *> &objects)
-		:name_(name), accelerate_(false), camera_(camera), objects_(objects) { }
+		Scene(const char *name, Camera *camera, const std::vector<Object *> &objects,
+			const std::vector<Light *> lights)
+		:name_(name), accelerate_(false), camera_(camera), objects_(objects), lights_(lights) { }
 
 		void accelerate();
 
 		const std::string& name() const { return name_; }
 		const Camera& camera() const { return *camera_; };
 		const std::vector<Object *>& objects() const { return objects_; };
+		const std::vector<Light *>& lights() const { return lights_; };
 
 		~Scene();
 
@@ -38,6 +41,7 @@ class Scene
 		bool 									accelerate_;
 		Camera 							 *camera_;
 		std::vector<Object *> objects_;
+		std::vector<Light *>  lights_;
 };
 
 } // namespace Giraffe
