@@ -8,11 +8,11 @@
 **/
 
 int screenWidth = 512, screenHeight = 512;
-Camera *cam = new PerspectiveCamera(Point3d(0, 0, 0), 	\
- 																		Vector3d(0, 0, -1.0),\
- 																		Point2i(screenWidth, screenHeight), \
- 																		Point2i(screenWidth, screenHeight), \
- 																		90);
+Camera *camera = new PerspectiveCamera(	Point3d(0, 0, 0), 	\
+		 																		Vector3d(0, 0, -1.0),\
+ 																				Point2i(screenWidth, screenHeight), \
+ 																				Point2i(screenWidth, screenHeight), \
+ 																				90);
 
 std::shared_ptr<Texture> wall1 = std::shared_ptr<Texture>(
 	new ConstantTexture(Color(0.75)));
@@ -32,7 +32,7 @@ std::shared_ptr<Texture> tex3 = std::shared_ptr<Texture>(
 std::shared_ptr<Texture> tex4 = std::shared_ptr<Texture>(
 	new ConstantTexture(Color(0.8, 0.8, 0.2)));
 
-std::vector<Object *> obj = {
+std::vector<Object *> objects = {
 	new Cylinder(Point3d(-45, -60, -160), Point3d(-45, -40, -160), 12, tex1),
 	new Cylinder(Point3d(-15, -60, -160), Point3d(-15, -40, -160), 12, tex1),
 	new Cylinder(Point3d(15, -60, -160), Point3d(15, -40, -160), 12, tex1),
