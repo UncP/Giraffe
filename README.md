@@ -38,3 +38,6 @@
 
 ####砖块纹理
 ![](./image/brick.png)
+
+####Puppy
+![](./image/puppy.png)
