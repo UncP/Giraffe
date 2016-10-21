@@ -29,7 +29,7 @@ class Box : public Object
 
 		const size_t size() const { return near_.size(); }
 
-		bool hit(const Ray &) const override;
+		bool intersect(const Ray &, Isect &isect) const override;
 
 		void enclose(const std::vector<std::pair<Object *, Box *>> &boxes,
 			const size_t beg, const size_t end) {

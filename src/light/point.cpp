@@ -11,6 +11,9 @@
 
 namespace Giraffe {
 
+PointLight::PointLight(const Point3d &position, const Vector3d &intensity)
+:position_(position), intensity_(intensity) { }
+
 Vector3d PointLight::illuminate(const Isect &isect) const
 {
 	Vector3d direction(position_ - isect.position());
@@ -18,9 +21,13 @@ Vector3d PointLight::illuminate(const Isect &isect) const
 	return intensity_ * (1.0 / direction.length2());
 }
 
-Vector3d PointLight::computeLight(const Point3d &position, const Vector3d &normal) const
+Vector3d PointLight::computeLight(Isect &isect) const
 {
-	return normalize(position_ - position);
+	Vector3d vec(position_ - isect.position());
+	double dis = vec.length();
+	isect.setDistance(dis);
+	vec /= dis;
+	return vec;
 }
 
 } // namespace Giraffe

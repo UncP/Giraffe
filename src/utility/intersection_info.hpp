@@ -30,6 +30,8 @@ class IntersectionInfo
 			return *this;
 		}
 
+		void setPosition(const Point3d &position) { position_ = position; }
+
 		const Point3d& position() const { return position_; }
 		const Vector3d& normal() const { return normal_; }
 		const Point2d& uv() const { return uv_; }

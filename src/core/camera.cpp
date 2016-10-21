@@ -68,6 +68,7 @@ Ray PerspectiveCamera::generateRay(const Point2d &sample) const
 		Point3d hit(ray.direction() * z);
 		ray.setDirection(normalize(hit - ori));
 	}
+
 	ray.setOrigin(cameraToWorld_(ori));
 	return std::move(ray);
 }

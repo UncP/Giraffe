@@ -21,16 +21,25 @@ Vector3d PathTracer::trace(
 	int depth)
 {
 	Isect isect;
-	for (size_t i = 0, end = objects.size(); i != end; ++i)
+	size_t oend = objects.size();
+#ifdef LIGHT
+	oend -= 1;
+#endif
+
+	for (size_t i = 0; i != oend; ++i)
 		objects[i]->intersect(ray, isect);
 
 	if (isect.miss()) return Vector3d();
 
 	Vector3d color(isect.color());
+#ifdef LIGHT
+	Vector3d emission(0);
+	const Object *obj = isect.object();
+#else
 	Vector3d emission(isect.emission());
-
+#endif
 	double max = std::max(color.x_, std::max(color.y_, color.z_));
-	if (++depth > 5) {
+	if (++depth > 3) {
 		if (Random() < max) color *= (1.0 / max);
 		else return emission;
 	}
@@ -41,24 +50,28 @@ Vector3d PathTracer::trace(
 	if (dot(ray.direction(), normal) > 0) normal = -normal, into = false;
 
 	Point3d reflPos = isect.position() + normal * kEpsilon;
+	isect.setPosition(reflPos);
 	REFL mat = isect.refl();
 
 	if (mat == kDiffuse) {
-		size_t lend = lights.size(), oend = objects.size();
+
+		#ifdef LIGHT
+		size_t lend = lights.size();
 		for (size_t i = 0; i != lend; ++i) {
 			bool flag = true;
-			Vector3d dir(lights[i]->computeLight(reflPos, normal));
-			if (dot(dir, normal) < 0) continue;
+			Vector3d light(lights[i]->computeLight(isect));
+			if (dot(light, normal) < 0) continue;
 			for (size_t j = 0; j != oend; ++j) {
-				if (objects[j]->hit(Ray(reflPos, dir))) {
+				if (objects[j]->hit(Ray(reflPos, light), isect) && isect.object() != obj) {
 					flag = false;
 					break;
 				}
 			}
 			if (flag) {
-				emission += lights[i]->illuminate(isect);
+				emission += dot(normal, light) * mult(lights[i]->illuminate(isect), color);
 			}
 		}
+		#endif
 
 		Vector3d u, v, w(normal);
 		if (std::fabs(w.x_) > 0.1)
@@ -111,7 +124,7 @@ Vector3d PathTracer::trace(
 		return emission + mult(color, trace(Ray(reflPos, refl), objects, lights, depth));
 
 	Vector3d refr = normalize(ray.direction() * ior + normal * (ior * cos1 - std::sqrt(cos2)));
-	Point3d refrPos = isect.position() - normal * kEpsilon;
+	Point3d refrPos = reflPos - 2 * normal * kEpsilon;
 
 	double a = etat - etai, b = etat + etai;
 	double R0 = a * a / (b * b), c = 1 - (into ? cos1 : -dot(refr, normal));

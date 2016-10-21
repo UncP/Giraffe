@@ -9,18 +9,25 @@
 * Global illumination
 * Russian Roulette
 * Procedural Texture
+	- Brick
+	- Stripe
+	- Image
 * Perlin Noise
+	- Marble
 * Depth of field
-* Acceleration data structures
-	- BVH
-		+	AABB (Axis-Aligned Bounding Box)
-		+	DOP	(Discrete Oriented Polytopes)
+* Light
+	- Point
+	- Directional
 * Object
 	- Triangle
 	- Sphere
 	- Quad
 	- Cylinder
 	- Disk
+* Acceleration data structures
+	- BVH
+		+	AABB (Axis-Aligned Bounding Box)
+		+	DOP	(Discrete Oriented Polytopes)
 
 
 

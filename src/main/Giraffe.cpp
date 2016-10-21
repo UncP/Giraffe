@@ -25,12 +25,14 @@
 #include "../texture/image.hpp"
 #include "../texture/bump_brick.hpp"
 #include "../light/point.hpp"
+#include "../light/directional.hpp"
 
 int main(int argc, char **argv)
 {
 	using namespace Giraffe;
 
 	int screenWidth = 512, screenHeight = 512;
+
 	Camera *camera = new PerspectiveCamera(	Point3d(0, 0, 0), 	\
 																					Vector3d(0, 0, -1.0),\
 																					Point2i(screenWidth, screenHeight), \
@@ -63,8 +65,6 @@ int main(int argc, char **argv)
 		// new StripeTexture(Color(), Color(1), Xaxis, 4));
 		// new MarbleTexture(Color(0.8), Color(0.2, 0.8, 0.8), Color(0.05), 0.1));
 		// new NoiseTexture(Color(0.2, 0.8, 0.8), Color(0.05), 0.1));
-		// new ConstantTexture(Color(0.999), Color(), kReflect));
-
 		// new StripeTexture(Color(), Color(1), Yaxis, 5));
 		// new BrickTexture(Color(1, 1, 0), Color(0, 1, 1), 0.2, 0.08, 0.016));
 		// new MarbleTexture(Color(0.8), Color(0.8, 0.8, 0.2), Color(0.05), 0.1));
@@ -92,12 +92,10 @@ int main(int argc, char **argv)
 	std::shared_ptr<Texture> tex6 = std::shared_ptr<Texture>(
 		new MarbleTexture(Color(1), Color(4, 1, 2), Color(0.5), 0.2, true));
 	std::shared_ptr<Texture> light = std::shared_ptr<Texture>(
-		new ConstantTexture(Color(16), true));
+		new ConstantTexture(Color(12), true));
 		// new StripeTexture(Color(), Color(1), Xaxis, 0.1, Color(16)));
 
 	std::vector<Object *> objects = {
-		// new Disk(Point3d(0, 0, -160), 5.0, 5.0, Vector3d(1, 1, 1), tex1),
-		// new Triangle(Point3d(0, -30, -150), Point3d(40, 0, -160), Point3d(0, 0, -150), tex3),
 		// new Sphere(Point3d(-45,  -52, -130.0),	8,		tex2),
 
 		new Sphere(Point3d(-35,  -42, -180.0),	18,		tex1),
@@ -111,8 +109,12 @@ int main(int argc, char **argv)
 		new Sphere(Point3d(1e5+70, 0, -175),  	1e5, 	wall4),
 		new Sphere(Point3d(0, 959.8, -160.0), 	900, 	light)
 	};
+
 	std::vector<Light *> lights = {
-		new PointLight(Point3d(0, 60, -160.0), Vector3d(256))
+		new PointLight(Point3d(0, 50, -160.0), Vector3d(1024)),
+		new PointLight(Point3d(-50, 30, -180.0), Vector3d(256)),
+		new PointLight(Point3d(50, 30, -140.0), Vector3d(256))
+		// new DirectionalLight(Vector3d(0, 0, -1), Vector3d(0.8))
 	};
 
 	Scene CornellBox("cornell box", camera, objects, lights);

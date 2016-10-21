@@ -7,8 +7,8 @@
  *    > Created Time: 2016-06-27 13:10:53
 **/
 
-#ifndef _VECTOR_H_
-#define _VECTOR_H_
+#ifndef _VECTOR_HPP_
+#define _VECTOR_HPP_
 
 #include <iostream>
 #include <iomanip>
@@ -220,4 +220,4 @@ inline Color mult(const Color &a, const Color &b) {
 
 } // namespace Giraffe
 
-#endif /* _VECTOR_H_ */
+#endif /* _VECTOR_HPP_ */

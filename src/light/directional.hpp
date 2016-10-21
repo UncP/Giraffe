@@ -10,13 +10,23 @@
 #ifndef _DIRECTIONAL_LIGHT_HPP_
 #define _DIRECTIONAL_LIGHT_HPP_
 
+#include "../math/constant.hpp"
 #include "../core/light.hpp"
 
 namespace Giraffe {
 
 class DirectionalLight : public Light
 {
+	public:
+		DirectionalLight(const Vector3d &direction, const Vector3d &intensity);
 
+		Vector3d illuminate(const Isect &isect) const override;
+
+		Vector3d computeLight(Isect &isect) const override;
+
+	private:
+		Vector3d direction_;
+		Vector3d intensity_;
 };
 
 } // namespace Giraffe

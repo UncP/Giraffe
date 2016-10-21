@@ -11,4 +11,17 @@
 
 namespace Giraffe {
 
+DirectionalLight::DirectionalLight(const Vector3d &direction, const Vector3d &intensity)
+:direction_(-normalize(direction)), intensity_(intensity) { }
+
+Vector3d DirectionalLight::illuminate(const Isect &isect) const
+{
+	return intensity_;
+}
+
+Vector3d DirectionalLight::computeLight(Isect &dis) const
+{
+	return direction_;
+}
+
 } // namespace Giraffe

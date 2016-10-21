@@ -8,18 +8,25 @@
 * 全局光照
 * Russian Roulette
 * Procedural Texture
+	-	砖块
+	- 条纹
+	- 图像
 * Perlin Noise
+	- 大理石
 * Depth of field
-* 加速数据结构
-	- BVH
-		+	AABB (Axis-Aligned Bounding Box)
-		+	DOP	(Discrete Oriented Polytopes)
 * 物体
 	- 三角形
 	- 球
 	- 四棱柱
 	- 圆柱
 	- 圆盘
+* 光源
+	- 点光源
+	- 方向光
+* 加速数据结构
+	- BVH
+		+	AABB (Axis-Aligned Bounding Box)
+		+	DOP	(Discrete Oriented Polytopes)
 
 
 

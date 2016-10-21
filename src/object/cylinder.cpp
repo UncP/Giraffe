@@ -52,7 +52,8 @@ bool Cylinder::intersect(const Ray &ray, Isect &isect) const
 		Point2d uv;
 		// Point2d uv((ori.x_-c.x_+radis_) * inv2radis_,
 		// 					 (-ori.y_+c.y_+radis_) * inv2radis_);
-		isect.update(dis, IntersectionInfo(hitPos, uv, flag ? -axis_ : axis_), texture_.get());
+		isect.update(dis, this,
+			IntersectionInfo(hitPos, uv, flag ? -axis_ : axis_), texture_.get());
 		return true;
 	}
 
@@ -92,7 +93,7 @@ bool Cylinder::intersect(const Ray &ray, Isect &isect) const
 		hitPos = ray.origin() + ray.direction() * dis;
 		Point3d cc(center1_ + t * axis_);
 		Point2d uv;
-		isect.update(dis, IntersectionInfo(hitPos, uv, hitPos-cc), texture_.get());
+		isect.update(dis, this, IntersectionInfo(hitPos, uv, hitPos-cc), texture_.get());
 		return true;
 	}
 	return false;

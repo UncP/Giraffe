@@ -29,7 +29,7 @@ class Sphere : public Object
 
 		bool intersect(const Ray &r, Isect &isect) const override;
 
-		bool hit(const Ray &r) const override;
+		bool hit(const Ray &r, Isect &) const override;
 
 		bool emit() const override { return texture_->emit(); }
 

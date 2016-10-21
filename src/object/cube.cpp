@@ -103,7 +103,7 @@ std::ostream& Cube::print(std::ostream &os) const
 
 bool Cube::intersect(const Ray &ray, Isect &isect) const
 {
-	if (!aabb_->hit(ray)) return false;
+	if (!aabb_->intersect(ray, isect)) return false;
 
 	bool hit = false;
 	double dis;
@@ -160,7 +160,7 @@ bool Cube::intersect(const Ray &ray, Isect &isect) const
 				if (s != b)
 					uv[k++] = (hitPos[j] - s) / (b - s);
 			}
-			isect.update(dis, IntersectionInfo(hitPos, uv, normals_[i]), texture_.get());
+			isect.update(dis, this, IntersectionInfo(hitPos, uv, normals_[i]), texture_.get());
 			hit = true;
 		}
 	}

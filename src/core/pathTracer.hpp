@@ -19,10 +19,10 @@ namespace Giraffe {
 class PathTracer
 {
 	public:
-		static Vector3d trace(const Ray &,
-													const std::vector<Object *> &,
-													const std::vector<Light *> &,
-													int);
+		static Vector3d trace(const Ray &ray,
+													const std::vector<Object *> &objects,
+													const std::vector<Light *> &lights,
+													int depth);
 };
 
 } // namespace Giraffe
