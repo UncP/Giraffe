@@ -45,3 +45,6 @@
 
 ####Puppy
 ![](./image/puppy.png)
+
+####Bear
+![](./image/Bear.png)
