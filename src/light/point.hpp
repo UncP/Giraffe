@@ -25,8 +25,9 @@ class PointLight : public Light
 
 	private:
 
+		using Light::intensity_;
+
 		Point3d  position_;
-		Vector3d intensity_;
 };
 
 } // namespace Giraffe

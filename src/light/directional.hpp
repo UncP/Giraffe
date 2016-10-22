@@ -20,13 +20,15 @@ class DirectionalLight : public Light
 	public:
 		DirectionalLight(const Vector3d &direction, const Vector3d &intensity);
 
-		Vector3d illuminate(const Isect &isect) const override;
-
 		Vector3d computeLight(Isect &isect) const override;
 
+		Vector3d illuminate(const Isect &isect) const override;
+
 	private:
+
+		using Light::intensity_;
+
 		Vector3d direction_;
-		Vector3d intensity_;
 };
 
 } // namespace Giraffe

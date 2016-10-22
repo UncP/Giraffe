@@ -19,13 +19,18 @@ namespace Giraffe {
 class Light
 {
 	public:
-		virtual Vector3d illuminate(const Isect &isect) const = 0;
+
+		Light(const Vector3d &intensity):intensity_(intensity) { }
 
 		virtual Vector3d computeLight(Isect &isect) const = 0;
 
-		~Light() { }
+		virtual Vector3d illuminate(const Isect &isect) const = 0;
 
-	private:
+		virtual ~Light() { }
+
+	protected:
+
+		Vector3d intensity_;
 
 };
 

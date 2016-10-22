@@ -1,6 +1,7 @@
 ##Giraffe Ray Tracer
 [中文版 README](./README.md)
 
+***
 
 ###Features
 * Diffuse reflection, Mirror reflection
@@ -8,6 +9,7 @@
 * Anti-aliasing
 * Global illumination
 * Russian Roulette
+* Explicit Lighting
 * Procedural Texture
 	- Brick
 	- Stripe
@@ -18,6 +20,7 @@
 * Light
 	- Point
 	- Directional
+	- Area
 * Object
 	- Triangle
 	- Sphere

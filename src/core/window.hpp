@@ -30,7 +30,7 @@ class Window
 
 		Window(const std::string &, const int, const int);
 
-		void render(const Scene &, const int &);
+		void ray_tracing(const Scene &, const int &);
 
 		void save_ppm() const;
 		bool save_png() const;

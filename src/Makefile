@@ -17,8 +17,8 @@ Giraffe:$(OBJ) main/Giraffe.cpp
 	$(CPP) $(CPPFLAGS) -o Giraffe $(OBJ) main/Giraffe.cpp $(LDFLAGS)
 
 path:
-	$(CPP) $(CPPFLAGS) -c core/pathTracer.cpp -DLIGHT
-	mv pathTracer.o core
+	rm core/pathTracer.o || ($(CPP) $(CPPFLAGS) -c core/pathTracer.cpp -DLIGHT && \
+	mv pathTracer.o core)
 
 tag:
 	ctags -R --sort=yes -f .tags

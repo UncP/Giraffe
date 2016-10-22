@@ -38,23 +38,24 @@ std::shared_ptr<Texture> tex6 = std::shared_ptr<Texture>(
 	new StripeTexture(Color(0.8, 0.8, 0.1), Color(0.7), Xaxis, 0.5));
 
 std::vector<Object *> objects = {
-	new Sphere(Point3d(0,  -35, -160.0),	20,		tex2),
-	new Sphere(Point3d(0,  -31, -143.0),	6,		tex3),
-	new Sphere(Point3d(-9,  -23, -144.5),	3,		tex4),
-	new Sphere(Point3d(9,  -23, -144.5),	3,		tex4),
-	new Sphere(Point3d(0,  -41, -140),	2.5,		tex5),
-	new Sphere(Point3d(0,  -22, -160),	10,			tex6),
-	new Sphere(Point3d(-9.5, -52, -152.0), 8,		tex2),
-	new Sphere(Point3d(-13, -52, -170.0), 8.5,	tex2),
-	new Sphere(Point3d(9.5,  -52, -152.0),	8,	tex2),
-	new Sphere(Point3d(13,  -52, -170.0),	8.5,	tex2),
 
-	new Sphere(Point3d(0, -1e5-60, -160),		1e5, 	wall1),
-	new Sphere(Point3d(0, 1e5+60, -160), 		1e5, 	wall1),
-	new Sphere(Point3d(0, 0, -1e5-225), 		1e5, 	wall1),
-	new Sphere(Point3d(0, 0, 1e5+125), 			1e5, 	wall2),
-	new Sphere(Point3d(-1e5-70, 0, -175), 	1e5, 	wall3),
-	new Sphere(Point3d(1e5+70, 0, -175),  	1e5, 	wall4),
+	new Sphere(Point3d(0,   -35, -160.0), 20,  tex2),  // Body
+	new Sphere(Point3d(0,   -41, -140),   2.5, tex5),  // Mouth
+	new Sphere(Point3d(0,   -31, -143.0), 6,   tex3),  // Nose
+	new Sphere(Point3d(-9,  -23, -144.5), 3,   tex4),  // Eye
+	new Sphere(Point3d(9,   -23, -144.5), 3,   tex4),
+	new Sphere(Point3d(0,   -22, -160),   10,  tex6),  // Hat
+	new Sphere(Point3d(-9.5,-52, -152.0), 8,   tex2),  // Foot
+	new Sphere(Point3d(-13, -52, -170.0), 8.5, tex2),
+	new Sphere(Point3d(9.5, -52, -152.0),	8,   tex2),
+	new Sphere(Point3d(13,  -52, -170.0),	8.5, tex2),
+
+	new Sphere(Point3d(0, -1e5-60, -160),     1e5,  wall1),
+	new Sphere(Point3d(0,  1e5+60, -160),     1e5,  wall1),
+	new Sphere(Point3d(0,       0, -1e5-225), 1e5,  wall1),
+	new Sphere(Point3d(0,       0,  1e5+125), 1e5,  wall2),
+	new Sphere(Point3d(-1e5-70, 0, -175),     1e5,  wall3),
+	new Sphere(Point3d(1e5+70,  0, -175),     1e5,  wall4),
 };
 
 std::vector<Light *> lights = {

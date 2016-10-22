@@ -11,4 +11,18 @@
 
 namespace Giraffe {
 
+TextureLight::TextureLight(const std::shared_ptr<Texture> texture, const Vector3d &intensity)
+:Light(intensity), texture_(texture.get()) { }
+
+Vector3d TextureLight::computeLight(Isect &isect) const
+{
+	return Vector3d(0);
+}
+
+Vector3d TextureLight::illuminate(const Isect &isect) const
+{
+	return Vector3d(0);
+}
+
+
 } // namespace Giraffe

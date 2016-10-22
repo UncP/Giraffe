@@ -1,10 +1,13 @@
 ##Giraffe 光线追踪器
 [English Version of README](./README.en.md)
 
+***
+
 ###特点
 * 漫反射, 镜面反射
 * 折射
 * 反走样
+* Explicit Lighting
 * 全局光照
 * Russian Roulette
 * Procedural Texture
@@ -14,15 +17,16 @@
 * Perlin Noise
 	- 大理石
 * Depth of field
+* 光源
+	- 点光源
+	- 方向光
+	- 区域光
 * 物体
 	- 三角形
 	- 球
 	- 四棱柱
 	- 圆柱
 	- 圆盘
-* 光源
-	- 点光源
-	- 方向光
 * 加速数据结构
 	- BVH
 		+	AABB (Axis-Aligned Bounding Box)

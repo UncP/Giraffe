@@ -19,7 +19,7 @@ Window::Window(const std::string &title, const int width, const int height)
 
 }
 
-void Window::render(const Scene &scene, const int &samples)
+void Window::ray_tracing(const Scene &scene, const int &samples)
 {
 	const Camera &camera = scene.camera();
 	const std::vector<Object *> &objects = scene.objects();
@@ -154,7 +154,8 @@ bool Window::save_png() const
 
 void Window::show_png(const char *file) const
 {
-	execlp("eog", "eog", file, NULL);
+	// execlp("eog", "eog", file, NULL);
+	execlp("subl", "subl", file, NULL);
 }
 
 } // namespace Giraffe

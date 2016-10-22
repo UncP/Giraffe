@@ -16,7 +16,21 @@ namespace Giraffe {
 
 class AreaLight : public Light
 {
+	public:
+		AreaLight(const Point3d &position, const Vector3d &direction, const Vector3d &intensity,
+			double angle);
 
+		Vector3d computeLight(Isect &isect) const override;
+
+		Vector3d illuminate(const Isect &isect) const override;
+
+	private:
+
+		using Light::intensity_;
+
+		Point3d  position_;
+		Vector3d direction_;
+		double   cos_max_;
 };
 
 } // namespace Giraffe
