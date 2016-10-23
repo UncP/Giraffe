@@ -8,8 +8,10 @@
 * Refraction
 * Anti-aliasing
 * Global illumination
-* Russian Roulette
+* Monte Carlo Integration
+* Distributed Path Tracing
 * Explicit Lighting
+* Russian Roulette
 * Procedural Texture
 	- Brick
 	- Stripe
@@ -47,4 +49,4 @@
 ![](./image/puppy.png)
 
 ####Bear
-![](./image/Bear.png)
+![](./image/bear.png)

@@ -7,8 +7,10 @@
 * 漫反射, 镜面反射
 * 折射
 * 反走样
-* Explicit Lighting
 * 全局光照
+* 蒙特卡洛积分
+* 分布式路径追踪
+* Explicit Lighting
 * Russian Roulette
 * Procedural Texture
 	-	砖块
