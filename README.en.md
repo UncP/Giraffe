@@ -23,6 +23,7 @@
 	- Point
 	- Directional
 	- Area
+	- Texture
 * Object
 	- Triangle
 	- Sphere

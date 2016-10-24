@@ -186,7 +186,6 @@ typedef Vector3<double> 			Vector3d;
 typedef Vector3<float> 				Vector3f;
 typedef Vector3<int> 					Vector3i;
 typedef Vector3<unsigned int> Vector3u;
-typedef Vector3<double> 			Color;
 
 template <typename T, typename U>
 inline Vector3<T> operator*(const U u, const Vector3<T> &v) {
@@ -214,8 +213,8 @@ inline Vector3<T> normalize(const Vector3<T> &v) {
 	return v / len;
 }
 
-inline Color mult(const Color &a, const Color &b) {
-	return Color(a.x_ * b.x_, a.y_ * b.y_, a.z_ * b.z_);
+inline Vector3d mult(const Vector3d &a, const Vector3d &b) {
+	return Vector3d(a.x_ * b.x_, a.y_ * b.y_, a.z_ * b.z_);
 }
 
 } // namespace Giraffe

@@ -13,13 +13,15 @@
 #include <memory>
 
 #include "../core/light.hpp"
+#include "../core/texture.hpp"
 
 namespace Giraffe {
 
 class TextureLight : public Light
 {
 	public:
-		TextureLight(const std::shared_ptr<Texture> texture, const Vector3d &intensity);
+		TextureLight(const Point3d &position, const Vector3d &direction, const Vector3d &intensity,
+			double angle, const std::shared_ptr<Texture> &texture);
 
 		Vector3d computeLight(Isect &isect) const override;
 
@@ -28,8 +30,13 @@ class TextureLight : public Light
 	private:
 
 		using Light::intensity_;
-
-		const std::shared_ptr<Texture> texture_;
+		Point3d  position_;
+		Vector3d direction_;
+		double   cos_max_;
+		Texture *texture_;
+		Point3d  center_;
+		double   radius_;
+		double   inv2radius_;
 };
 
 } // namespace Giraffe

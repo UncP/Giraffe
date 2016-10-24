@@ -1,0 +1,4 @@
+Giraffe
+*.o
+.tags
+*.png

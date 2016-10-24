@@ -27,6 +27,7 @@
 #include "../light/point.hpp"
 #include "../light/directional.hpp"
 #include "../light/area.hpp"
+#include "../light/texture.hpp"
 
 int main(int argc, char **argv)
 {
@@ -35,6 +36,8 @@ int main(int argc, char **argv)
 	typedef std::shared_ptr<Texture> Tex;
 	typedef Point3d  Pos;
 	typedef Vector3d Dir;
+	typedef Vector3d Int;
+	typedef Vector3d Color;
 
 	int screenWidth = 512, screenHeight = 512;
 	Camera *camera = new PerspectiveCamera(	Pos(0, 0, 0), Dir(0, 0, -1.0),\
@@ -57,19 +60,22 @@ int main(int argc, char **argv)
 	Tex wall5 = Tex(new BrickTexture(Color(0.1, 0.1, 0.5), Color(0.5),
 		1.2e-4, 4.8e-5, 7.2e-6, shear2X(45)));
 
-	Tex tex1 = Tex(new ConstantTexture(Color(0.25, 0.25, 0.7)));
+	Tex tex1 = Tex(new ConstantTexture(Color(0.8)));
 	Tex tex2 = Tex(new ConstantTexture(Color(0.3)));
 	Tex tex3 = Tex(new ConstantTexture(Color(0.8)));
 	Tex tex4 = Tex(new ConstantTexture(Color(0.15)));
 	Tex tex5 = Tex(new ConstantTexture(Color(0.9, 0.2, 0.2)));
 	Tex tex6 = Tex(new ConstantTexture(Color(0.2)));
-	Tex tex7 = Tex(new ConstantTexture(Color(0.25, 0.25, 0.75)));
+	Tex tex7 = Tex(new ImageTexture("../texture/stones.png", 1, true));
+	// Tex tex8 = Tex(new ImageTexture("../image/bear.png", 1, true));
 
-	Tex light= Tex(new ConstantTexture(Color(12), true));
+	// Tex tex9 = Tex(new StripeTexture(Color(0.6, 0.6, 0.2), Color(0.2, 0.6, 0.6), Xaxis,
+	// 	5, Matrix::Identity, true));
+
+	Tex light= Tex(new ConstantTexture(Color(16), true));
 
 	std::vector<Object *> objects = {
-
-		new Sphere(Pos(0, -20, -160), 20, tex1),
+		new Sphere(Pos(0, -10, -160), 20, tex1),
 
 		new Sphere(Pos(0, -1e5-60, -160),		1e5, 	wall1),
 		new Sphere(Pos(0, 1e5+60, -160), 		1e5, 	wall1),
@@ -80,18 +86,20 @@ int main(int argc, char **argv)
 	};
 
 	std::vector<Light *> lights = {
-		// new PointLight(Pos(0, 59.9999, -160.0), Dir(2048)),
-		// new PointLight(Pos(-50, 30, -180.0), Dir(256)),
-		// new PointLight(Pos(50, 30, -140.0), Dir(256))
-		// new DirectionalLight(Dir(-0.3, 0.3, -1), Dir(0.8))
-		new AreaLight(Pos(40, 40, -120.0), Dir(-1, -1, -1), Dir(2048), 40)
+		// new PointLight(Pos(0, 59.9999, -160.0), Int(2048)),
+		// new PointLight(Pos(-50, 30, -180.0), Int(256)),
+		// new PointLight(Pos(50, 30, -140.0), Int(256))
+		// new DirectionalLight(Dir(-0.3, 0.3, -1), Int(0.8))
+		// new AreaLight(Pos(0, 50, -160.0), Dir(0, -1, 0), Int(2048), 30)
+		// new TextureLight(Pos(-50, 50, -50), Dir(0.8, -1.0, -2), Int(1.5), 20, tex7)
+		new TextureLight(Pos(-20, 0, -50), Dir(0.2, 0, -1), Int(1.5), 20, tex7)
 	};
 
 	Scene CornellBox("cornell box", camera, objects, lights);
 
 	Window win(CornellBox.name(), screenWidth, screenHeight);
 
-	win.ray_tracing(CornellBox, argc == 2 ? atoi(argv[1]) : 4);
+	win.ray_tracing(CornellBox, argc == 2 ? atoi(argv[1]) : 1);
 
 	return 0;
 }

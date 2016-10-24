@@ -20,9 +20,9 @@ namespace Giraffe {
 class Sphere : public Object
 {
 	public:
-		Sphere(const Point3d &center, const double radis, const std::shared_ptr<Texture> &texture)
-		:center_(center), radis_(radis), radis2_(radis * radis),
-		 inv2radis_(1.0 / (2 * radis_)), texture_(texture) { }
+		Sphere(const Point3d &center, const double radius, const std::shared_ptr<Texture> &texture)
+		:center_(center), radius_(radius), radius2_(radius * radius),
+		 inv2radius_(1.0 / (2 * radius_)), texture_(texture) { }
 
 		void computeBox(std::vector<double> &near, std::vector<double> &far,
 			const Vector3d *normal) const override;
@@ -37,9 +37,9 @@ class Sphere : public Object
 
 	private:
 		Point3d 	center_;
-		double 		radis_;
-		double 		radis2_;
-		double		inv2radis_;
+		double 		radius_;
+		double 		radius2_;
+		double		inv2radius_;
 		std::shared_ptr<Texture> texture_;
 };
 
