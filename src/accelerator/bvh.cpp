@@ -108,15 +108,16 @@ void BVHNode::split(Box *box, std::vector<std::pair<Object *, Box *>> &boxes,
 	right_->split(rBox, boxes, beg + pos, end);
 }
 
-void BVH::build(std::vector<Object *> &objects)
+void BVH::build(std::vector<Object *>::iterator beg, std::vector<Object *>::iterator end)
 {
-	std::vector<std::pair<Object *, Box *>> boxes(objects.size());
+	std::vector<std::pair<Object *, Box *>> boxes(end - beg);
 	Box *tmp = new AABB[boxes.size()];
 
-	for (size_t i = 0, end = boxes.size(); i != end; ++i) {
-		boxes[i].first 	= objects[i];
-		boxes[i].second = &tmp[i];
-		boxes[i].first->computeBox(boxes[i].second->near_, boxes[i].second->far_, NormalSet);
+	for (auto i = beg; i != end; ++i) {
+		int idx = i - beg;
+		boxes[idx].first 	= *i;
+		boxes[idx].second = &tmp[idx];
+		boxes[idx].first->computeBox(boxes[idx].second->near_, boxes[idx].second->far_, NormalSet);
 	}
 
 	Box *box = new AABB();

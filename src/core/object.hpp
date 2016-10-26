@@ -14,7 +14,7 @@
 #include <vector>
 
 #include "../math/ray.hpp"
-#include "../utility/utility.hpp"
+#include "../utility/isect.hpp"
 
 namespace Giraffe {
 

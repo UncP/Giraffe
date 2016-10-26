@@ -27,7 +27,7 @@ class Scene
 			const std::vector<Light *> lights)
 		:name_(name), accelerate_(false), camera_(camera), objects_(objects), lights_(lights) { }
 
-		void accelerate();
+		void accelerate(int beg, int end);
 
 		const std::string& name() const { return name_; }
 		const Camera& camera() const { return *camera_; };

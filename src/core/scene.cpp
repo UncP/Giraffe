@@ -11,11 +11,11 @@
 
 namespace Giraffe {
 
-void Scene::accelerate()
+void Scene::accelerate(int beg, int end)
 {
 	BVH *bvh = new BVH();
-	bvh->build(objects_);
-	objects_.clear();
+	bvh->build(objects_.begin() + beg, objects_.begin() + end);
+	objects_.erase(objects_.begin() + beg, objects_.begin() + end);
 	objects_.push_back(static_cast<Object *>(bvh));
 	accelerate_ = true;
 }
@@ -23,8 +23,7 @@ void Scene::accelerate()
 Scene::~Scene()
 {
 	delete camera_;
-	if (!accelerate_)
-		std::for_each(objects_.begin(), objects_.end(), [](Object *obj) { delete obj; });
+	std::for_each(objects_.begin(), objects_.end(), [](Object *obj) { delete obj; });
 }
 
 } // namespace Giraffe

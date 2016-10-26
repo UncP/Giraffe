@@ -23,9 +23,9 @@ class TextureLight : public Light
 		TextureLight(const Point3d &position, const Vector3d &direction, const Vector3d &intensity,
 			double angle, const std::shared_ptr<Texture> &texture);
 
-		Vector3d computeLight(Isect &isect) const override;
+		Vector3d sample(Isect &isect) const override;
 
-		Vector3d illuminate(const Isect &isect) const override;
+		Vector3d radiance(const Isect &isect) const override;
 
 	private:
 

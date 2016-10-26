@@ -7,4 +7,8 @@
  *    > Created Time: 2016-08-09 10:20:13
 **/
 
-#include "utility.hpp"
+#include "isect.hpp"
+
+namespace Giraffe {
+
+} // namespace Giraffe

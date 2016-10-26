@@ -10,7 +10,6 @@
 #ifndef _CAMERA_HPP_
 #define _CAMERA_HPP_
 
-#include "../utility/random.hpp"
 #include "../math/matrix.hpp"
 #include "../math/ray.hpp"
 

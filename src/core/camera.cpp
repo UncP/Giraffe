@@ -8,6 +8,7 @@
 **/
 
 #include "camera.hpp"
+#include "../utility/sampler.hpp"
 
 namespace Giraffe {
 
@@ -44,17 +45,6 @@ PerspectiveCamera::PerspectiveCamera(	const Point3d  &ori,
 
 	Matrix cameraToRaster = cameraToScreen * screenToRaster;
 	rasterToCamera_ = inverse(cameraToRaster);
-
-	// std::cout << rasterToCamera_;
-
-	// Vector3d d1 = normalize(Vector3d(rasterToCamera_(Point3d(0, 0, 0))));
-	// std::cout << d1;
-	// Vector3d d2 = normalize(Vector3d(rasterToCamera_(Point3d(1, 0, 0))));
-	// std::cout << d2;
-	// Vector3d d3 = normalize(Vector3d(rasterToCamera_(Point3d(0, 1, 0))));
-	// std::cout << d3;
-	// Vector3d d4 = normalize(Vector3d(rasterToCamera_(Point3d(1, 1, 0))));
-	// std::cout << d4;
 }
 
 Ray PerspectiveCamera::generateRay(const Point2d &sample) const
@@ -63,7 +53,8 @@ Ray PerspectiveCamera::generateRay(const Point2d &sample) const
 	Ray ray(ori, normalize(Vector3d(rasterToCamera_(Point3d(sample.x_, sample.y_, 0)))));
 
 	if (focal_distance_ > 0) {
-		ori = Point3d(Random2(), Random2(), 0) * radius_;
+		Point2d tmp = Sampler::get2D2();
+		ori = Point3d(tmp.x_, tmp.y_, 0) * radius_;
 		double z = -(focal_distance_ / ray.direction().z_);
 		Point3d hit(ray.direction() * z);
 		ray.setDirection(normalize(hit - ori));

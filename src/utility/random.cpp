@@ -11,14 +11,8 @@
 
 namespace Giraffe {
 
-static std::default_random_engine generator(time(0));
-static std::uniform_real_distribution<double> distribution(0, 1);
-
-static std::default_random_engine generator2(time(0));
-static std::uniform_real_distribution<double> distribution2(-1, 1);
-
-double Random() { return distribution(generator); }
-
-double Random2() { return distribution2(generator2); }
+std::default_random_engine RandomNumberGenerator::generator(time(0));
+std::uniform_real_distribution<double> RandomNumberGenerator::distribution1( 0, 1);
+std::uniform_real_distribution<double> RandomNumberGenerator::distribution2(-1, 1);
 
 } // namespace Giraffe

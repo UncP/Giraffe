@@ -12,7 +12,7 @@
 
 #include "../math/point.hpp"
 #include "../math/vector.hpp"
-#include "../utility/utility.hpp"
+#include "../utility/isect.hpp"
 
 namespace Giraffe {
 
@@ -22,9 +22,9 @@ class Light
 
 		Light(const Vector3d &intensity):intensity_(intensity) { }
 
-		virtual Vector3d computeLight(Isect &isect) const = 0;
+		virtual Vector3d sample(Isect &isect) const = 0;
 
-		virtual Vector3d illuminate(const Isect &isect) const = 0;
+		virtual Vector3d radiance(const Isect &isect) const = 0;
 
 		virtual ~Light() { }
 

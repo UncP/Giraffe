@@ -17,7 +17,7 @@ AreaLight::AreaLight(const Point3d &position, const Vector3d &direction,
 :Light(intensity), position_(position), direction_(-normalize(direction)),
  cos_max_(std::cos(radian(angle))) { }
 
-Vector3d AreaLight::computeLight(Isect &isect) const
+Vector3d AreaLight::sample(Isect &isect) const
 {
 	Vector3d vec(position_ - isect.position());
 	double dis = vec.length();
@@ -29,7 +29,7 @@ Vector3d AreaLight::computeLight(Isect &isect) const
 	return Vector3d(0);
 }
 
-Vector3d AreaLight::illuminate(const Isect &isect) const
+Vector3d AreaLight::radiance(const Isect &isect) const
 {
 	Vector3d direction(position_ - isect.position());
 

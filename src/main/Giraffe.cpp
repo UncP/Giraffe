@@ -11,7 +11,6 @@
 
 #include "../math/matrix.hpp"
 #include "../core/scene.hpp"
-#include "../core/window.hpp"
 #include "../object/sphere.hpp"
 #include "../object/triangle.hpp"
 #include "../object/cube.hpp"
@@ -28,6 +27,7 @@
 #include "../light/directional.hpp"
 #include "../light/area.hpp"
 #include "../light/texture.hpp"
+#include "../core/path_tracer.hpp"
 
 int main(int argc, char **argv)
 {
@@ -95,11 +95,13 @@ int main(int argc, char **argv)
 		new TextureLight(Pos(-20, 0, -50), Dir(0.2, 0, -1), Int(1.5), 20, tex7)
 	};
 
-	Scene CornellBox("cornell box", camera, objects, lights);
+	Scene *cornell_box = new Scene("cornell box", camera, objects, lights);
 
-	Window win(CornellBox.name(), screenWidth, screenHeight);
+	int samples = argc == 2 ? atoi(argv[1]) : 1;
 
-	win.ray_tracing(CornellBox, argc == 2 ? atoi(argv[1]) : 1);
+	GiraffePathTracer giraffe_path_tracer(cornell_box, screenWidth, screenHeight, samples);
+
+	giraffe_path_tracer.ray_tracing();
 
 	return 0;
 }

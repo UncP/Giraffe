@@ -14,6 +14,7 @@
 #include <memory>
 #include <map>
 #include <algorithm>
+#include <iterator>
 
 #include "../core/object.hpp"
 #include "../math/constant.hpp"
@@ -140,7 +141,7 @@ class BVH : public Object
 
 		std::ostream& print(std::ostream &os) const override { root_->traverse(os); return os; }
 
-		void build(std::vector<Object *> &);
+		void build(std::vector<Object *>::iterator, std::vector<Object *>::iterator);
 
 		~BVH() { root_->release(); }
 
