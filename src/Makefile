@@ -7,7 +7,7 @@ OBJ      = math/constant.o math/vector.o math/point.o math/ray.o math/vertex.o m
            utility/random.o utility/sampler.o utility/intersection_info.o utility/isect.o \
            utility/image_io.o \
            core/object.o core/noise.o core/texture.o core/light.o core/camera.o \
-           core/scene.o core/path_tracer.o \
+           core/scene.o core/path_tracer.o core/tl_parser.o\
            accelerator/bvh.o \
            object/triangle.o object/sphere.o object/cube.o \
            object/cylinder.o object/disk.o \
