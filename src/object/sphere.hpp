@@ -10,8 +10,6 @@
 #ifndef _SPHERE_HPP_
 #define _SPHERE_HPP_
 
-#include <memory>
-
 #include "../core/object.hpp"
 #include "../math/vertex.hpp"
 
@@ -20,7 +18,7 @@ namespace Giraffe {
 class Sphere : public Object
 {
 	public:
-		Sphere(const Point3d &center, const double radius, const std::shared_ptr<Texture> &texture)
+		Sphere(const Point3d &center, const double radius, const Texture *texture)
 		:center_(center), radius_(radius), radius2_(radius * radius),
 		 inv2radius_(1.0 / (2 * radius_)), texture_(texture) { }
 
@@ -33,14 +31,16 @@ class Sphere : public Object
 
 		bool emit() const override { return texture_->emit(); }
 
-		std::ostream& print(std::ostream &os) const override { return os << "sphere\n" << center_; }
+		std::ostream& print(std::ostream &os) const override {
+			return os << "sphere\n" << center_ << "radius " << radius_ << std::endl;
+		}
 
 	private:
-		Point3d 	center_;
-		double 		radius_;
-		double 		radius2_;
-		double		inv2radius_;
-		std::shared_ptr<Texture> texture_;
+		Point3d 	     center_;
+		double 		     radius_;
+		double 		     radius2_;
+		double		     inv2radius_;
+		const Texture *texture_;
 };
 
 } // namespace Giraffe

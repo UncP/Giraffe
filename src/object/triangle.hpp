@@ -10,8 +10,6 @@
 #ifndef _TRIANGLE_HPP_
 #define _TRIANGLE_HPP_
 
-#include <memory>
-
 #include "../core/object.hpp"
 
 namespace Giraffe {
@@ -19,8 +17,7 @@ namespace Giraffe {
 class Triangle : public Object
 {
 	public:
-		Triangle(	const Point3d &a, const Point3d &b, const Point3d &c,
-							const std::shared_ptr<Texture> &texture)
+		Triangle(	const Point3d &a, const Point3d &b, const Point3d &c, const Texture *texture)
 		:a_(a), b_(b), c_(c), texture_(texture) {
 			normal_ = normalize(cross(c_-a_, b_-a_));
 		}
@@ -34,9 +31,9 @@ class Triangle : public Object
 		bool emit() const override { return texture_->emit(); }
 
 	private:
-		Point3d  a_, b_, c_;
-		Vector3d normal_;
-		std::shared_ptr<Texture> texture_;
+		Point3d        a_, b_, c_;
+		Vector3d       normal_;
+		const Texture *texture_;
 };
 
 } // namespace Giraffe

@@ -20,10 +20,4 @@ void Scene::accelerate(int beg, int end)
 	accelerate_ = true;
 }
 
-Scene::~Scene()
-{
-	delete camera_;
-	std::for_each(objects_.begin(), objects_.end(), [](Object *obj) { delete obj; });
-}
-
 } // namespace Giraffe

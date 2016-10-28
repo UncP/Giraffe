@@ -18,7 +18,7 @@ class MarbleTexture : public Texture
 {
 	public:
 		MarbleTexture(const Vector3d &color1, const Vector3d &color2, const Vector3d &color3,
-									double frequency = 0.1, bool emit = false, REFL refl = kDiffuse)
+									double frequency, bool emit, REFL refl)
 		:Texture(refl, emit), color1_(color1), color2_(color2), color3_(color3),
 		 frequency_(frequency) { }
 

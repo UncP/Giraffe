@@ -14,9 +14,9 @@
 namespace Giraffe {
 
 TextureLight::TextureLight(const Point3d &position, const Vector3d &direction,
-	const Vector3d &intensity, double angle, const std::shared_ptr<Texture> &texture)
+	const Vector3d &intensity, double angle, const Texture *texture)
 :Light(intensity), position_(position), direction_(-normalize(direction)),
- cos_max_(std::cos(radian(angle))), texture_(texture.get()) {
+ cos_max_(std::cos(radian(angle))), texture_(texture) {
 	center_ = position_ + direction_;
 	radius_ = std::tan(radian(angle));
 	inv2radius_ = 0.5 / radius_;

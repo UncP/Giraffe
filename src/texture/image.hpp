@@ -21,7 +21,7 @@ namespace Giraffe {
 class ImageTexture : public Texture
 {
 	public:
-		ImageTexture(const char *name, double frequency = 1, bool emit=false, REFL refl=kDiffuse)
+		ImageTexture(const char *name, double frequency, bool emit, REFL refl)
 		:Texture(refl, emit), frequency_(frequency) {
 			assert(ImageIO::read_png(name, width_, height_, image_));
 		}

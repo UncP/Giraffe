@@ -10,8 +10,6 @@
 #ifndef _TEXTURE_LIGHT_HPP_
 #define _TEXTURE_LIGHT_HPP_
 
-#include <memory>
-
 #include "../core/light.hpp"
 #include "../core/texture.hpp"
 
@@ -21,7 +19,7 @@ class TextureLight : public Light
 {
 	public:
 		TextureLight(const Point3d &position, const Vector3d &direction, const Vector3d &intensity,
-			double angle, const std::shared_ptr<Texture> &texture);
+			double angle, const Texture *texture);
 
 		Vector3d sample(Isect &isect) const override;
 
@@ -33,7 +31,7 @@ class TextureLight : public Light
 		Point3d  position_;
 		Vector3d direction_;
 		double   cos_max_;
-		Texture *texture_;
+		const Texture *texture_;
 		Point3d  center_;
 		double   radius_;
 		double   inv2radius_;

@@ -11,7 +11,6 @@
 #define _CYLINDER_HPP_
 
 #include <assert.h>
-#include <memory>
 
 #include "../math/point.hpp"
 #include "../core/object.hpp"
@@ -22,7 +21,7 @@ class Cylinder : public Object
 {
 	public:
 		Cylinder(	const Point3d &center1, const Point3d &center2, const double radis,
-							const std::shared_ptr<Texture> &texture);
+							const Texture *texture);
 
 		bool intersect(const Ray &, Isect &) const override;
 
@@ -40,7 +39,7 @@ class Cylinder : public Object
 		double   inv2radis_;
 		double   tmax_;
 		Vector3d axis_;
-		std::shared_ptr<Texture> texture_;
+		const Texture *texture_;
 };
 
 } // namespace Giraffe

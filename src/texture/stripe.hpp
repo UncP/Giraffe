@@ -19,8 +19,7 @@ class StripeTexture : public Texture
 {
 	public:
 		StripeTexture(const Vector3d &color1, const Vector3d &color2, int axis,
-									const double &factor = 0.1, const Matrix &transform = Matrix::Identity,
-									bool emit = false, REFL refl = kDiffuse)
+									const double factor, const Matrix &transform, bool emit, REFL refl)
 		:Texture(refl, emit), color1_(color1), color2_(color2), transform_(transform), axis_(axis),
 		 factor_(factor) { }
 

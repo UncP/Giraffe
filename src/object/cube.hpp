@@ -10,7 +10,6 @@
 #ifndef _CUBE_HPP_
 #define _CUBE_HPP_
 
-#include <memory>
 #include <array>
 #include <map>
 
@@ -28,7 +27,7 @@ class Cube : public Object
 		typedef std::array<int, 4> quad;
 
 		Cube( const Point3d &center, int length, int width, int height,
-					const std::shared_ptr<Texture> &texture, const Matrix &matrix = Matrix::Identity);
+					const Texture *texture, const Matrix &matrix = Matrix::Identity);
 
 		bool intersect(const Ray &, Isect &) const override;
 
@@ -39,11 +38,11 @@ class Cube : public Object
 		~Cube() { delete aabb_; }
 
 	private:
-		std::vector<Point3d>            vertices_;
-		std::vector<Vector3d>           normals_;
-		std::array<box, 6>              bounds_;
-		std::shared_ptr<Texture>        texture_;
-		Box                            *aabb_;
+		std::vector<Point3d>   vertices_;
+		std::vector<Vector3d>  normals_;
+		std::array<box, 6>     bounds_;
+		const Texture         *texture_;
+		Box                   *aabb_;
 
 		const static std::array<quad, 6> indexes_;
 

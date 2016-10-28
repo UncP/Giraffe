@@ -29,7 +29,7 @@ Vector3d GiraffePathTracer::trace(const Ray &ray, int depth)
 	const std::vector<Object *> &objects = scene_->objects();
 	size_t oend = objects.size();
 #ifndef NOEXPLICIT
-	oend -= 1;
+	// oend -= 1;
 #endif
 
 	for (size_t i = 0; i != oend; ++i)

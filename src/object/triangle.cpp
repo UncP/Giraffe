@@ -33,7 +33,7 @@ bool Triangle::intersect(const Ray &ray, Isect &isect) const
 
 	if (t < isect.distance()) {
 		Point3d hitPos(ray.origin() + ray.direction() * t);
-		isect.update(t, this, IntersectionInfo(hitPos, Point2d(u, v), normal_), texture_.get());
+		isect.update(t, this, IntersectionInfo(hitPos, Point2d(u, v), normal_), texture_);
 		return true;
 	} else {
 		return false;

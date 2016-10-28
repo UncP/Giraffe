@@ -20,7 +20,7 @@ const std::array<std::array<int, 4>, 6> Cube::indexes_ = {0, 1, 2, 3,
 																													4, 0, 7, 3};
 
 Cube::Cube(const Point3d &center, int length, int width, int height,
-	const std::shared_ptr<Texture> &texture, const Matrix &matrix)
+	const Texture *texture, const Matrix &matrix)
 :texture_(texture), aabb_(new AABB())
 {
 	assert(aabb_);
@@ -160,7 +160,7 @@ bool Cube::intersect(const Ray &ray, Isect &isect) const
 				if (s != b)
 					uv[k++] = (hitPos[j] - s) / (b - s);
 			}
-			isect.update(dis, this, IntersectionInfo(hitPos, uv, normals_[i]), texture_.get());
+			isect.update(dis, this, IntersectionInfo(hitPos, uv, normals_[i]), texture_);
 			hit = true;
 		}
 	}

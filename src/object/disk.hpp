@@ -10,8 +10,6 @@
 #ifndef _DISK_HPP_
 #define _DISK_HPP_
 
-#include <memory>
-
 #include "../core/object.hpp"
 #include "../math/point.hpp"
 #include "../math/matrix.hpp"
@@ -22,7 +20,7 @@ class Disk : public Object
 {
 	public:
 		Disk(const Point3d &center, double radis1, double radis2, const Vector3d &axis,
-			const std::shared_ptr<Texture> texture, const Matrix &matrix = Matrix::Identity)
+			const Texture *texture, const Matrix &matrix = Matrix::Identity)
 		:center_(center), radis2_min_(radis1*radis1),
 		 radis2_max_((radis1+2*radis2) * (radis1+2*radis2)), axis_(matrix(axis)), texture_(texture)
 		{ }
@@ -34,11 +32,11 @@ class Disk : public Object
 		}
 
 	private:
-		Point3d center_;
-		double radis2_min_;
-		double radis2_max_;
-		Vector3d axis_;
-		std::shared_ptr<Texture> texture_;
+		Point3d        center_;
+		double         radis2_min_;
+		double         radis2_max_;
+		Vector3d       axis_;
+		const Texture *texture_;
 };
 
 } // namespace Giraffe
