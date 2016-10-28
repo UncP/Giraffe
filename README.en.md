@@ -1,11 +1,12 @@
-##Giraffe Ray Tracer
+##Giraffe Distributed Monte Carlo Ray Tracer
 [中文版 README](./README.md)
+
+###Giraffe is a Distributed Monte Carlo Ray Tracer which has its own ray tracing language
 
 ***
 
 ###Features
-* Diffuse reflection, Mirror reflection
-* Refraction
+* Diffuse reflection, Mirror reflection, Refraction
 * Anti-aliasing
 * Global illumination
 * Monte Carlo Integration
@@ -34,7 +35,7 @@
 	- BVH
 		+	AABB (Axis-Aligned Bounding Box)
 		+	DOP	(Discrete Oriented Polytopes)
-
+* Giraffe Ray Tracing Language
 
 
 ####Reflection & Refraction

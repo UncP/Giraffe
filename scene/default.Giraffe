@@ -1,0 +1,27 @@
+//Texture mirror ConstantTexture Color 0.99 0.99 0.99 false kReflect
+//Texture glass  ConstantTexture Color 0.99 0.99 0.99 false kRefract
+
+Texture wall1 ConstantTexture Color 0.75 0.75 0.75
+Texture wall2 ConstantTexture Color 0.75 0.25 0.25
+Texture wall3 ConstantTexture Color 0.25 0.75 0.25
+
+Texture t1 ConstantTexture Color 0.8 0.8 0.8
+Texture t2 ImageTexture "../texture/stones.png" 1 true
+//Texture t3 StripeTexture Color 0.3 0.4 0.5 Color 0.5 0.4 0.3 Xaxis 0.3 rotateZ 45
+
+Texture t4 MarbleTexture Color 0.3 0.4 0.5 Color 0.5 0.5 0.5 Color 0.5 0.4 0.3  0.1
+//Texture t5 BrickTexture Color 0.3 0.4 0.5 Color 0.5 0.4 0.3 8e-5 3e-5 5e-6
+
+//               Position                    Radius  Texture
+Object s1 Sphere Position 0 -10 -160 20 t1
+
+Object s2 Sphere Position  0   -100060  -160     1e5  wall1
+Object s3 Sphere Position  0    100060  -160     1e5  wall1
+Object s4 Sphere Position  0         0  -100225  1e5  wall1
+Object s5 Sphere Position -100070    0  -175     1e5  wall2
+Object s6 Sphere Position 100070     0  -175     1e5  wall3
+
+//Light l1 TextureLight Position -20 0 -50  Direction 0.2 0 -1  Intensity 1.5 1.5 1.5 20 t2
+//Light l2 PointLight Position 0 30 -160 Intensity 1024 1024 1024
+//Light l3 DirectionalLight Direction 0.2 -0.2 -1 Intensity 0.8 0.8 0.8
+Light l4 AreaLight Position 0 59.99 -160 Direction 0 -1 0 Intensity 2048 2048 2048 90
