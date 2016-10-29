@@ -44,9 +44,8 @@ class Isect
 		const Object* object() const { return object_; }
 		const Point3d& position() const { return surface_.position(); }
 		const Vector3d& normal() const { return surface_.normal(); }
-		Vector3d color() { return texture_->color(surface_); }
+		Vector3d evaluate() { return texture_->evaluate(surface_); }
 		REFL refl() const { return texture_->refl(); }
-		Vector3d emission() { return texture_->emission(surface_); }
 
 	private:
 

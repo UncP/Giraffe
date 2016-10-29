@@ -18,8 +18,8 @@ class MarbleTexture : public Texture
 {
 	public:
 		MarbleTexture(const Vector3d &color1, const Vector3d &color2, const Vector3d &color3,
-									double frequency, bool emit, REFL refl)
-		:Texture(refl, emit), color1_(color1), color2_(color2), color3_(color3),
+									double frequency, REFL refl)
+		:Texture(refl), color1_(color1), color2_(color2), color3_(color3),
 		 frequency_(frequency) { }
 
 	Vector3d evaluate(IntersectionInfo &) const override;

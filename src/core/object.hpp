@@ -40,8 +40,6 @@ class Object
 			return os;
 		}
 
-		virtual bool emit() const { return false; }
-
 		virtual ~Object() { }
 };
 

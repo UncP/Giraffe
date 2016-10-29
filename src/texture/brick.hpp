@@ -20,8 +20,8 @@ class BrickTexture : public Texture
 	public:
 		BrickTexture(	const Vector3d &color1, const Vector3d &color2, double width, double height,
 									double interval, const Matrix2 &transform = Matrix2::Identity,
-									bool emit = false, REFL refl = kDiffuse)
-		:Texture(refl, emit), color1_(color1), color2_(color2), transform_(transform) {
+									REFL refl = kDiffuse)
+		:Texture(refl), color1_(color1), color2_(color2), transform_(transform) {
 			width_  = width + interval;
 			height_ = height + interval;
 			wf_ = (interval * 0.5) / width;

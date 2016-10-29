@@ -28,22 +28,16 @@ Vector3d GiraffePathTracer::trace(const Ray &ray, int depth)
 	Isect isect;
 	const std::vector<Object *> &objects = scene_->objects();
 	size_t oend = objects.size();
-#ifndef NOEXPLICIT
-	// oend -= 1;
-#endif
 
 	for (size_t i = 0; i != oend; ++i)
 		scene_->objects()[i]->intersect(ray, isect);
 
 	if (isect.miss()) return Vector3d();
 
-	Vector3d color(isect.color());
-#ifdef NOEXPLICIT
-	Vector3d emission(isect.emission());
-#else
+	Vector3d color(isect.evaluate());
 	Vector3d emission(0);
 	const Object *obj = isect.object();
-#endif
+
 	double max = std::max(color.x_, std::max(color.y_, color.z_));
 	if (++depth > 3) {
 		if (Sampler::get1D() < max) color *= (1.0 / max);
@@ -61,7 +55,6 @@ Vector3d GiraffePathTracer::trace(const Ray &ray, int depth)
 
 	if (mat == kDiffuse) {
 
-		#ifndef NOEXPLICIT
 		const std::vector<Light *> &lights = scene_->lights();
 		size_t lend = lights.size();
 		for (size_t i = 0; i != lend; ++i) {
@@ -78,7 +71,6 @@ Vector3d GiraffePathTracer::trace(const Ray &ray, int depth)
 				emission += dot(normal, light) * mult(lights[i]->radiance(isect), color);
 			}
 		}
-		#endif
 
 		Vector3d u, v, w(normal);
 		if (std::fabs(w.x_) > 0.1)
@@ -125,7 +117,7 @@ void GiraffePathTracer::ray_tracing()
 	double inv = 1.0 / samples_;
 	auto beg = std::chrono::high_resolution_clock::now();
 	const Camera &camera = scene_->camera();
-	#pragma omp parallel for schedule(dynamic, 1) private(color)
+	#pragma omp parallel for schedule(dynamic) private(color)
 	for (int x = 0; x < width_; ++x) {
 		fprintf(stderr,"\rprogress: %5.2f%%", 100 * (x / static_cast<float>(width_-1)));
 		for (int y = 0; y < height_; ++y) {

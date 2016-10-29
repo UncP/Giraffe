@@ -22,7 +22,7 @@ class BumpBrickTexture : public Texture
 
 		BumpBrickTexture(	const Vector3d &color1, const Vector3d &color2,
 											double width, double height,
-											double interval, bool emit = false, REFL refl = kDiffuse);
+											double interval, REFL refl);
 
 		Vector3d evaluate(IntersectionInfo &) const override;
 

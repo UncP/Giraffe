@@ -14,8 +14,8 @@
 namespace Giraffe {
 
 BumpBrickTexture::BumpBrickTexture(const Vector3d &color1, const Vector3d &color2,
-double width, double height, double interval, bool emit, REFL refl)
-:Texture(refl, emit), color1_(color1), color2_(color2)
+double width, double height, double interval, REFL refl)
+:Texture(refl), color1_(color1), color2_(color2)
 {
 	assert(width > 0 && height > 0 && interval > 0);
 	width_  = width + interval;

@@ -28,8 +28,6 @@ class Sphere : public Object
 
 		bool hit(const Ray &r, Isect &) const override;
 
-		bool emit() const override { return texture_->emit(); }
-
 		std::ostream& print(std::ostream &os) const override {
 			return os << "sphere\n" << center_ << "radius " << radius_ << std::endl;
 		}

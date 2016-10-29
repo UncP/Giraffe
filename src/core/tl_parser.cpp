@@ -240,19 +240,15 @@ std::shared_ptr<Texture> TracingLanguageParser::findTexture()
 {
 	std::string s;
 	str_ >> s;
-	bool emit = false;
 	REFL refl = kDiffuse;
 	Matrix matrix = Matrix::Identity;
 	if (s == "ConstantTexture") {
 		Vector3d color = findVector();
 		if (!str_.eof()) {
-			emit = findBool();
-			if (!str_.eof()) {
-				refl = findREFL();
-				assert(str_.eof());
-			}
+			refl = findREFL();
+			assert(str_.eof());
 		}
-		return std::shared_ptr<Texture>(new ConstantTexture(color, emit, refl));
+		return std::shared_ptr<Texture>(new ConstantTexture(color, refl));
 	} else if (s == "StripeTexture") {
 		Vector3d color1 = findVector();
 		Vector3d color2 = findVector();
@@ -261,29 +257,23 @@ std::shared_ptr<Texture> TracingLanguageParser::findTexture()
 		if (!str_.eof()) {
 			matrix = findMatrix();
 			if (!str_.eof()) {
-				emit = findBool();
-				if (!str_.eof()) {
-					refl = findREFL();
-					assert(str_.eof());
-				}
+				refl = findREFL();
+				assert(str_.eof());
 			}
 		}
 		return std::shared_ptr<Texture>(
-			new StripeTexture(color1, color2, axis, factor, matrix, emit, refl));
+			new StripeTexture(color1, color2, axis, factor, matrix, refl));
 	} else if (s == "MarbleTexture") {
 		Vector3d color1 = findVector();
 		Vector3d color2 = findVector();
 		Vector3d color3 = findVector();
 		double frequency = findDouble();
 		if (!str_.eof()) {
-			emit = findBool();
-			if (!str_.eof()) {
-				refl = findREFL();
-				assert(str_.eof());
-			}
+			refl = findREFL();
+			assert(str_.eof());
 		}
 		return std::shared_ptr<Texture>(
-			new MarbleTexture(color1, color2, color3, frequency, emit, refl));
+			new MarbleTexture(color1, color2, color3, frequency, refl));
 	} else if (s == "BrickTexture") {
 		Vector3d color1 = findVector();
 		Vector3d color2 = findVector();
@@ -298,13 +288,10 @@ std::shared_ptr<Texture> TracingLanguageParser::findTexture()
 		if (str_.fail() || !file.size()) return nullptr;
 		double frequency = findDouble();
 		if (!str_.eof()) {
-			emit = findBool();
-			if (!str_.eof()) {
-				refl = findREFL();
-				assert(str_.eof());
-			}
+			refl = findREFL();
+			assert(str_.eof());
 		}
-		return std::shared_ptr<Texture>(new ImageTexture(file.c_str(), frequency, emit, refl));
+		return std::shared_ptr<Texture>(new ImageTexture(file.c_str(), frequency, refl));
 	}
 	assert(0);
 }

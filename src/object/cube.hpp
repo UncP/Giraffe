@@ -33,8 +33,6 @@ class Cube : public Object
 
 		std::ostream& print(std::ostream &os) const override;
 
-		bool emit() const override { return texture_->emit(); }
-
 		~Cube() { delete aabb_; }
 
 	private:

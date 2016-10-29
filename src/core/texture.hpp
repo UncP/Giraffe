@@ -22,29 +22,18 @@ namespace Giraffe {
 class Texture
 {
 	public:
-		Texture():refl_(kDiffuse), emit_(false) { }
+		Texture():refl_(kDiffuse) { }
 
-		Texture(REFL refl, bool emit):refl_(refl), emit_(emit) { }
+		Texture(REFL refl):refl_(refl) { }
 
 		virtual Vector3d evaluate(IntersectionInfo &) const = 0;
 
 		REFL refl() const { return refl_; }
 
-		bool emit() const { return emit_; }
-
-		Vector3d color(IntersectionInfo &surface) const {
-			return !emit_ ? evaluate(surface) : Vector3d();
-		}
-
-		Vector3d emission(IntersectionInfo &surface) const {
-			return emit_ ? evaluate(surface) : Vector3d();
-		}
-
 		virtual ~Texture() { }
 
 	protected:
 		REFL      refl_;
-		bool      emit_;
 };
 
 } // namespace Giraffe

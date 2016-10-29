@@ -28,8 +28,6 @@ class Triangle : public Object
 			return os << "triangle\n" << a_ << b_ << c_ << normal_;
 		}
 
-		bool emit() const override { return texture_->emit(); }
-
 	private:
 		Point3d        a_, b_, c_;
 		Vector3d       normal_;
