@@ -11,7 +11,6 @@
 #define _SPHERE_HPP_
 
 #include "../core/object.hpp"
-#include "../math/vertex.hpp"
 
 namespace Giraffe {
 

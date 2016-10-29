@@ -12,24 +12,11 @@
 * 分布式路径追踪
 * Explicit Lighting
 * Russian Roulette
-* Procedural Texture
-	-	砖块
-	- 条纹
-	- 图像
-* Perlin Noise
-	- 大理石
+* Procedural Texture（砖块，条纹，图像）
+* Perlin Noise（大理石）
 * Depth of field
-* 光源
-	- 点光源
-	- 方向光
-	- 区域光
-	- 纹理光
-* 物体
-	- 三角形
-	- 球
-	- 四棱柱
-	- 圆柱
-	- 圆盘
+* 光源（点光源，方向光，区域光，纹理光）
+* 物体（平面，三角形，球，四棱柱，圆柱，圆盘）
 * 加速数据结构
 	- BVH
 		+	AABB (Axis-Aligned Bounding Box)

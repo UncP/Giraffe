@@ -163,7 +163,8 @@ void GiraffePathTracer::save_png() const
 		execlp("subl", "subl", file.c_str(), NULL);
 }
 
-GiraffePathTracer::~GiraffePathTracer() {
+GiraffePathTracer::~GiraffePathTracer()
+{
 	if (pixels_)
 		delete [] pixels_;
 	if (scene_)

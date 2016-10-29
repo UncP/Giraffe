@@ -9,7 +9,7 @@ OBJ      = math/constant.o math/vector.o math/point.o math/ray.o math/vertex.o m
            core/object.o core/noise.o core/texture.o core/light.o core/camera.o \
            core/scene.o core/path_tracer.o core/tl_parser.o\
            accelerator/bvh.o \
-           object/triangle.o object/sphere.o object/cube.o \
+           object/plane.o object/triangle.o object/sphere.o object/cube.o \
            object/cylinder.o object/disk.o \
            texture/brick.o texture/bump_brick.o texture/stripe.o texture/constant.o \
            texture/noise.o texture/marble.o texture/image.o \

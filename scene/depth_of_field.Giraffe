@@ -25,4 +25,4 @@ Object w3 Sphere Position  0         0  -100225  1e5  wall1
 Object w4 Sphere Position -100070    0  -175     1e5  wall2
 Object w5 Sphere Position 100070     0  -175     1e5  wall3
 
-Light l1 AreaLight Position 0 59.99 -160 Direction 0 -1 0 Intensity 2048 2048 2048 90
+Light l1 AreaLight Position 0 59.99 -160 Direction 0 -1 0 Intensity 4096 4096 4096 90

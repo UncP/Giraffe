@@ -43,7 +43,7 @@ class Box : public Object
 			}
 		}
 
-		Plane getSplitPlane() const {
+		Axis getSplitPlane() const {
 			double x = far_[0] - near_[0];
 			double y = far_[1] - near_[1];
 			double z = far_[2] - near_[2];

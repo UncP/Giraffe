@@ -13,6 +13,7 @@
 
 #include "tl_parser.hpp"
 
+#include "../object/plane.hpp"
 #include "../object/sphere.hpp"
 #include "../object/cylinder.hpp"
 
@@ -97,6 +98,7 @@ Scene* TracingLanguageParser::parse(const char *file)
 													Point2i(screenWidth, screenHeight), \
 													Point2i(screenWidth, screenHeight), \
 													90));
+
 	return new Scene(camera_.get(), objects, lights);
 }
 
@@ -115,7 +117,7 @@ Vector3d TracingLanguageParser::findVector()
 {
 	std::string s;
 	str_ >> s;
-	assert(s == "Color" || s == "Direction" || s == "Intensity");
+	assert(s == "Normal" || s == "Color" || s == "Direction" || s == "Intensity");
 	Vector3d res;
 	str_ >> res.x_ >> res.y_ >> res.z_;
 	check();
@@ -202,7 +204,16 @@ std::shared_ptr<Object> TracingLanguageParser::findObject()
 {
 	std::string s;
 	str_ >> s;
-	if (s == "Sphere") {
+	if (s == "Plane") {
+		Point3d position = findPosition();
+		Vector3d normal = findVector();
+		str_ >> s;
+		auto p = textures_.find(s);
+		if (p == textures_.end())
+			abort("texture not existed");
+		assert(str_.eof());
+		return std::shared_ptr<Object>(new Plane(position, normal, p->second.get()));
+	} else if (s == "Sphere") {
 		Point3d center = findPosition();
 		double radius = findDouble();
 		str_ >> s;

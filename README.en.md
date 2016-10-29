@@ -13,24 +13,11 @@
 * Distributed Path Tracing
 * Explicit Lighting
 * Russian Roulette
-* Procedural Texture
-	- Brick
-	- Stripe
-	- Image
-* Perlin Noise
-	- Marble
+* Procedural Texture(Brick, Stripe, Image)
+* Perlin Noise(Marble)
 * Depth of field
-* Light
-	- Point
-	- Directional
-	- Area
-	- Texture
-* Object
-	- Triangle
-	- Sphere
-	- Quad
-	- Cylinder
-	- Disk
+* Light(Point, Directional, Area, Texture)
+* Object(Plane, Triangle, Sphere, Quad, Cylinder, Disk)
 * Acceleration data structures
 	- BVH
 		+	AABB (Axis-Aligned Bounding Box)

@@ -25,7 +25,7 @@ const double kEpsilon = 1e-4;
 
 enum REFL { kDiffuse, kReflect, kRefract };
 
-enum Plane { Xaxis = 0, Yaxis, Zaxis};
+enum Axis { Xaxis = 0, Yaxis, Zaxis};
 
 inline double radian(double angle) {
 	return angle * (PI / 180.0);

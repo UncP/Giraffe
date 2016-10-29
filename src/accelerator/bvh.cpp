@@ -64,7 +64,7 @@ bool BVH::intersect(const Ray &ray, Isect &isect) const
 }
 
 static int _splitByPlane(std::vector<std::pair<Object *, Box *>> &boxes,
-	const size_t beg, const size_t end, const Plane &p)
+	const size_t beg, const size_t end, const Axis &p)
 {
 	std::sort(boxes.begin() + beg, boxes.begin() + end,
 		[p](const std::pair<Object *, Box *> &p1, const std::pair<Object *, Box *> &p2)
