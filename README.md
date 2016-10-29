@@ -40,11 +40,11 @@
 ####反射折射
 ![](./image/reflect_refract.png)
 
-####条纹纹理
-![](./image/stripe.png)
-
 ####砖块纹理
 ![](./image/brick.png)
+
+####景深
+![](./image/depth_of_field.png)
 
 ####Puppy
 ![](./image/puppy.png)

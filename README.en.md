@@ -1,7 +1,7 @@
 ##Giraffe Distributed Monte Carlo Ray Tracer
 [中文版 README](./README.md)
 
-###Giraffe is a Distributed Monte Carlo Ray Tracer which has its own ray tracing language
+###Giraffe is a Distributed Monte Carlo Ray Tracer which has its own ray tracing language, written in C++11/14
 
 ***
 
@@ -41,11 +41,11 @@
 ####Reflection & Refraction
 ![](./image/reflect_refract.png)
 
-####Stripe Texture
-![](./image/stripe.png)
-
 ####Brick Texture
 ![](./image/brick.png)
+
+####Depth of Field
+![](./image/depth_of_field.png)
 
 ####Puppy
 ![](./image/puppy.png)
