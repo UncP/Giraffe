@@ -21,6 +21,7 @@
 #include "texture.hpp"
 #include "object.hpp"
 #include "light.hpp"
+#include "material.hpp"
 
 namespace Giraffe {
 
@@ -48,26 +49,27 @@ class TracingLanguageParser
 
 		bool findBool();
 
-		REFL findREFL();
-
 		Matrix findMatrix();
 
 		void check() const;
 
 		void abort(const std::string &, const std::string & = "") const;
 
-		std::shared_ptr<Object> findObject();
-
 		std::shared_ptr<Texture> findTexture();
+
+		std::shared_ptr<Material> findMaterial();
+
+		std::shared_ptr<Object> findObject();
 
 		std::shared_ptr<Light> findLight();
 
 		int line_;
 		std::istringstream str_;
 		std::shared_ptr<Camera> camera_;
-		std::map<std::string, std::shared_ptr<Texture>> textures_;
-		std::map<std::string, std::shared_ptr<Object>>  objects_;
-		std::map<std::string, std::shared_ptr<Light>>   lights_;
+		std::map<std::string, std::shared_ptr<Texture>>  textures_;
+		std::map<std::string, std::shared_ptr<Material>> materials_;
+		std::map<std::string, std::shared_ptr<Object>>   objects_;
+		std::map<std::string, std::shared_ptr<Light>>    lights_;
 };
 
 } // namespace Giraffe

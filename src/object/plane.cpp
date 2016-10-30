@@ -11,7 +11,7 @@
 
 namespace Giraffe {
 
-bool Plane::hit(const Ray &ray, Isect &isect) const
+bool Plane::hit(const Ray &ray, const double &distance) const
 {
 	double a = dot(normal_, ray.direction());
 	if (a > 0) return false;
@@ -20,10 +20,7 @@ bool Plane::hit(const Ray &ray, Isect &isect) const
 
 	double dis = b / a;
 
-	if (dis > 0 && dis < isect.distance()) {
-		isect.update(dis, this);
-		return true;
-	}
+	if (dis > 0 && dis < distance) return true;
 	return false;
 }
 
@@ -40,7 +37,7 @@ bool Plane::intersect(const Ray &ray, Isect &isect) const
 
 	if (dis > 0 && dis < isect.distance()) {
 		Point3d hitPos(ray.origin() + ray.direction() * dis);
-		isect.update(dis, this, IntersectionInfo(hitPos, Point2d(), normal_), texture_);
+		isect.update(dis, this, hitPos, normal_, Point2d(), material_);
 		return true;
 	}
 	return false;

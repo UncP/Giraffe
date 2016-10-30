@@ -18,21 +18,21 @@ class Plane : public Object
 {
 	public:
 
-		Plane(const Point3d &position, const Vector3d &normal, const Texture *texture)
-		:position_(position), normal_(normalize(normal)), texture_(texture) { }
+		Plane(const Point3d &position, const Vector3d &normal, Material *material)
+		:position_(position), normal_(normalize(normal)), material_(material) { }
 
 		bool intersect(const Ray &, Isect &) const override;
 
-		bool hit(const Ray &, Isect &) const override;
+		bool hit(const Ray &, const double &distance) const override;
 
 		std::ostream& print(std::ostream &os) const override {
 			return os << "position: " << position_ << "normal: " << normal_;
 		}
 
 	private:
-		Point3d  position_;
-		Vector3d normal_;
-		const Texture *texture_;
+		Point3d   position_;
+		Vector3d  normal_;
+		Material *material_;
 };
 
 } // namespace Giraffe

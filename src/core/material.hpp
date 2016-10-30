@@ -10,14 +10,16 @@
 #ifndef _MATERIAL_HPP_
 #define _MATERIAL_HPP_
 
+#include "../math/point.hpp"
+#include "../math/vector.hpp"
+#include "../utility/isect.hpp"
+
 namespace Giraffe {
 
 class Material
 {
 	public:
-		enum Type { kDiffuse, kReflect, kRefract };
-
-		Vector3d sample(const Vector3d direction, Vector3d &normal, ) const = 0;
+		virtual Color sample(const Vector3d &out, Vector3d &in, const Isect &isect) = 0;
 
 		virtual ~Material() { }
 };

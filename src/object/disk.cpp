@@ -25,7 +25,7 @@ bool Disk::intersect(const Ray &ray, Isect &isect) const
 		// double inv2radis = 1.0 / (2 * (radis1_ + radis2_));
 		// Point2d uv((hitPos.x_-center_.x_+(radis1_+radis2_)) * inv2radis,
 			// (hitPos.y_-center_.y_+(radis1_+radis2_)) * inv2radis);
-		isect.update(dis, this, IntersectionInfo(hitPos, Point2d(), axis_), texture_);
+		isect.update(dis, this, hitPos, axis_, Point2d(), material_);
 		return true;
 	}
 	return false;

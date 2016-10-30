@@ -11,10 +11,10 @@
 
 namespace Giraffe {
 
-Vector3d MarbleTexture::evaluate(IntersectionInfo &surface) const
+Vector3d MarbleTexture::evaluate(const Vertex &vertex) const
 {
-	double t = Noise::getNoise().fractalSum(surface.position() * frequency_);
-	double tt = 2 * std::fabs(std::sin(surface.position().z_ * frequency_ + t));
+	double t = Noise::getNoise().fractalSum(vertex.position() * frequency_);
+	double tt = 2 * std::fabs(std::sin(vertex.position().z_ * frequency_ + t));
 
 	if (tt < 1)
 		return mix(color2_, color3_, tt);

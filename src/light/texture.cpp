@@ -40,8 +40,7 @@ Vector3d TextureLight::radiance(const Isect &isect) const
 	double t = 1.0 / dot(direction_, direction);
 	Vector3d p(position_ + t * direction);
 	Point2d uv((p.x_-center_.x_+radius_)*inv2radius_, (-center_.y_+p.y_+radius_)*inv2radius_);
-	IntersectionInfo surface(p, uv, Vector3d());
-	return mult(intensity_, texture_->evaluate(surface));
+	return mult(intensity_, texture_->evaluate(Vertex(p, Vector3d(), uv)));
 }
 
 } // namespace Giraffe

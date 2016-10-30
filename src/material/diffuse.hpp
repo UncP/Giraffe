@@ -11,17 +11,19 @@
 #define _DIFFUSE_MATERIAL_HPP_
 
 #include "../core/material.hpp"
-#include "../core/texture.hpp"
 
 namespace Giraffe {
 
 class Diffuse : public Material
 {
-
 	public:
+		Diffuse(const Color &color):color_(color) { }
+
+		Color sample(const Vector3d &out, Vector3d &in, const Isect &isect) override;
 
 	private:
-		const Texture *texture_;
+
+		Color color_;
 };
 
 } // namespace Giraffe

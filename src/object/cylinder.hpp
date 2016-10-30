@@ -10,8 +10,6 @@
 #ifndef _CYLINDER_HPP_
 #define _CYLINDER_HPP_
 
-#include <assert.h>
-
 #include "../math/point.hpp"
 #include "../core/object.hpp"
 
@@ -21,7 +19,7 @@ class Cylinder : public Object
 {
 	public:
 		Cylinder(	const Point3d &center1, const Point3d &center2, const double radis,
-							const Texture *texture);
+							Material *material);
 
 		bool intersect(const Ray &, Isect &) const override;
 
@@ -30,14 +28,14 @@ class Cylinder : public Object
 		}
 
 	private:
-		Point3d  center1_;
-		Point3d  center2_;
-		double   radis_;
-		double   radis2_;
-		double   inv2radis_;
-		double   tmax_;
-		Vector3d axis_;
-		const Texture *texture_;
+		Point3d   center1_;
+		Point3d   center2_;
+		double    radis_;
+		double    radis2_;
+		double    inv2radis_;
+		double    tmax_;
+		Vector3d  axis_;
+		Material *material_;
 };
 
 } // namespace Giraffe

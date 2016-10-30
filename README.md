@@ -2,6 +2,8 @@
 [English Version of README](./README.en.md)
 
 ###Giraffe 是一个拥有自己的光线追踪语言的分布式蒙特卡洛光线追踪器，采用C++11/14实现。
+###它的中文名字是`长颈鹿`。
+
 ***
 
 ###特点

@@ -25,7 +25,7 @@ class Object
 
 		virtual bool intersect(const Ray &, Isect &) const = 0;
 
-		virtual bool hit(const Ray &, Isect &) const { return false; }
+		virtual bool hit(const Ray &, const double &distance) const { return false; }
 
 		virtual void computeBox(std::vector<double> &, std::vector<double> &,
 			const Vector3d *) const {

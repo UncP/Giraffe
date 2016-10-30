@@ -7,14 +7,16 @@
  *    > Created Time: 2016-09-20 22:58:45
 **/
 
+#include <cassert>
+
 #include "cylinder.hpp"
 
 namespace Giraffe {
 
-Cylinder::Cylinder(const Point3d &center1, const Point3d &center2, const double radis,
-const Texture *texture)
+Cylinder::Cylinder(	const Point3d &center1, const Point3d &center2, const double radis,
+										Material *material)
 :center1_(center1), center2_(center2), radis_(radis), radis2_(radis * radis),
-inv2radis_(1.0 / (2.0 * radis)), texture_(texture)
+inv2radis_(1.0 / (2.0 * radis)), material_(material)
 {
 	assert(center1_ != center2_);
 	axis_ = center2_ - center1_;
@@ -52,8 +54,7 @@ bool Cylinder::intersect(const Ray &ray, Isect &isect) const
 		Point2d uv;
 		// Point2d uv((ori.x_-c.x_+radis_) * inv2radis_,
 		// 					 (-ori.y_+c.y_+radis_) * inv2radis_);
-		isect.update(dis, this,
-			IntersectionInfo(hitPos, uv, flag ? -axis_ : axis_), texture_);
+		isect.update(dis, this, hitPos, flag ? -axis_ : axis_, uv, material_);
 		return true;
 	}
 
@@ -93,7 +94,7 @@ bool Cylinder::intersect(const Ray &ray, Isect &isect) const
 		hitPos = ray.origin() + ray.direction() * dis;
 		Point3d cc(center1_ + t * axis_);
 		Point2d uv;
-		isect.update(dis, this, IntersectionInfo(hitPos, uv, hitPos-cc), texture_);
+		isect.update(dis, this, hitPos, hitPos-cc, uv, material_);
 		return true;
 	}
 	return false;

@@ -17,11 +17,10 @@ namespace Giraffe {
 class NoiseTexture : public Texture
 {
 	public:
-		NoiseTexture(	const Vector3d &color1, const Vector3d &color2, const double &frequency,
-									REFL refl)
-		:Texture(refl), color1_(color1), color2_(color2), frequency_(frequency) { }
+		NoiseTexture(	const Vector3d &color1, const Vector3d &color2, const double &frequency)
+		:color1_(color1), color2_(color2), frequency_(frequency) { }
 
-		Vector3d evaluate(IntersectionInfo &) const override;
+		Vector3d evaluate(const Vertex &vertex) const override;
 
 	private:
 		Vector3d color1_;

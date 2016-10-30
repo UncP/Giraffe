@@ -19,11 +19,10 @@ class StripeTexture : public Texture
 {
 	public:
 		StripeTexture(const Vector3d &color1, const Vector3d &color2, int axis,
-									const double factor, const Matrix &transform, REFL refl)
-		:Texture(refl), color1_(color1), color2_(color2), transform_(transform), axis_(axis),
-		 factor_(factor) { }
+									const double factor, const Matrix &transform)
+		:color1_(color1), color2_(color2), transform_(transform), axis_(axis), factor_(factor) { }
 
-		Vector3d evaluate(IntersectionInfo &) const override;
+		Vector3d evaluate(const Vertex &vertex) const override;
 
 	private:
 		Vector3d color1_;

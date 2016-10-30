@@ -19,9 +19,8 @@ const std::array<std::array<int, 4>, 6> Cube::indexes_ = {0, 1, 2, 3,
 																													1, 5, 6, 2,
 																													4, 0, 7, 3};
 
-Cube::Cube(const Point3d &center, int length, int width, int height,
-	const Texture *texture, const Matrix &matrix)
-:texture_(texture), aabb_(new AABB())
+Cube::Cube(const Point3d &center, int length, int width, int height, Material *material,
+	const Matrix &matrix):material_(material), aabb_(new AABB())
 {
 	assert(aabb_);
 	/*
@@ -160,7 +159,7 @@ bool Cube::intersect(const Ray &ray, Isect &isect) const
 				if (s != b)
 					uv[k++] = (hitPos[j] - s) / (b - s);
 			}
-			isect.update(dis, this, IntersectionInfo(hitPos, uv, normals_[i]), texture_);
+			isect.update(dis, this, hitPos, normals_[i], uv, material_);
 			hit = true;
 		}
 	}

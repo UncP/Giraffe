@@ -23,7 +23,7 @@ void Sphere::computeBox(std::vector<double> &near, std::vector<double> &far,
 	}
 }
 
-bool Sphere::hit(const Ray &ray, Isect &isect) const
+bool Sphere::hit(const Ray &ray, const double &distance) const
 {
 	Vector3d l = center_ - ray.origin();
 	double s = dot(l, ray.direction());
@@ -35,10 +35,8 @@ bool Sphere::hit(const Ray &ray, Isect &isect) const
 		return false;
 	double q = std::sqrt(radius2_ - q2);
 	double dis = l2 > radius2_ ? (s - q) : (s + q);
-	if (dis < isect.distance()) {
-		isect.update(dis, this);
-		return true;
-	}
+
+	if (dis < distance) return true;
 	return false;
 }
 
@@ -64,7 +62,7 @@ bool Sphere::intersect(const Ray &ray, Isect &isect) const
 		// Point2d uv((std::atan2(hitPos.y_-center_.y_, hitPos.x_-center_.x_) + DOU_PI) * DOU_PI_INV,
 							 // 1 - (std::acos((hitPos.z_-center_.z_) / radius_) * PI_INV));
 
-		isect.update(dis, this, IntersectionInfo(hitPos, uv, hitPos-center_), texture_);
+		isect.update(dis, this, hitPos, hitPos-center_, uv, material_);
 		return true;
 	} else {
 		return false;

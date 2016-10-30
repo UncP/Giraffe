@@ -11,4 +11,19 @@
 
 namespace Giraffe {
 
+void Isect::update(	const double &distance,
+										const Object *object,
+										const Point3d &position,
+										const Vector3d &normal,
+										const Point2d &uv,
+										Material *material)
+{
+	distance_  = distance;
+	object_    = object;
+	position_  = position;
+	normal_    = normal;
+	uv_        = uv;
+	material_  = material;
+}
+
 } // namespace Giraffe

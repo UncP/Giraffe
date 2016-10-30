@@ -21,14 +21,13 @@ namespace Giraffe {
 class ImageTexture : public Texture
 {
 	public:
-		ImageTexture(const char *name, double frequency, REFL refl)
-		:Texture(refl), frequency_(frequency) {
+		ImageTexture(const char *name, double frequency):frequency_(frequency) {
 			assert(ImageIO::read_png(name, width_, height_, image_));
 		}
 
 		~ImageTexture() { delete [] image_; }
 
-		Vector3d evaluate(IntersectionInfo &) const override;
+		Vector3d evaluate(const Vertex &vertex) const override;
 
 	private:
 		int       width_, height_;
