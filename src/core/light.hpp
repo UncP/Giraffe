@@ -22,7 +22,7 @@ class Light
 
 		Light(const Vector3d &intensity):intensity_(intensity) { }
 
-		virtual Vector3d sample(Isect &isect) const = 0;
+		virtual Vector3d illuminate(Isect &isect) const = 0;
 
 		virtual Vector3d radiance(const Isect &isect) const = 0;
 

@@ -30,74 +30,47 @@ Vector3d GiraffePathTracer::trace(const Ray &ray, int depth)
 	const std::vector<Object *> &objects = scene_->objects();
 	size_t oend = objects.size();
 
-	for (size_t i = 0; i != oend; ++i)
-		scene_->objects()[i]->intersect(ray, isect);
+	for (size_t i = 0; i != oend; ++i) objects[i]->intersect(ray, isect);
 
 	if (isect.miss()) return Vector3d();
-
-	Vector3d dir;
-	Color color = isect.material()->sample(ray.direction(), dir, isect);
-
-	if (++depth > 3) {
-		double max = std::max(color.x_, std::max(color.y_, color.z_));
-		if (Sampler::get1D() < max) color *= (1.0 / max);
-		else return Vector3d(0);
-	}
-
-	Vector3d emission(0);
-
-	// bool into = true;
-	// if (dot(ray.direction(), normal) > 0) normal = -normal, into = false;
 
 	Vector3d normal = normalize(isect.normal());
 	isect.setNormal(normal);
 
+	double pdf;
+	Vector3d dir;
+	Color color = isect.material()->sample(ray.direction(), dir, isect.normal(), pdf);
+
+	if (++depth > 3) {
+		double max = std::max(color.x_, std::max(color.y_, color.z_));
+		if (Sampler::get1D() < max) color *= (1.0 / max);
+		else return Vector3d();
+	}
+
 	Point3d pos = isect.position() + normal * kEpsilon;
 	isect.setPosition(pos);
 
-	const std::vector<Light *> &lights = scene_->lights();
-	for (size_t i = 0, lend = lights.size(); i != lend; ++i) {
-		bool flag = true;
-		Vector3d light_dir = lights[i]->sample(isect);
-		if (light_dir == Vector3d(0) || dot(light_dir, normal) < 0) continue;
-		for (size_t j = 0; j != oend; ++j) {
-			if (objects[j]->hit(Ray(pos, light_dir), isect.distance()) &&
-					objects[j] != isect.object()) {
-				flag = false;
-				break;
+	Vector3d emission;
+	if (isect.material()->type() & Material::kDiffuse) {
+		const std::vector<Light *> &lights = scene_->lights();
+		for (size_t i = 0, lend = lights.size(); i != lend; ++i) {
+			bool flag = true;
+			Vector3d light_dir = lights[i]->illuminate(isect);
+			if (light_dir == Vector3d(0) || dot(light_dir, normal) < 0) continue;
+			for (size_t j = 0; j != oend; ++j) {
+				if (objects[j]->hit(Ray(pos, light_dir), isect.distance()) &&
+						objects[j] != isect.object()) {
+					flag = false;
+					break;
+				}
+			}
+			if (flag) {
+				emission += dot(normal, light_dir) * mult(lights[i]->radiance(isect), color);
 			}
 		}
-		if (flag) {
-			emission += dot(normal, light_dir) * mult(lights[i]->radiance(isect), color);
-		}
 	}
-	return emission + mult(color, trace(Ray(pos, dir), depth));
+	return emission + mult(color, trace(Ray(pos, dir), depth));// * dot(dir, normal);
 
-	// Vector3d refl = normalize(ray.direction() - 2 * dot(ray.direction(), normal) * normal);
-
-	// if (mat == kReflect)
-	// 	return emission + mult(color, trace(Ray(reflPos, refl), depth));
-
-	// double etai = 1.0, etat = kRefractionRatio;
-	// double ior;
-	// if (into) ior = 1.0 / kRefractionRatio;
-	// else 			ior = kRefractionRatio;
-
-	// double cos1 = -dot(ray.direction(), normal), cos2;
-	// if ((cos2 = (1 - ior * ior * (1.0 - cos1 * cos1))) < 0.0)
-	// 	return emission + mult(color, trace(Ray(reflPos, refl), depth));
-
-	// Vector3d refr = normalize(ray.direction() * ior + normal * (ior * cos1 - std::sqrt(cos2)));
-	// Point3d refrPos = reflPos - 2 * normal * kEpsilon;
-
-	// double a = etat - etai, b = etat + etai;
-	// double R0 = a * a / (b * b), c = 1 - (into ? cos1 : -dot(refr, normal));
-	// double Re = R0 + (1 - R0) * c * c * c * c * c, Tr = 1 - Re;
-
-	// double P = 0.25 + 0.5 * Re, RP = Re / P, TP = Tr / (1 - P);
-	// return emission + mult(color, (depth > 2 ? (Sampler::get1D() < P ?
-	// 	trace(Ray(reflPos, refl), depth)*RP : trace(Ray(refrPos, refr), depth)*TP):
-	// 	trace(Ray(reflPos, refl), depth)*Re + trace(Ray(refrPos, refr), depth)*Tr));
 }
 
 void GiraffePathTracer::ray_tracing()

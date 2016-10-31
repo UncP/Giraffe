@@ -19,7 +19,7 @@ class PointLight : public Light
 	public:
 		PointLight(const Point3d &position, const Vector3d &intensity);
 
-		Vector3d sample(Isect &isect) const override;
+		Vector3d illuminate(Isect &isect) const override;
 
 		Vector3d radiance(const Isect &isect) const override;
 

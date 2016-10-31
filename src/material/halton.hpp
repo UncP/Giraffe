@@ -4,22 +4,22 @@
  *    > Github:   https://www.github.com/UncP/Giraffe
  *    > Description:
  *
- *    > Created Time: 2016-10-29 23:00:05
+ *    > Created Time: 2016-10-31 12:05:47
 **/
 
-#ifndef _GLASS_MATERIAL_HPP_
-#define _GLASS_MATERIAL_HPP_
+#ifndef _HALTON_HPP_
+#define _HALTON_HPP_
 
 #include "../core/material.hpp"
-#include "../core/texture.hpp"
 
 namespace Giraffe {
 
-class Glass : public Material
+class Halton : public Material
 {
 	public:
-		Glass(Type type):Material(type), color_(Vector3d(0.999)) {
-			assert(type == kRefract);
+		Halton(Type type, const Vector3d &color)
+		:Material(Type(type | kDiffuse)), color_(color) {
+			assert(type == kHalton);
 		}
 
 		Color sample(const Vector3d &out, Vector3d &in, const Vector3d &normal, double &pdf)override;
@@ -31,4 +31,4 @@ class Glass : public Material
 
 } // namespace Giraffe
 
-#endif /* _GLASS_MATERIAL_HPP_ */
+#endif /* _HALTON_HPP_ */

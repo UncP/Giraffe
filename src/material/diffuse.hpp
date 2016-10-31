@@ -17,12 +17,14 @@ namespace Giraffe {
 class Diffuse : public Material
 {
 	public:
-		Diffuse(const Color &color):color_(color) { }
+		Diffuse(Type type, const Vector3d &color):Material(type), color_(color) {
+			assert(type == kDiffuse);
+		}
 
-		Color sample(const Vector3d &out, Vector3d &in, const Isect &isect) override;
+		Color sample(const Vector3d &out, Vector3d &in, const Vector3d &normal, double &pdf)override;
 
 	private:
-
+		using Material::type_;
 		Color color_;
 };
 

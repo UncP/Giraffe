@@ -20,7 +20,7 @@ class DirectionalLight : public Light
 	public:
 		DirectionalLight(const Vector3d &direction, const Vector3d &intensity);
 
-		Vector3d sample(Isect &isect) const override;
+		Vector3d illuminate(Isect &isect) const override;
 
 		Vector3d radiance(const Isect &isect) const override;
 

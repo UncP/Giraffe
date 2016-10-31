@@ -14,7 +14,7 @@ namespace Giraffe {
 PointLight::PointLight(const Point3d &position, const Vector3d &intensity)
 :Light(intensity), position_(position) { }
 
-Vector3d PointLight::sample(Isect &isect) const
+Vector3d PointLight::illuminate(Isect &isect) const
 {
 	Vector3d vec(position_ - isect.position());
 	double dis = vec.length();

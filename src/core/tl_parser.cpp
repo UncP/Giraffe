@@ -20,6 +20,8 @@
 #include "../texture/image.hpp"
 
 #include "../material/diffuse.hpp"
+#include "../material/mirror.hpp"
+#include "../material/halton.hpp"
 
 #include "../object/plane.hpp"
 #include "../object/sphere.hpp"
@@ -245,7 +247,17 @@ std::shared_ptr<Material> TracingLanguageParser::findMaterial()
 	if (s == "Diffuse") {
 		Vector3d color = findVector();
 		assert(str_.eof());
-		return std::shared_ptr<Material>(new Diffuse(color));
+		return std::shared_ptr<Material>(new Diffuse(Material::kDiffuse, color));
+	} else if (s == "Mirror") {
+		assert(str_.eof());
+		return std::shared_ptr<Material>(new Mirror(Material::kReflect));
+	}/* else if (s == "Glass") {
+		assert(str_.eof());
+		return std::shared_ptr<Material>(new Mirror(Material::kRefract));
+	} */else if (s == "Halton") {
+		Vector3d color = findVector();
+		assert(str_.eof());
+		return std::shared_ptr<Material>(new Halton(Material::kHalton, color));
 	}
 	assert(0);
 }

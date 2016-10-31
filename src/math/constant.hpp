@@ -20,10 +20,7 @@ const double PI_INV = 1.0 / PI;
 const double DOU_PI = 2.0 * PI;
 const double DOU_PI_INV = 1.0 / DOU_PI;
 const double kInfinity = std::numeric_limits<double>::max();
-const double kRefractionRatio = 1.5;
 const double kEpsilon = 1e-4;
-
-enum REFL { kDiffuse, kReflect, kRefract };
 
 enum Axis { Xaxis = 0, Yaxis, Zaxis};
 

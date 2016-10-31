@@ -22,7 +22,7 @@ int main(int argc, char **argv)
 	const char *def = "default.Giraffe";
 	char file[128] = {0};
 	strcat(file, dir);
-	if (argc >= 2)
+	if (argc == 3)
 		strcat(file, argv[1]);
 	else
 		strcat(file, def);
@@ -30,7 +30,7 @@ int main(int argc, char **argv)
 	Scene *scene = parser.parse(file);
 
 	int samples = 1;
-	if (argc == 3) samples = atoi(argv[2]);
+	if (argc == 2) samples = atoi(argv[1]);
 	GiraffePathTracer giraffe_path_tracer(scene, screenWidth, screenHeight, samples);
 
 	giraffe_path_tracer.ray_tracing();

@@ -20,7 +20,7 @@ class AreaLight : public Light
 		AreaLight(const Point3d &position, const Vector3d &direction, const Vector3d &intensity,
 			double angle);
 
-		Vector3d sample(Isect &isect) const override;
+		Vector3d illuminate(Isect &isect) const override;
 
 		Vector3d radiance(const Isect &isect) const override;
 

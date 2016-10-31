@@ -22,7 +22,7 @@ TextureLight::TextureLight(const Point3d &position, const Vector3d &direction,
 	inv2radius_ = 0.5 / radius_;
 }
 
-Vector3d TextureLight::sample(Isect &isect) const
+Vector3d TextureLight::illuminate(Isect &isect) const
 {
 	Vector3d vec(position_ - isect.position());
 	double dis = vec.length();

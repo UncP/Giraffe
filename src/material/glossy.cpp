@@ -4,14 +4,14 @@
  *    > Github:   https://www.github.com/UncP/Giraffe
  *    > Description:
  *
- *    > Created Time: 2016-10-29 22:59:17
+ *    > Created Time: 2016-10-31 18:22:40
 **/
 
-#include "mirror.hpp"
+#include "glossy.hpp"
 
 namespace Giraffe {
 
-Color Mirror::sample(const Vector3d &out, Vector3d &in, const Vector3d &normal, double &pdf)
+Color Glossy::sample(const Vector3d &out, Vector3d &in, const Vector3d &normal, double &pdf)
 {
 	in = normalize(out - (2 * dot(out, normal)) * normal);
 
