@@ -17,7 +17,7 @@ namespace Giraffe {
 class Mirror : public Material
 {
 	public:
-		Mirror(Type type):Material(type), color_(Vector3d(0.999)) {
+		Mirror(Type type, const Vector3d &color):Material(type), color_(color) {
 			assert(type == kReflect);
 		}
 

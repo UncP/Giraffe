@@ -6,7 +6,7 @@
 ***
 
 ###Features
-* Diffuse reflection, Mirror reflection, Refraction
+* Diffuse reflection, Mirror reflection, Glossy Reflection, Refraction
 * Anti-aliasing
 * Global illumination
 * Monte Carlo Integration

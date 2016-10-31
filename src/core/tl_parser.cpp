@@ -21,6 +21,7 @@
 
 #include "../material/diffuse.hpp"
 #include "../material/mirror.hpp"
+#include "../material/glossy.hpp"
 #include "../material/halton.hpp"
 
 #include "../object/plane.hpp"
@@ -65,19 +66,19 @@ Scene* TracingLanguageParser::parse(const char *file)
 		str_ >> s;
 		if (s == "Texture") {
 			str_ >> s;
-			if (textures_.find(s) != textures_.end()) abort("existed texture", s);
+			if (textures_.find(s) != textures_.end()) abort("existed texture ", s);
 			textures_.insert({s, findTexture()});
 		} else if (s == "Material") {
 			str_ >> s;
-			if (materials_.find(s) != materials_.end()) abort("existed material", s);
+			if (materials_.find(s) != materials_.end()) abort("existed material ", s);
 			materials_.insert({s, findMaterial()});
 		} else if (s == "Object") {
 			str_ >> s;
-			if (objects_.find(s) != objects_.end()) abort("existed object", s);
+			if (objects_.find(s) != objects_.end()) abort("existed object ", s);
 			objects_.insert({s, findObject()});
 		} else if (s == "Light") {
 			str_ >> s;
-			if (lights_.find(s) != lights_.end()) abort("existed light", s);
+			if (lights_.find(s) != lights_.end()) abort("existed light ", s);
 				lights_.insert({s, findLight()});
 		} else {
 			abort("wrong type");
@@ -249,12 +250,18 @@ std::shared_ptr<Material> TracingLanguageParser::findMaterial()
 		assert(str_.eof());
 		return std::shared_ptr<Material>(new Diffuse(Material::kDiffuse, color));
 	} else if (s == "Mirror") {
+		Vector3d color = findVector();
 		assert(str_.eof());
-		return std::shared_ptr<Material>(new Mirror(Material::kReflect));
+		return std::shared_ptr<Material>(new Mirror(Material::kReflect, color));
 	}/* else if (s == "Glass") {
 		assert(str_.eof());
 		return std::shared_ptr<Material>(new Mirror(Material::kRefract));
-	} */else if (s == "Halton") {
+	} */else if (s == "Glossy") {
+		Vector3d color = findVector();
+		double roughness = findDouble();
+		assert(str_.eof());
+		return std::shared_ptr<Material>(new Glossy(Material::kGlossy, color, roughness));
+	} else if (s == "Halton") {
 		Vector3d color = findVector();
 		assert(str_.eof());
 		return std::shared_ptr<Material>(new Halton(Material::kHalton, color));

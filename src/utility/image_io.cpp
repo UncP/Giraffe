@@ -194,14 +194,18 @@ bool ImageIO::save_ppm(int width, int height, const Vector3d *pixels, std::strin
 {
 	file = generate_file_name();
 	file += ".ppm";
+	std::cerr << "save to: " << file << std::endl;
 
 	std::ofstream out(file, std::ios::out | std::ios::binary);
-	if (!out) { std::cerr << "ppm格式图片保存失败 :(\n"; return false; }
+	if (!out.is_open()) { std::cerr << "ppm格式图片保存失败 :(\n"; return false; }
 	out << "P3\n" << width << " " << height << "\n255\n";
 	for (int i = 0, end = width * height; i < end; ++i) {
-		int r = static_cast<int>(std::pow(std::min(pixels[i].x_,1.0),1 / 2.2) * 255 + 0.5);
-		int g = static_cast<int>(std::pow(std::min(pixels[i].y_,1.0),1 / 2.2) * 255 + 0.5);
-		int b = static_cast<int>(std::pow(std::min(pixels[i].z_,1.0),1 / 2.2) * 255 + 0.5);
+		int r = static_cast<int>(std::min(pixels[i].x_ * 255, 255.0));
+		int g = static_cast<int>(std::min(pixels[i].y_ * 255, 255.0));
+		int b = static_cast<int>(std::min(pixels[i].z_ * 255, 255.0));
+		// int r = static_cast<int>(std::pow(std::min(pixels[i].x_, 1.0),1 / 2.2) * 255 + 0.5);
+		// int g = static_cast<int>(std::pow(std::min(pixels[i].y_, 1.0),1 / 2.2) * 255 + 0.5);
+		// int b = static_cast<int>(std::pow(std::min(pixels[i].z_, 1.0),1 / 2.2) * 255 + 0.5);
 		out << r << " " << g << " " << b << " ";
 	}
 	out.close();

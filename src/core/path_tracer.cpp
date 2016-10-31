@@ -70,7 +70,6 @@ Vector3d GiraffePathTracer::trace(const Ray &ray, int depth)
 		}
 	}
 	return emission + mult(color, trace(Ray(pos, dir), depth));// * dot(dir, normal);
-
 }
 
 void GiraffePathTracer::ray_tracing()

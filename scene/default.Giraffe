@@ -1,24 +1,30 @@
-//Texture mirror ConstantTexture Color 0.99 0.99 0.99 kReflect
-//Texture glass  ConstantTexture Color 0.99 0.99 0.99 kRefract
-
 //Texture t2 ImageTexture "../texture/stones.png" 1
 //Texture t3 StripeTexture Color 0.3 0.4 0.5 Color 0.5 0.4 0.3 Xaxis 0.3 rotateZ 45
+//Texture t4 MarbleTexture Color 0.3 0.4 0.5 Color 0.5 0.5 0.5 Color 0.5 0.4 0.3  0.1
+//Texture t5 BrickTexture Color 0.3 0.4 0.5 Color 0.5 0.4 0.3 8e-5 3e-5 5e-6
 
 Material m1 Diffuse Color 0.75 0.75 0.75
 Material m2 Diffuse Color 0.75 0.25 0.25
 Material m3 Diffuse Color 0.25 0.75 0.25
-Material m4 Diffuse Color 0.75 0.75 0.25
+Material m4 Glossy Color 0.75 0.75 0.25 5
+Material m5 Mirror Color 0.75 0.75 0.25
 
-//Texture t4 MarbleTexture Color 0.3 0.4 0.5 Color 0.5 0.5 0.5 Color 0.5 0.4 0.3  0.1
-//Texture t5 BrickTexture Color 0.3 0.4 0.5 Color 0.5 0.4 0.3 8e-5 3e-5 5e-6
+//Material m1 Halton Color 0.75 0.75 0.75
+//Material m2 Halton Color 0.75 0.25 0.25
+//Material m3 Halton Color 0.25 0.75 0.25
+//Material m4 Halton Color 0.75 0.75 0.25
 
-Object s1 Sphere Position -20 -40 -160 20 m4
+Object s1 Sphere Position -35 -40 -160 20 m4
+Object s2 Sphere Position  35 -40 -160 20 m5
+//Object s2 Sphere Position 0 659.5 -80 600 m5
+//Object s2 Sphere Position 0 20 -70 5 m5
 
-Object p1 Plane Position 0  -60 0   Normal  0  1 0  m1
-Object p2 Plane Position 0   60 0   Normal  0 -1 0  m1
-Object p3 Plane Position 0   0 -225 Normal  0  0 1  m1
-Object p4 Plane Position -70 0  0   Normal  1  0 0  m2
-Object p5 Plane Position 70  0  0   Normal -1  0 0  m3
+Object p1 Plane Position 0  -60 0   Normal  0  1  0  m1
+Object p2 Plane Position 0   60 0   Normal  0 -1  0  m1
+Object p3 Plane Position 0   0 -225 Normal  0  0  1  m1
+Object p5 Plane Position -70 0  0   Normal  1  0  0  m2
+Object p6 Plane Position 70  0  0   Normal -1  0  0  m3
+//Object p4 Plane Position 0   0  80  Normal  0  0 -1  m1
 
 //Light l1 TextureLight Position -20 0 -50  Direction 0.2 0 -1  Intensity 1.5 1.5 1.5 20 t2
 //Light l2 PointLight Position 0 30 -160 Intensity 1024 1024 1024

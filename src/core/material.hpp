@@ -25,7 +25,8 @@ class Material
 								kReflect = 2,
 								kRefract = 4,
 								kGlossy  = 8,
-								kHalton  = 16};
+								kRetro   = 16,
+								kHalton  = 32};
 
 		Material(Type type):type_(type) { }
 

@@ -18,7 +18,9 @@ class Glossy : public Material
 {
 	public:
 
-		Glossy(Type type, const Vector3d &color):Material(type_), color_(color) {
+		Glossy(Type type, const Vector3d &color, double roughness)
+		:Material(Type(type_ | kDiffuse)), color_(color),
+		 sin_(sin(radian(roughness))), cos_(cos(radian(roughness)))  {
 			assert(type == kGlossy);
 		}
 
@@ -26,6 +28,8 @@ class Glossy : public Material
 	private:
 		using Material::type_;
 		Vector3d color_;
+		double sin_;
+		double cos_;
 };
 
 } // namespace Giraffe
