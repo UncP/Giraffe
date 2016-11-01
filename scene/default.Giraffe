@@ -6,8 +6,9 @@
 Material m1 Diffuse Color 0.75 0.75 0.75
 Material m2 Diffuse Color 0.75 0.25 0.25
 Material m3 Diffuse Color 0.25 0.75 0.25
-Material m4 Glossy Color 0.75 0.75 0.25 5
-Material m5 Mirror Color 0.75 0.75 0.25
+Material m4 Glossy Color 0.75 0.75 0.25 30
+Material m5 Retro Color 0.75 0.75 0.25 10
+Material m6 Phong Color 0.25 0.75 0.75 32
 
 //Material m1 Halton Color 0.75 0.75 0.75
 //Material m2 Halton Color 0.75 0.25 0.25
@@ -15,7 +16,7 @@ Material m5 Mirror Color 0.75 0.75 0.25
 //Material m4 Halton Color 0.75 0.75 0.25
 
 Object s1 Sphere Position -35 -40 -160 20 m4
-Object s2 Sphere Position  35 -40 -160 20 m5
+Object s2 Sphere Position  35 -40 -180 20 m6
 //Object s2 Sphere Position 0 659.5 -80 600 m5
 //Object s2 Sphere Position 0 20 -70 5 m5
 

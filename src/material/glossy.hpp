@@ -19,7 +19,7 @@ class Glossy : public Material
 	public:
 
 		Glossy(Type type, const Vector3d &color, double roughness)
-		:Material(Type(type_ | kDiffuse)), color_(color),
+		:Material(Type(type | kDiffuse)), color_(color),
 		 sin_(sin(radian(roughness))), cos_(cos(radian(roughness)))  {
 			assert(type == kGlossy);
 		}

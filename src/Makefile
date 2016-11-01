@@ -10,11 +10,11 @@ OBJ      = math/constant.o math/vector.o math/point.o math/ray.o math/vertex.o m
            core/scene.o\
            accelerator/bvh.o \
            texture/brick.o texture/stripe.o texture/noise.o texture/marble.o texture/image.o \
-           material/diffuse.o material/mirror.o material/glossy.o material/retro.o \
-           material/halton.o \
            light/point.o light/directional.o light/area.o light/texture.o \
            object/plane.o object/sphere.o object/cylinder.o \
            core/path_tracer.o core/tl_parser.o
+           # material/diffuse.o material/mirror.o material/glossy.o material/retro.o \
+           # material/halton.o \
            # object/triangle.o object/cube.oobject/disk.o \
 
 Giraffe:$(OBJ) main/Giraffe.cpp

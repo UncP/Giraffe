@@ -19,10 +19,11 @@
 #include "../texture/brick.hpp"
 #include "../texture/image.hpp"
 
-#include "../material/diffuse.hpp"
-#include "../material/mirror.hpp"
-#include "../material/glossy.hpp"
-#include "../material/halton.hpp"
+// #include "../material/diffuse.hpp"
+// #include "../material/mirror.hpp"
+// #include "../material/glossy.hpp"
+// #include "../material/retro.hpp"
+// #include "../material/halton.hpp"
 
 #include "../object/plane.hpp"
 #include "../object/sphere.hpp"
@@ -248,23 +249,34 @@ std::shared_ptr<Material> TracingLanguageParser::findMaterial()
 	if (s == "Diffuse") {
 		Vector3d color = findVector();
 		assert(str_.eof());
-		return std::shared_ptr<Material>(new Diffuse(Material::kDiffuse, color));
+		return std::shared_ptr<Material>(new Material(Material::kDiffuse, color));
 	} else if (s == "Mirror") {
 		Vector3d color = findVector();
 		assert(str_.eof());
-		return std::shared_ptr<Material>(new Mirror(Material::kReflect, color));
+		return std::shared_ptr<Material>(new Material(Material::kReflect, color));
 	}/* else if (s == "Glass") {
 		assert(str_.eof());
 		return std::shared_ptr<Material>(new Mirror(Material::kRefract));
-	} */else if (s == "Glossy") {
+	} */else if (s == "Phong") {
+		Vector3d color = findVector();
+		int pow_factor = findInteger();
+		std::cout << pow_factor << std::endl;
+		assert(str_.eof());
+		return std::shared_ptr<Material>(new Material(Material::kPhong, color, 0, pow_factor));
+	} else if (s == "Glossy") {
 		Vector3d color = findVector();
 		double roughness = findDouble();
 		assert(str_.eof());
-		return std::shared_ptr<Material>(new Glossy(Material::kGlossy, color, roughness));
+		return std::shared_ptr<Material>(new Material(Material::kGlossy, color, roughness));
+	} else if (s == "Retro") {
+		Vector3d color = findVector();
+		double roughness = findDouble();
+		assert(str_.eof());
+		return std::shared_ptr<Material>(new Material(Material::kRetro, color, roughness));
 	} else if (s == "Halton") {
 		Vector3d color = findVector();
 		assert(str_.eof());
-		return std::shared_ptr<Material>(new Halton(Material::kHalton, color));
+		return std::shared_ptr<Material>(new Material(Material::kHalton, color));
 	}
 	assert(0);
 }
