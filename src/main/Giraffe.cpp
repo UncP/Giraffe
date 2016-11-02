@@ -19,13 +19,14 @@ int main(int argc, char **argv)
 	int screenWidth = 512, screenHeight = 512;
 
 	const char *dir = "../scene/";
-	const char *def = "default.Giraffe";
+	const char *def = "default";
 	char file[128] = {0};
 	strcat(file, dir);
 	if (argc == 3)
 		strcat(file, argv[1]);
 	else
 		strcat(file, def);
+	strcat(file, ".Giraffe");
 	TracingLanguageParser parser;
 	Scene *scene = parser.parse(file);
 

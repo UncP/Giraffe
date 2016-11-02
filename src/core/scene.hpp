@@ -12,7 +12,6 @@
 
 #include <vector>
 
-#include "../accelerator/bvh.hpp"
 #include "camera.hpp"
 #include "object.hpp"
 #include "light.hpp"
@@ -22,21 +21,22 @@ namespace Giraffe {
 class Scene
 {
 	public:
-		Scene(Camera *camera, const std::vector<Object *> &objects,
+		Scene(const Camera *camera,
+					const std::vector<Object *> &accelerators,
+					const std::vector<Object *> &objects,
 					const std::vector<Light *> lights)
-		:camera_(camera), objects_(objects), lights_(lights), accelerate_(false) { }
-
-		void accelerate(int beg, int end);
+		:camera_(camera), accelerators_(accelerators), objects_(objects), lights_(lights) { }
 
 		const Camera& camera() const { return *camera_; };
+		const std::vector<Object *>& accelerators() const { return accelerators_; };
 		const std::vector<Object *>& objects() const { return objects_; };
 		const std::vector<Light *>& lights() const { return lights_; };
 
 	private:
-		Camera 							 *camera_;
+		const Camera         *camera_;
+		std::vector<Object *> accelerators_;
 		std::vector<Object *> objects_;
 		std::vector<Light *>  lights_;
-		bool 									accelerate_;
 };
 
 } // namespace Giraffe

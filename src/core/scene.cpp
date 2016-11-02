@@ -11,13 +11,5 @@
 
 namespace Giraffe {
 
-void Scene::accelerate(int beg, int end)
-{
-	BVH *bvh = new BVH();
-	bvh->build(objects_.begin() + beg, objects_.begin() + end);
-	objects_.erase(objects_.begin() + beg, objects_.begin() + end);
-	objects_.push_back(static_cast<Object *>(bvh));
-	accelerate_ = true;
-}
 
 } // namespace Giraffe

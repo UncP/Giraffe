@@ -28,6 +28,7 @@
 #include "../object/plane.hpp"
 #include "../object/sphere.hpp"
 #include "../object/cylinder.hpp"
+#include "../accelerator/bvh.hpp"
 
 #include "../light/point.hpp"
 #include "../light/directional.hpp"
@@ -81,6 +82,10 @@ Scene* TracingLanguageParser::parse(const char *file)
 			str_ >> s;
 			if (lights_.find(s) != lights_.end()) abort("existed light ", s);
 				lights_.insert({s, findLight()});
+		} else if (s == "Accelerate") {
+			str_ >> s;
+			if (accelerators_.find(s) != accelerators_.end()) abort("existed bvh ", s);
+			accelerators_.insert({s, sceneAccelerate()});
 		} else {
 			abort("wrong type");
 		}
@@ -88,16 +93,21 @@ Scene* TracingLanguageParser::parse(const char *file)
 	if (!objects_.size()) abort("no objects");
 	if (!lights_.size()) abort("no lights");
 
+	std::vector<Object *> accelerators;
 	std::vector<Object *> objects;
+	std::for_each(accelerators_.begin(), accelerators_.end(),
+		[&accelerators](const std::pair<std::string, std::shared_ptr<Object>> &p) {
+			accelerators.push_back(p.second.get());
+		});
 	std::for_each(objects_.begin(), objects_.end(),
-		[&objects] (const std::pair<std::string, std::shared_ptr<Object>> &p) {
-			assert(p.second);
+		[this, &objects, &accelerators] (const std::pair<std::string, std::shared_ptr<Object>> &p) {
+			if (accelerated_.find(p.first) == accelerated_.end())
+				accelerators.push_back(p.second.get());
 			objects.push_back(p.second.get());
 	});
 	std::vector<Light *> lights;
 	std::for_each(lights_.begin(), lights_.end(),
 		[&lights] (const std::pair<std::string, std::shared_ptr<Light>> &p) {
-			assert(p.second);
 			lights.push_back(p.second.get());
 	});
 
@@ -108,8 +118,7 @@ Scene* TracingLanguageParser::parse(const char *file)
 													Point2i(screenWidth, screenHeight), \
 													Point2i(screenWidth, screenHeight), \
 													90));
-
-	return new Scene(camera_.get(), objects, lights);
+	return new Scene(camera_.get(), accelerators, objects, lights);
 }
 
 Point3d TracingLanguageParser::findPosition()
@@ -260,7 +269,6 @@ std::shared_ptr<Material> TracingLanguageParser::findMaterial()
 	} */else if (s == "Phong") {
 		Vector3d color = findVector();
 		int pow_factor = findInteger();
-		std::cout << pow_factor << std::endl;
 		assert(str_.eof());
 		return std::shared_ptr<Material>(new Material(Material::kPhong, color, 0, pow_factor));
 	} else if (s == "Glossy") {
@@ -350,6 +358,24 @@ std::shared_ptr<Light> TracingLanguageParser::findLight()
 			p->second.get()));
 	}
 	assert(0);
+}
+
+std::shared_ptr<Object> TracingLanguageParser::sceneAccelerate()
+{
+	std::string name;
+	std::vector<Object *> vec;
+	for (; !str_.eof();) {
+		str_ >> name;
+		auto p = objects_.find(name);
+		if (p == objects_.end()) abort("objects not existed");
+		accelerated_.insert(name);
+		vec.push_back(p->second.get());
+	}
+	std::shared_ptr<Object> bvh = std::shared_ptr<Object>(new BVH());
+
+	reinterpret_cast<BVH *>(bvh.get())->build(vec);
+	std::cout << bvh;
+	return bvh;
 }
 
 } // namespace Giraffe

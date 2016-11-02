@@ -27,10 +27,10 @@ GiraffePathTracer::GiraffePathTracer(const Scene *scene, int width, int height, 
 Vector3d GiraffePathTracer::trace(const Ray &ray, int depth)
 {
 	Isect isect;
-	const std::vector<Object *> &objects = scene_->objects();
-	size_t oend = objects.size();
+	const std::vector<Object *> &accelerators = scene_->accelerators();
+	size_t oend = accelerators.size();
 
-	for (size_t i = 0; i != oend; ++i) objects[i]->intersect(ray, isect);
+	for (size_t i = 0; i != oend; ++i) accelerators[i]->intersect(ray, isect);
 
 	if (isect.miss()) return Vector3d();
 
@@ -53,11 +53,12 @@ Vector3d GiraffePathTracer::trace(const Ray &ray, int depth)
 	Vector3d emission;
 	if (isect.material()->type() & Material::kDiffuse) {
 		const std::vector<Light *> &lights = scene_->lights();
+		const std::vector<Object *> &objects = scene_->objects();
 		for (size_t i = 0, lend = lights.size(); i != lend; ++i) {
 			bool flag = true;
 			Vector3d light_dir = lights[i]->illuminate(isect);
 			if (light_dir == Vector3d(0) || dot(light_dir, normal) < 0) continue;
-			for (size_t j = 0; j != oend; ++j) {
+			for (size_t j = 0; j != objects.size(); ++j) {
 				if (objects[j]->hit(Ray(pos, light_dir), isect.distance()) &&
 						objects[j] != isect.object()) {
 					flag = false;

@@ -93,9 +93,7 @@ void BVHNode::split(Box *box, std::vector<std::pair<Object *, Box *>> &boxes,
 	}
 
 	obj_ = box;
-
 	int pos = _splitByPlane(boxes, beg, end, box->getSplitPlane());
-
 	left_  = std::shared_ptr<BVHNode>(new BVHNode());
 	right_ = std::shared_ptr<BVHNode>(new BVHNode());
 
@@ -108,16 +106,15 @@ void BVHNode::split(Box *box, std::vector<std::pair<Object *, Box *>> &boxes,
 	right_->split(rBox, boxes, beg + pos, end);
 }
 
-void BVH::build(std::vector<Object *>::iterator beg, std::vector<Object *>::iterator end)
+void BVH::build(std::vector<Object *> &objects)
 {
-	std::vector<std::pair<Object *, Box *>> boxes(end - beg);
+	std::vector<std::pair<Object *, Box *>> boxes(objects.size());
 	Box *tmp = new AABB[boxes.size()];
 
-	for (auto i = beg; i != end; ++i) {
-		int idx = i - beg;
-		boxes[idx].first 	= *i;
-		boxes[idx].second = &tmp[idx];
-		boxes[idx].first->computeBox(boxes[idx].second->near_, boxes[idx].second->far_, NormalSet);
+	for (size_t i = 0; i != objects.size(); ++i) {
+		boxes[i].first 	= objects[i];
+		boxes[i].second = &tmp[i];
+		boxes[i].first->computeBox(boxes[i].second->near_, boxes[i].second->far_, NormalSet);
 	}
 
 	Box *box = new AABB();

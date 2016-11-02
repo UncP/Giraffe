@@ -10,6 +10,7 @@
 #ifndef _TL_PARSER_HPP_
 #define _TL_PARSER_HPP_
 
+#include <set>
 #include <map>
 #include <memory>
 #include <sstream>
@@ -63,12 +64,16 @@ class TracingLanguageParser
 
 		std::shared_ptr<Light> findLight();
 
+		std::shared_ptr<Object> sceneAccelerate();
+
 		int line_;
 		std::istringstream str_;
-		std::shared_ptr<Camera> camera_;
+		std::shared_ptr<Camera>                          camera_;
 		std::map<std::string, std::shared_ptr<Texture>>  textures_;
 		std::map<std::string, std::shared_ptr<Material>> materials_;
 		std::map<std::string, std::shared_ptr<Object>>   objects_;
+		std::set<std::string>                            accelerated_;
+		std::map<std::string, std::shared_ptr<Object>>   accelerators_;
 		std::map<std::string, std::shared_ptr<Light>>    lights_;
 };
 

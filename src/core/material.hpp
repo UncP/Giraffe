@@ -58,10 +58,6 @@ class Material
 		Color sampleRetro(const Vector3d &out, Vector3d &in, const Vector3d &normal, double &pdf);
 		Color sampleHalton(const Vector3d &out, Vector3d &in, const Vector3d &normal, double &pdf);
 
-		Color evaluateDiffuse(const Vector3d &out, const Vector3d &in, const Vector3d &normal);
-		Color evaluatePhong(const Vector3d &out, const Vector3d &in, const Vector3d &normal);
-
-
 		Vector3d color_;
 		double   sin_;
 		double   cos_;

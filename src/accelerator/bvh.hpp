@@ -14,7 +14,6 @@
 #include <memory>
 #include <map>
 #include <algorithm>
-#include <iterator>
 
 #include "../core/object.hpp"
 #include "../math/constant.hpp"
@@ -71,8 +70,6 @@ class Box : public Object
 			return far_[i];
 		}
 
-		~Box() { }
-
 		std::vector<double> near_;
 		std::vector<double> far_;
 };
@@ -118,16 +115,8 @@ class BVHNode
 
 		void split(Box *, std::vector<std::pair<Object *, Box *>> &, const size_t, const size_t);
 
-		void release() {
-			if (left_) left_->release();
-			if (right_) right_->release();
-			delete obj_;
-		}
-
-		~BVHNode() { }
-
 	private:
-		Object*									 obj_;
+		Object*	                 obj_;
 		std::shared_ptr<BVHNode> left_;
 		std::shared_ptr<BVHNode> right_;
 };
@@ -141,9 +130,7 @@ class BVH : public Object
 
 		std::ostream& print(std::ostream &os) const override { root_->traverse(os); return os; }
 
-		void build(std::vector<Object *>::iterator, std::vector<Object *>::iterator);
-
-		~BVH() { root_->release(); }
+		void build(std::vector<Object *> &objects);
 
 	private:
 		std::shared_ptr<BVHNode> root_;
