@@ -10,6 +10,7 @@
 #include <iostream>
 #include <string>
 #include <fstream>
+#include <algorithm>
 
 #include "tl_parser.hpp"
 
@@ -364,17 +365,17 @@ std::shared_ptr<Object> TracingLanguageParser::sceneAccelerate()
 {
 	std::string name;
 	std::vector<Object *> vec;
+	std::shared_ptr<Object> box = std::shared_ptr<Object>(new AABB());
 	for (; !str_.eof();) {
 		str_ >> name;
 		auto p = objects_.find(name);
 		if (p == objects_.end()) abort("objects not existed");
 		accelerated_.insert(name);
-		vec.push_back(p->second.get());
+		// vec.push_back(p->second.get());
+		box.put(p->second.get());
 	}
-	std::shared_ptr<Object> bvh = std::shared_ptr<Object>(new BVH());
 
 	reinterpret_cast<BVH *>(bvh.get())->build(vec);
-	std::cout << bvh;
 	return bvh;
 }
 

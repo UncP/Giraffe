@@ -7,44 +7,12 @@
  *    > Created Time: 2016-08-01 15:21:29
 **/
 
+#include <map>
+#include <algorithm>
+
 #include "bvh.hpp"
 
 namespace Giraffe {
-
-static const Vector3d NormalSet[kNormalNumber] = {
-	Vector3d(1, 0, 0),
-	Vector3d(0, 1, 0),
-	Vector3d(0, 0, 1),
-	Vector3d( std::sqrt(3)/3.0,  std::sqrt(3)/3.0, std::sqrt(3)/3.0),
-	Vector3d(-std::sqrt(3)/3.0,  std::sqrt(3)/3.0, std::sqrt(3)/3.0),
-	Vector3d(-std::sqrt(3)/3.0, -std::sqrt(3)/3.0, std::sqrt(3)/3.0),
-	Vector3d( std::sqrt(3)/3.0, -std::sqrt(3)/3.0, std::sqrt(3)/3.0)
-};
-
-bool Box::intersect(const Ray &ray, Isect &isect) const
-{
-	double tmin = -kInfinity, tmax = kInfinity;
-	size_t size = near_.size();
-	double no[size], nd[size];
-	for (size_t i = 0; i != size; ++i) {
-		no[i] = proj(ray.origin(), NormalSet[i]);
-		nd[i] = 1.0 / dot(ray.direction(), NormalSet[i]);
-	}
-	for (size_t i = 0, end = near_.size(); i != end; ++i) {
-		double min, max;
-		// if ((std::fabs(nd[i]) < 1e-20) && ((no[i] - near_[i] < 0) || (far_[i] - no[i] < 0)))
-			// return false;
-		// nd[i] = 1.0 / nd[i];
-		min = (near_[i] - no[i]) * nd[i];
-		max = (far_[i]  - no[i]) * nd[i];
-		if (nd[i] < 0) std::swap(min, max);
-		if (max < 0) return false;
-		if (min > tmin) tmin = min;
-		if (max < tmax) tmax = max;
-		if (tmin > tmax) return false;
-	}
-	return true;
-}
 
 bool BVHNode::intersect(const Ray &ray, Isect &isect) const
 {

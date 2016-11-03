@@ -12,91 +12,12 @@
 
 #include <vector>
 #include <memory>
-#include <map>
-#include <algorithm>
 
-#include "../core/object.hpp"
 #include "../math/constant.hpp"
+#include "../core/object.hpp"
+#include "box.hpp"
 
 namespace Giraffe {
-
-const int kNormalNumber = 7, kAABBNumber = 3, kDOPNumber = kNormalNumber;
-
-class Box : public Object
-{
-	public:
-		Box() = default;
-
-		const size_t size() const { return near_.size(); }
-
-		bool intersect(const Ray &, Isect &isect) const override;
-
-		void enclose(const std::vector<std::pair<Object *, Box *>> &boxes,
-			const size_t beg, const size_t end) {
-			for (size_t i = beg; i != end; ++i) {
-				const Box *box = boxes[i].second;
-				for (size_t j = 0, jEnd = box->size(); j != jEnd; ++j) {
-					if (box->near_[j] < near_[j]) near_[j] = box->near_[j];
-					if (box->far_[j] > far_[j]) 	far_[j] = box->far_[j];
-				}
-			}
-		}
-
-		Axis getSplitPlane() const {
-			double x = far_[0] - near_[0];
-			double y = far_[1] - near_[1];
-			double z = far_[2] - near_[2];
-			return x >= y && x >= z ? Xaxis : y >= z ? Yaxis : Zaxis;
-		}
-
-		std::ostream& print(std::ostream &os) const override {
-			os << "box\n";
-			for (size_t i = 0; i != near_.size(); ++i)
-				os << std::setw(8) << near_[i] << " ";
-			os << std::endl;
-			for (size_t i = 0; i != far_.size(); ++i)
-				os << std::setw(8) << far_[i] << " ";
-			os << std::endl;
-			return os;
-		}
-
-		double& near(size_t i) {
-			assert(i < size());
-			return near_[i];
-		}
-
-		double& far(size_t i) {
-			assert(i < size());
-			return far_[i];
-		}
-
-		std::vector<double> near_;
-		std::vector<double> far_;
-};
-
-// Axis-Aligned Bounding Box
-class AABB : public Box
-{
-	public:
-		AABB() {
-			for (size_t i = 0; i != kAABBNumber; ++i) {
-				near_.push_back(kInfinity);
-				far_.push_back(-kInfinity);
-			}
-		}
-};
-
-// Discrete Oriented Polytopes
-class DOP : public Box
-{
-	public:
-		DOP() {
-			for (size_t i = 0; i < kDOPNumber; ++i) {
-				near_.push_back(kInfinity);
-				far_.push_back(-kInfinity);
-			}
-		}
-};
 
 class BVHNode
 {

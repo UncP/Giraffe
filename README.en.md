@@ -6,7 +6,7 @@
 ***
 
 ###Features
-* Diffuse reflection, Mirror reflection, Glossy Reflection, Refraction
+* Multi BRDF(reflect, refract, glossy, specular...)
 * Anti-aliasing
 * Global illumination
 * Monte Carlo Integration

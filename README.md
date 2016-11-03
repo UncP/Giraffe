@@ -7,7 +7,7 @@
 ***
 
 ###特点
-* 漫反射, 镜面反射, Glossy Reflection, 折射
+* 多种表面的BRDF(reflect, refract, glossy, specular...)
 * 反走样
 * 全局光照
 * 蒙特卡洛积分
@@ -40,3 +40,4 @@
 
 ####Bear
 ![](./image/bear.png)
+
