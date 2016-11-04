@@ -6,17 +6,17 @@
 Material m1 Diffuse Color 0.75 0.75 0.75
 Material m2 Diffuse Color 0.75 0.25 0.25
 Material m3 Diffuse Color 0.25 0.75 0.25
-Material m4 Glossy Color 0.75 0.75 0.25 30
+Material m4 Glossy Color 0.75 0.75 0.25 10
 Material m5 Retro Color 0.75 0.75 0.25 10
-Material m6 Phong Color 0.25 0.75 0.75 32
+Material m6 Phong Color 0.25 0.75 0.75 16
 
 //Material m1 Halton Color 0.75 0.75 0.75
 //Material m2 Halton Color 0.75 0.25 0.25
 //Material m3 Halton Color 0.25 0.75 0.25
 //Material m4 Halton Color 0.75 0.75 0.25
 
-Object s1 Sphere Position -35 -40 -160 20 m4
-Object s2 Sphere Position  35 -40 -180 20 m6
+Object s1 Sphere Position 0 -40 -160 20 m4
+//Object s2 Sphere Position  35 -40 -160 20 m6
 //Object s2 Sphere Position 0 659.5 -80 600 m5
 //Object s2 Sphere Position 0 20 -70 5 m5
 
@@ -30,4 +30,4 @@ Object p6 Plane Position 70  0  0   Normal -1  0  0  m3
 //Light l1 TextureLight Position -20 0 -50  Direction 0.2 0 -1  Intensity 1.5 1.5 1.5 20 t2
 //Light l2 PointLight Position 0 30 -160 Intensity 1024 1024 1024
 //Light l3 DirectionalLight Direction 0.2 -0.2 -1 Intensity 0.8 0.8 0.8
-Light l4 AreaLight Position 0 59.99 -160 Direction 0 -1 0 Intensity 2048 2048 2048 90
+Light l4 AreaLight Position 0 59.99 -160 Direction 0 -1 0 Intensity 3072 3072 3072 90

@@ -23,7 +23,7 @@ class Plane : public Object
 
 		bool intersect(const Ray &, Isect &) const override;
 
-		bool hit(const Ray &, const double &distance) const override;
+		bool hit(const Ray &, const double &distance, const Object *obj) const override;
 
 		std::ostream& print(std::ostream &os) const override {
 			return os << "position: " << position_ << "normal: " << normal_;

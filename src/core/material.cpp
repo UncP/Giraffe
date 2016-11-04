@@ -13,6 +13,10 @@
 
 namespace Giraffe {
 
+Material::Material(Type type, const Texture *texture, double roughness = 0, int pow = 0)
+:type_(type), texture_(texture), sin_(std::sin(radian(roughness))),
+ cos_(std::cos(radian(roughness))), pow_(pow) { }
+
 Color Material::brdf(const Vector3d &out, Vector3d &in, const Vector3d &normal, double &pdf)
 {
 	switch (type_) {
@@ -34,22 +38,23 @@ Color Material::brdf(const Vector3d &out, Vector3d &in, const Vector3d &normal, 
 	assert(0);
 }
 
-Color Material::evaluate(const Vector3d &out, const Vector3d &in, const Vector3d &normal)
+Color Material::evaluate(const Vector3d &out, const Vector3d &in,
+	const Point3d &position, const Point2d &uv, Vector3d &normal)
 {
 	if (type_ == kPhong) {
 		Vector3d mid(normalize(in - out));
-		return color_ * dot(normal, in) + Vector3d(1.5) * std::pow(dot(normal, mid), pow_);
+		return texture_->evaluate(position, uv, normal) * dot(normal, in) +
+					 Vector3d(1.5) * std::pow(dot(normal, mid), pow_);
 	} else {
-		return color_ * dot(normal, in);
+		Vector3d color = texture_->evaluate(position, uv, normal);
+		return color * dot(normal, in);
 	}
 }
 
 Color Material::sampleDiffuse(const Vector3d &out, Vector3d &in, const Vector3d &normal,
 	double &pdf)
 {
-
 	in = sampleCosHemisphere(normal);
-
 	return color_;
 }
 

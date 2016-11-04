@@ -64,7 +64,9 @@ class TracingLanguageParser
 
 		std::shared_ptr<Light> findLight();
 
-		std::shared_ptr<Object> sceneAccelerate();
+		std::shared_ptr<Object> findBox();
+
+		Scene* generateScene();
 
 		int line_;
 		std::istringstream str_;
@@ -73,7 +75,7 @@ class TracingLanguageParser
 		std::map<std::string, std::shared_ptr<Material>> materials_;
 		std::map<std::string, std::shared_ptr<Object>>   objects_;
 		std::set<std::string>                            accelerated_;
-		std::map<std::string, std::shared_ptr<Object>>   accelerators_;
+		std::set<std::string>                            accelerators_;
 		std::map<std::string, std::shared_ptr<Light>>    lights_;
 };
 

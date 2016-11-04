@@ -28,6 +28,10 @@ inline double radian(double angle) {
 	return angle * (PI / 180.0);
 }
 
+inline double rradian(double angle) {
+	return angle * (180.0 / PI);
+}
+
 } // namespace Giraffe
 
 #endif /* _CONSTANT_HPP_ */

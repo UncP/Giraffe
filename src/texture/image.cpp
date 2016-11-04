@@ -11,10 +11,11 @@
 
 namespace Giraffe {
 
-Vector3d ImageTexture::evaluate(const Vertex &vertex) const
+Vector3d ImageTexture::evaluate(const Point3d &position, const Point2d &uv,
+	Vector3d &normal) const
 {
-	int uu = static_cast<int>(std::fmod(vertex.uv().x_ * frequency_, 1.0) * (width_ - 1));
-	int vv = static_cast<int>(std::fmod(vertex.uv().y_ * frequency_, 1.0) * (height_ - 1));
+	int uu = static_cast<int>(std::fmod(uv.x_ * frequency_, 1.0) * (width_ - 1));
+	int vv = static_cast<int>(std::fmod(uv.y_ * frequency_, 1.0) * (height_ - 1));
 	return image_[uu + vv * width_];
 }
 

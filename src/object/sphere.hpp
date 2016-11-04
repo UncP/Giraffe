@@ -26,7 +26,7 @@ class Sphere : public Object
 
 		bool intersect(const Ray &r, Isect &isect) const override;
 
-		bool hit(const Ray &r, const double &distance) const override;
+		bool hit(const Ray &r, const double &distance, const Object *obj) const override;
 
 		std::ostream& print(std::ostream &os) const override {
 			return os << "sphere\n" << center_ << "radius " << radius_ << std::endl;

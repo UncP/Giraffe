@@ -23,7 +23,7 @@ void Sphere::computeBox(std::vector<double> &near, std::vector<double> &far,
 	}
 }
 
-bool Sphere::hit(const Ray &ray, const double &distance) const
+bool Sphere::hit(const Ray &ray, const double &distance, const Object *obj) const
 {
 	Vector3d l = center_ - ray.origin();
 	double s = dot(l, ray.direction());
@@ -36,7 +36,7 @@ bool Sphere::hit(const Ray &ray, const double &distance) const
 	double q = std::sqrt(radius2_ - q2);
 	double dis = l2 > radius2_ ? (s - q) : (s + q);
 
-	if (dis < distance) return true;
+	if (dis < distance && this != obj) return true;
 	return false;
 }
 

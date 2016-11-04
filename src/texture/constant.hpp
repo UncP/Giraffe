@@ -20,7 +20,10 @@ class ConstantTexture : public Texture
 		ConstantTexture(const Vector3d &color, REFL refl)
 		:Texture(refl), color_(color) { }
 
-		Vector3d evaluate(IntersectionInfo &) const override { return color_; }
+		Vector3d evaluate(const Point3d &position, const Point2d &uv,
+			Vector3d &normal) const override {
+			return color_;
+		}
 
 	private:
 		Vector3d color_;

@@ -14,22 +14,29 @@
 
 namespace Giraffe {
 
-const int kNormalNumber = 7, kAABBNumber = 3, kDOPNumber = kNormalNumber;
 
 class Box : public Object
 {
 	public:
 		Box() = default;
 
+		static const int kNormalNumber = 7, kAABBNumber = 3, kDOPNumber = kNormalNumber;
+
+		static Vector3d NormalSet[kNormalNumber];
+
 		const size_t size() const { return near_.size(); }
 
-		bool intersect(const Ray &, Isect &isect) const override;
+		bool intersect(const Ray &ray, Isect &isect) const override;
+
+		bool hit(const Ray &ray, const double &distance, const Object *object) const override;
 
 		void enclose(const std::vector<std::pair<Object *, Box *>> &boxes, size_t beg, size_t end);
 
 		void put(Object *object) {
 			objects_.push_back(object);
 		}
+
+		void enclose();
 
 		Axis getSplitPlane() const;
 
@@ -54,13 +61,18 @@ class Box : public Object
 			return far_[i];
 		}
 
+		std::vector<double>& near() { return near_; }
+
+		std::vector<double>& far() { return far_; }
+
 	protected:
 		std::vector<double>   near_;
 		std::vector<double>   far_;
 		std::vector<Object *> objects_;
 
 	private:
-		void enclose();
+		bool intersect(const Ray &ray) const;
+
 };
 
 // Axis-Aligned Bounding Box

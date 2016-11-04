@@ -29,7 +29,8 @@
 #include "../object/plane.hpp"
 #include "../object/sphere.hpp"
 #include "../object/cylinder.hpp"
-#include "../accelerator/bvh.hpp"
+
+#include "../accelerator/box.hpp"
 
 #include "../light/point.hpp"
 #include "../light/directional.hpp"
@@ -54,10 +55,38 @@ void TracingLanguageParser::abort(const std::string &error, const std::string &s
 	exit(-1);
 }
 
+Scene* TracingLanguageParser::generateScene()
+{
+	if (!objects_.size()) abort("no objects");
+	if (!lights_.size()) abort("no lights");
+
+	std::vector<Object *> objects;
+	std::for_each(objects_.begin(), objects_.end(),
+		[this, &objects] (const std::pair<std::string, std::shared_ptr<Object>> &p) {
+			if (accelerated_.find(p.first) == accelerated_.end())
+				objects.push_back(p.second.get());
+	});
+
+	std::vector<Light *> lights;
+	std::for_each(lights_.begin(), lights_.end(),
+		[&lights] (const std::pair<std::string, std::shared_ptr<Light>> &p) {
+			lights.push_back(p.second.get());
+	});
+
+	int screenWidth = 512, screenHeight = 512;
+	camera_ = std::shared_ptr<Camera>(
+		new PerspectiveCamera(Point3d(0, 0, 0), \
+													Vector3d(0, 0, -1.0), \
+													Point2i(screenWidth, screenHeight), \
+													Point2i(screenWidth, screenHeight), \
+													90));
+	return new Scene(camera_.get(), objects, lights);
+}
+
 Scene* TracingLanguageParser::parse(const char *file)
 {
 	std::ifstream in(file);
-	if (!in.is_open()) abort("文件打开失败");
+	if (!in.is_open()) abort("文件打开失败 ", std::string(file));
 
 	std::string str;
 	std::getline(in, str);
@@ -85,41 +114,15 @@ Scene* TracingLanguageParser::parse(const char *file)
 				lights_.insert({s, findLight()});
 		} else if (s == "Accelerate") {
 			str_ >> s;
-			if (accelerators_.find(s) != accelerators_.end()) abort("existed bvh ", s);
-			accelerators_.insert({s, sceneAccelerate()});
+			if (objects_.find(s) != objects_.end()) abort("conflicted name ", s);
+			if (accelerators_.find(s) != accelerators_.end()) abort("existed box ", s);
+			accelerators_.insert(s);
+			objects_.insert({s, findBox()});
 		} else {
 			abort("wrong type");
 		}
 	}
-	if (!objects_.size()) abort("no objects");
-	if (!lights_.size()) abort("no lights");
-
-	std::vector<Object *> accelerators;
-	std::vector<Object *> objects;
-	std::for_each(accelerators_.begin(), accelerators_.end(),
-		[&accelerators](const std::pair<std::string, std::shared_ptr<Object>> &p) {
-			accelerators.push_back(p.second.get());
-		});
-	std::for_each(objects_.begin(), objects_.end(),
-		[this, &objects, &accelerators] (const std::pair<std::string, std::shared_ptr<Object>> &p) {
-			if (accelerated_.find(p.first) == accelerated_.end())
-				accelerators.push_back(p.second.get());
-			objects.push_back(p.second.get());
-	});
-	std::vector<Light *> lights;
-	std::for_each(lights_.begin(), lights_.end(),
-		[&lights] (const std::pair<std::string, std::shared_ptr<Light>> &p) {
-			lights.push_back(p.second.get());
-	});
-
-	int screenWidth = 512, screenHeight = 512;
-	camera_ = std::shared_ptr<Camera>(
-		new PerspectiveCamera(Point3d(0, 0, 0), \
-													Vector3d(0, 0, -1.0), \
-													Point2i(screenWidth, screenHeight), \
-													Point2i(screenWidth, screenHeight), \
-													90));
-	return new Scene(camera_.get(), accelerators, objects, lights);
+	return generateScene();
 }
 
 Point3d TracingLanguageParser::findPosition()
@@ -361,7 +364,7 @@ std::shared_ptr<Light> TracingLanguageParser::findLight()
 	assert(0);
 }
 
-std::shared_ptr<Object> TracingLanguageParser::sceneAccelerate()
+std::shared_ptr<Object> TracingLanguageParser::findBox()
 {
 	std::string name;
 	std::vector<Object *> vec;
@@ -371,12 +374,10 @@ std::shared_ptr<Object> TracingLanguageParser::sceneAccelerate()
 		auto p = objects_.find(name);
 		if (p == objects_.end()) abort("objects not existed");
 		accelerated_.insert(name);
-		// vec.push_back(p->second.get());
-		box.put(p->second.get());
+		static_cast<Box *>(box.get())->put(p->second.get());
 	}
-
-	reinterpret_cast<BVH *>(bvh.get())->build(vec);
-	return bvh;
+	static_cast<Box *>(box.get())->enclose();
+	return box;
 }
 
 } // namespace Giraffe

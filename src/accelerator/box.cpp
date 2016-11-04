@@ -13,7 +13,7 @@
 
 namespace Giraffe {
 
-static const Vector3d NormalSet[kNormalNumber] = {
+Vector3d Box::NormalSet[kNormalNumber] = {
 	Vector3d(1, 0, 0),
 	Vector3d(0, 1, 0),
 	Vector3d(0, 0, 1),
@@ -49,7 +49,7 @@ void Box::enclose()
 	});
 }
 
-bool Box::intersect(const Ray &ray, Isect &isect) const
+bool Box::intersect(const Ray &ray) const
 {
 	double tmin = -kInfinity, tmax = kInfinity;
 	size_t size = near_.size();
@@ -72,6 +72,26 @@ bool Box::intersect(const Ray &ray, Isect &isect) const
 		if (tmin > tmax) return false;
 	}
 	return true;
+}
+
+bool Box::intersect(const Ray &ray, Isect &isect) const
+{
+	if (!intersect(ray)) return false;
+	bool flag = false;
+	for (auto &e : objects_)
+		if (e->intersect(ray, isect))
+			flag = true;
+	return flag;
+}
+
+bool Box::hit(const Ray &ray, const double &distance, const Object *object) const
+{
+	if (!intersect(ray)) return false;
+	bool flag = false;
+	for (auto &e : objects_)
+		if (e->hit(ray, distance, object))
+			flag = true;
+	return flag;
 }
 
 } // namespace Giraffe

@@ -24,7 +24,8 @@ class BumpBrickTexture : public Texture
 											double width, double height,
 											double interval, REFL refl);
 
-		Vector3d evaluate(IntersectionInfo &) const override;
+		Vector3d evaluate(const Point3d &position, const Point2d &uv,
+			Vector3d &normal) const override;
 
 	private:
 		Vector3d color1_;

@@ -20,18 +20,29 @@ int main(int argc, char **argv)
 
 	const char *dir = "../scene/";
 	const char *def = "default";
+
 	char file[128] = {0};
 	strcat(file, dir);
-	if (argc == 3)
-		strcat(file, argv[1]);
-	else
+	int samples = 1;
+	if (argc == 1) {
 		strcat(file, def);
+	} else if (argc == 2) {
+		if (!(samples = atoi(argv[1]))) {
+			strcat(file, argv[1]);
+			samples = 1;
+		} else {
+			strcat(file, def);
+		}
+	} else if (argc == 3) {
+		samples = atoi(argv[2]);
+		if (!samples) samples = 1;
+		strcat(file, argv[1]);
+	}
 	strcat(file, ".Giraffe");
 	TracingLanguageParser parser;
+
 	Scene *scene = parser.parse(file);
 
-	int samples = 1;
-	if (argc == 2) samples = atoi(argv[1]);
 	GiraffePathTracer giraffe_path_tracer(scene, screenWidth, screenHeight, samples);
 
 	giraffe_path_tracer.ray_tracing();

@@ -36,12 +36,12 @@ static int _splitByPlane(std::vector<std::pair<Object *, Box *>> &boxes,
 {
 	std::sort(boxes.begin() + beg, boxes.begin() + end,
 		[p](const std::pair<Object *, Box *> &p1, const std::pair<Object *, Box *> &p2)
-		{ return p1.second->far_[p] < p2.second->far_[p]; });
+		{ return p1.second->far(p) < p2.second->far(p); });
 
-	double mid = (boxes[beg].second->far_[p] + boxes[end-1].second->far_[p]) / 2;
+	double mid = (boxes[beg].second->far(p) + boxes[end-1].second->far(p)) / 2;
 
 	auto it = std::find_if(boxes.begin() + beg, boxes.begin() + end,
-		[mid, p](const std::pair<Object *, Box *> &pp) { return pp.second->far_[p] > mid; });
+		[mid, p](const std::pair<Object *, Box *> &pp) { return pp.second->far(p) > mid; });
 
 	if (it == (boxes.begin() + beg))
 		return 1;
@@ -82,7 +82,7 @@ void BVH::build(std::vector<Object *> &objects)
 	for (size_t i = 0; i != objects.size(); ++i) {
 		boxes[i].first 	= objects[i];
 		boxes[i].second = &tmp[i];
-		boxes[i].first->computeBox(boxes[i].second->near_, boxes[i].second->far_, NormalSet);
+		boxes[i].first->computeBox(boxes[i].second->near(), boxes[i].second->far(), Box::NormalSet);
 	}
 
 	Box *box = new AABB();

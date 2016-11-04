@@ -22,7 +22,8 @@ class StripeTexture : public Texture
 									const double factor, const Matrix &transform)
 		:color1_(color1), color2_(color2), transform_(transform), axis_(axis), factor_(factor) { }
 
-		Vector3d evaluate(const Vertex &vertex) const override;
+		Vector3d evaluate(const Point3d &position, const Point2d &uv,
+			Vector3d &normal) const override;
 
 	private:
 		Vector3d color1_;

@@ -15,6 +15,7 @@
 #include "../math/point.hpp"
 #include "../math/vector.hpp"
 #include "../utility/isect.hpp"
+#include "texture.hpp"
 
 namespace Giraffe {
 
@@ -29,9 +30,7 @@ class Material
 								kRetro   = kDiffuse | 32,
 								kHalton  = 64};
 
-		Material(Type type, const Vector3d &color, double roughness = 0, int pow = 0)
-		:type_(type), color_(color), sin_(std::sin(radian(roughness))),
-		 cos_(std::cos(radian(roughness))), pow_(pow) { }
+		Material(Type type, const Texture *texture, double roughness = 0, int pow = 0);
 
 		Type type() const { return type_; }
 
@@ -58,10 +57,10 @@ class Material
 		Color sampleRetro(const Vector3d &out, Vector3d &in, const Vector3d &normal, double &pdf);
 		Color sampleHalton(const Vector3d &out, Vector3d &in, const Vector3d &normal, double &pdf);
 
-		Vector3d color_;
-		double   sin_;
-		double   cos_;
-		int      pow_;
+		const Texture *texture_;
+		double         sin_;
+		double         cos_;
+		int            pow_;
 };
 
 } // namespace Giraffe

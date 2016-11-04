@@ -116,15 +116,9 @@ void BumpBrickTexture::generateHeightMap()
 			height_map_[i * map_len + j] = max_fill;
 }
 
-Vector3d BumpBrickTexture::evaluate(IntersectionInfo &surface) const
+Vector3d BumpBrickTexture::evaluate(const Point3d &position, const Point2d &uv,
+	Vector3d &normal) const
 {
-	// Vector3d u, v, w(surface.normal());
-	// if (std::fabs(w.x_) > 0.1)
-	// 	u = normalize(cross(Vector3d(0, 1, 0), w));
-	// else
-	// 	u = normalize(cross(Vector3d(1, 0, 0), w));
-	// v = normalize(cross(w, u));
-
 	double ss = surface.uv().x_ / width_;
 	double tt = surface.uv().y_ / height_;
 
@@ -140,17 +134,22 @@ Vector3d BumpBrickTexture::evaluate(IntersectionInfo &surface) const
 	double w = step(wf_, ss) - step(1 - wf_, ss);
 	double h = step(hf_, tt) - step(1 - hf_, tt);
 	double interval = w * h;
-	// if (interval == 0.0) {
-	// 	int i = ss * (map_len - 1);
-	// 	int j = tt * (map_len - 1);
-	// 	int l = (i > 0) ? (i - 1) : i;
-	// 	int r = (i < (map_len-1)) ? (i + 1) : i;
-	// 	int du = height_map_[j * map_len + l] - height_map_[j * map_len + r];
-	// 	int u = (j > 0) ? (j - 1) : j;
-	// 	int d = (j < (map_len-1)) ? (j + 1) : j;
-	// 	int dv = height_map_[u * map_len + i] - height_map_[d * map_len + i];
-	// }
-
+	if (interval == 0.0) {
+		int i = ss * (map_len - 1);
+		int j = tt * (map_len - 1);
+		int l = (i > 0) ? (i - 1) : i;
+		int r = (i < (map_len-1)) ? (i + 1) : i;
+		int du = height_map_[j * map_len + l] - height_map_[j * map_len + r];
+		double angle1 = rradian(std::atan(du));
+		Matrix a = rotateX(angle1);
+		int u = (j > 0) ? (j - 1) : j;
+		int d = (j < (map_len-1)) ? (j + 1) : j;
+		int dv = height_map_[u * map_len + i] - height_map_[d * map_len + i];
+		double angle2 = rradian(std::atan(dv));
+		Matrix b = rotateX(angle2);
+		Matrix c = a * b;
+		normal = c(normal);
+	}
 	return mix(color1_, color2_, interval);
 }
 

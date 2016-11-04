@@ -11,11 +11,12 @@
 
 namespace Giraffe {
 
-Vector3d BrickTexture::evaluate(const Vertex &vertex) const
+Vector3d BrickTexture::evaluate(const Point3d &position, const Point2d &uv,
+	Vector3d &normal) const
 {
-	Point2d uv(transform_(vertex.uv()));
-	double ss = uv.x_ / width_;
-	double tt = uv.y_ / height_;
+	Point2d uv_(transform_(uv));
+	double ss = uv_.x_ / width_;
+	double tt = uv_.y_ / height_;
 
 	if (std::fmod(tt * 0.5, 1.0) > 0.5)
 		ss += 0.5;
