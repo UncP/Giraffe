@@ -39,7 +39,7 @@ Vector3d GiraffePathTracer::trace(const Ray &ray, int depth)
 
 	double pdf;
 	Vector3d refl_dir;
-	Color color = isect.material()->brdf(ray.direction(), refl_dir, isect.normal(), pdf);
+	Color color = isect.material()->brdf(isect, ray.direction(), refl_dir, pdf);
 
 	if (++depth > 3) {
 		double max = std::max(color.x_, std::max(color.y_, color.z_));
@@ -66,8 +66,7 @@ Vector3d GiraffePathTracer::trace(const Ray &ray, int depth)
 			}
 			if (flag) {
 				emission += mult(lights[i]->radiance(isect),
-					isect.material()->evaluate(ray.direction(), light_dir, isect.position(), isect.uv(),
-						normal));
+					isect.material()->evaluate(ray.direction(), light_dir, isect));
 			}
 		}
 	}

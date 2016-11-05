@@ -17,7 +17,7 @@ namespace Giraffe {
 class Sphere : public Object
 {
 	public:
-		Sphere(const Point3d &center, const double radius, Material *material)
+		Sphere(const Point3d &center, const double radius, const Material *material)
 		:center_(center), radius_(radius), radius2_(radius * radius),
 		 inv2radius_(1.0 / (2 * radius_)), material_(material) { }
 
@@ -33,11 +33,11 @@ class Sphere : public Object
 		}
 
 	private:
-		Point3d 	center_;
-		double 		radius_;
-		double 		radius2_;
-		double		inv2radius_;
-		Material *material_;
+		Point3d 	      center_;
+		double 		      radius_;
+		double 		      radius2_;
+		double		      inv2radius_;
+		const Material *material_;
 };
 
 } // namespace Giraffe

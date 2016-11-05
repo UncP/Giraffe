@@ -14,7 +14,7 @@
 namespace Giraffe {
 
 Cylinder::Cylinder(	const Point3d &center1, const Point3d &center2, const double radis,
-										Material *material)
+										const Material *material)
 :center1_(center1), center2_(center2), radis_(radis), radis2_(radis * radis),
 inv2radis_(1.0 / (2.0 * radis)), material_(material)
 {
@@ -46,7 +46,7 @@ bool Cylinder::intersect(const Ray &ray, Isect &isect) const
 	double dis = flag ? t1 : t2;
 	const Point3d &c = flag ? center1_ : center2_;
 
-	Point3d hitPos(ray.origin() + ray.direction() * dis);
+	Point3d hitPos = ray.origin() + ray.direction() * dis;
 
 	// 判断光线是否与底面相交
 	Vector3d v(hitPos - c);

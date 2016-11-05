@@ -16,13 +16,14 @@ void Isect::update(	const double &distance,
 										const Point3d &position,
 										const Vector3d &normal,
 										const Point2d &uv,
-										Material *material)
+										const Material *material)
 {
 	distance_  = distance;
 	object_    = object;
-	position_  = position;
-	normal_    = normal;
-	uv_        = uv;
+	vertex_    = Vertex(position, normal, uv);
+	// position_  = position;
+	// normal_    = normal;
+	// uv_        = uv;
 	material_  = material;
 }
 

@@ -17,7 +17,7 @@ namespace Giraffe {
 class Triangle : public Object
 {
 	public:
-		Triangle(	const Point3d &a, const Point3d &b, const Point3d &c, Material *material)
+		Triangle(	const Point3d &a, const Point3d &b, const Point3d &c, const Material *material)
 		:a_(a), b_(b), c_(c), material_(material) {
 			normal_ = normalize(cross(c_-a_, b_-a_));
 		}
@@ -31,7 +31,7 @@ class Triangle : public Object
 	private:
 		Point3d   a_, b_, c_;
 		Vector3d  normal_;
-		Material *material_;
+		const Material *material_;
 };
 
 } // namespace Giraffe

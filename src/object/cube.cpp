@@ -19,7 +19,7 @@ const std::array<std::array<int, 4>, 6> Cube::indexes_ = {0, 1, 2, 3,
 																													1, 5, 6, 2,
 																													4, 0, 7, 3};
 
-Cube::Cube(const Point3d &center, int length, int width, int height, Material *material,
+Cube::Cube(const Point3d &center, int length, int width, int height, const Material *material,
 	const Matrix &matrix):material_(material), aabb_(new AABB())
 {
 	assert(aabb_);

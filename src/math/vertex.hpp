@@ -29,13 +29,16 @@ class Vertex
 			return *this;
 		}
 
+		void setPosition(const Point3d &position) { position_ = position; }
+		void setNormal(const Vector3d &normal) { normal_ = normal; }
+
 		const Point3d& position() const { return position_; }
 		const Vector3d& normal() const { return normal_; }
 		const Point2d& uv() const { return uv_; }
 
-	friend std::ostream& operator<<(std::ostream &os, const Vertex &v) {
-		return os << v.position_ << v.normal_ << v.uv_;
-	}
+		friend std::ostream& operator<<(std::ostream &os, const Vertex &v) {
+			return os << v.position_ << v.normal_ << v.uv_;
+		}
 
 	private:
 		Point3d 	position_;

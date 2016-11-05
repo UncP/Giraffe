@@ -259,8 +259,8 @@ std::shared_ptr<Material> TracingLanguageParser::findMaterial()
 {
 	std::string s;
 	str_ >> s;
+	Material::Type type;
 	if (s == "Diffuse") {
-		Vector3d color = findVector();
 		assert(str_.eof());
 		return std::shared_ptr<Material>(new Material(Material::kDiffuse, color));
 	} else if (s == "Mirror") {

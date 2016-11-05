@@ -18,7 +18,7 @@ class Plane : public Object
 {
 	public:
 
-		Plane(const Point3d &position, const Vector3d &normal, Material *material)
+		Plane(const Point3d &position, const Vector3d &normal, const Material *material)
 		:position_(position), normal_(normalize(normal)), material_(material) { }
 
 		bool intersect(const Ray &, Isect &) const override;
@@ -32,7 +32,7 @@ class Plane : public Object
 	private:
 		Point3d   position_;
 		Vector3d  normal_;
-		Material *material_;
+		const Material *material_;
 };
 
 } // namespace Giraffe

@@ -20,8 +20,7 @@ class NoiseTexture : public Texture
 		NoiseTexture(	const Vector3d &color1, const Vector3d &color2, const double &frequency)
 		:color1_(color1), color2_(color2), frequency_(frequency) { }
 
-		Vector3d evaluate(const Point3d &position, const Point2d &uv,
-			Vector3d &normal) const override;
+		Vector3d evaluate(const Vertex &vertex) const override;
 
 	private:
 		Vector3d color1_;

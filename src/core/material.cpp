@@ -13,90 +13,90 @@
 
 namespace Giraffe {
 
-Material::Material(Type type, const Texture *texture, double roughness = 0, int pow = 0)
+Material::Material(Type type, const Texture *texture, double roughness, int pow)
 :type_(type), texture_(texture), sin_(std::sin(radian(roughness))),
  cos_(std::cos(radian(roughness))), pow_(pow) { }
 
-Color Material::brdf(const Vector3d &out, Vector3d &in, const Vector3d &normal, double &pdf)
+Color Material::brdf(const Isect &isect, const Vector3d &out, Vector3d &in, double &pdf) const
 {
 	switch (type_) {
 		case kDiffuse:
-			return sampleDiffuse(out, in, normal, pdf);
+			return sampleDiffuse(isect, out, in, pdf);
 		case kReflect:
-			return sampleReflect(out, in, normal, pdf);
+			return sampleReflect(isect, out, in, pdf);
 		case kRefract:
-			return sampleRefract(out, in, normal, pdf);
+			return sampleRefract(isect, out, in, pdf);
 		case kPhong:
-			return samplePhong(out, in, normal, pdf);
+			return samplePhong(isect, out, in, pdf);
 		case kGlossy:
-			return sampleGlossy(out, in, normal, pdf);
+			return sampleGlossy(isect, out, in, pdf);
 		case kRetro:
-			return sampleRetro(out, in, normal, pdf);
+			return sampleRetro(isect, out, in,  pdf);
 		case kHalton:
-			return sampleHalton(out, in, normal, pdf);
+			return sampleHalton(isect, out, in,  pdf);
 	}
 	assert(0);
 }
 
-Color Material::evaluate(const Vector3d &out, const Vector3d &in,
-	const Point3d &position, const Point2d &uv, Vector3d &normal)
+Color Material::evaluate(const Vector3d &out, const Vector3d &in, const Isect &isect) const
 {
 	if (type_ == kPhong) {
 		Vector3d mid(normalize(in - out));
-		return texture_->evaluate(position, uv, normal) * dot(normal, in) +
-					 Vector3d(1.5) * std::pow(dot(normal, mid), pow_);
+		return texture_->evaluate(isect.vertex()) * dot(isect.normal(), in) +
+					 Vector3d(1.5) * std::pow(dot(isect.normal(), mid), pow_);
 	} else {
-		Vector3d color = texture_->evaluate(position, uv, normal);
-		return color * dot(normal, in);
+		Vector3d color = texture_->evaluate(isect.vertex());
+		return color * dot(isect.normal(), in);
 	}
 }
 
-Color Material::sampleDiffuse(const Vector3d &out, Vector3d &in, const Vector3d &normal,
-	double &pdf)
+Color Material::sampleDiffuse(const Isect &isect, const Vector3d &out, Vector3d &in, double &pdf)
+const
 {
-	in = sampleCosHemisphere(normal);
-	return color_;
+	in = sampleCosHemisphere(isect.normal());
+	return texture_->evaluate(isect.vertex());
 }
 
-Color Material::sampleReflect(const Vector3d &out, Vector3d &in, const Vector3d &normal,
-	double &pdf)
+Color Material::sampleReflect(const Isect &isect, const Vector3d &out, Vector3d &in, double &pdf)
+const
 {
-	in = normalize(out - (2 * dot(out, normal)) * normal);
+	in = normalize(out - (2 * dot(out, isect.normal())) * isect.normal());
 
-	return color_;
+	return texture_->evaluate(isect.vertex());
 }
 
-Color Material::sampleRefract(const Vector3d &out, Vector3d &in, const Vector3d &Normal,
-	double &pdf)
+Color Material::sampleRefract(const Isect &isect, const Vector3d &out, Vector3d &in, double &pdf)
+const
 {
 	return Vector3d();
 }
 
-Color Material::samplePhong(const Vector3d &out, Vector3d &in, const Vector3d &normal,
-	double &pdf)
+Color Material::samplePhong(const Isect &isect, const Vector3d &out, Vector3d &in, double &pdf)
+const
 {
-	in = sampleCosHemisphere(normal);
-	return color_;
+	in = sampleCosHemisphere(isect.normal());
+	return texture_->evaluate(isect.vertex());
 }
 
-Color Material::sampleGlossy(const Vector3d &out, Vector3d &in, const Vector3d &normal,
-	double &pdf)
+Color Material::sampleGlossy(const Isect &isect, const Vector3d &out, Vector3d &in, double &pdf)
+const
 {
-	in = sampleCosSphere(normalize(out - (2 * dot(out, normal)) * normal), sin_, cos_);
+	in = sampleCosSphere(
+		normalize(out - (2 * dot(out, isect.normal())) * isect.normal()), sin_, cos_);
 
-	return color_;
+	return texture_->evaluate(isect.vertex());
 }
 
-Color Material::sampleRetro(const Vector3d &out, Vector3d &in, const Vector3d &normal,
-	double &pdf)
+Color Material::sampleRetro(const Isect &isect, const Vector3d &out, Vector3d &in, double &pdf)
+const
 {
 	in = sampleCosSphere(-out, sin_, cos_);
 
-	return color_;
+	return texture_->evaluate(isect.vertex());
 }
 
-Color Material::sampleHalton(const Vector3d &out, Vector3d &in, const Vector3d &normal,
-	double &pdf)
+Color Material::sampleHalton(const Isect &isect, const Vector3d &out, Vector3d &in, double &pdf)
+const
 {
 	return Vector3d();
 }

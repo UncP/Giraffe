@@ -19,7 +19,7 @@ class Cylinder : public Object
 {
 	public:
 		Cylinder(	const Point3d &center1, const Point3d &center2, const double radis,
-							Material *material);
+							const Material *material);
 
 		bool intersect(const Ray &, Isect &) const override;
 
@@ -35,7 +35,7 @@ class Cylinder : public Object
 		double    inv2radis_;
 		double    tmax_;
 		Vector3d  axis_;
-		Material *material_;
+		const Material *material_;
 };
 
 } // namespace Giraffe

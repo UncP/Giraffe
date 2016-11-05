@@ -21,8 +21,7 @@ class MarbleTexture : public Texture
 									double frequency)
 		:color1_(color1), color2_(color2), color3_(color3), frequency_(frequency) { }
 
-		Vector3d evaluate(const Point3d &position, const Point2d &uv,
-			Vector3d &normal) const override;
+		Vector3d evaluate(const Vertex &vertex) const override;
 
 	private:
 		Vector3d color1_;

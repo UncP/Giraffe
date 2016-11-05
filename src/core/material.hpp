@@ -34,12 +34,11 @@ class Material
 
 		Type type() const { return type_; }
 
-		Color brdf(const Vector3d &out, Vector3d &in, const Vector3d &normal, double &pdf);
+		Color brdf(const Isect &isect, const Vector3d &out, Vector3d &in, double &pdf) const;
 
-		Color evaluate(	const Vector3d &out, const Vector3d &in, const Vector3d &normal);
+		Color evaluate(const Vector3d &out, const Vector3d &in, const Isect &isect) const;
 
-		virtual Color sample(const Vector3d &out, Vector3d &in, const Vector3d &normal, double &pdf)
-		{
+		virtual Color sample(const Vector3d &out, Vector3d &in, const Vector3d &normal, double &pdf){
 			return Vector3d(0);
 		}
 
@@ -49,13 +48,13 @@ class Material
 		Type type_;
 
 	private:
-		Color sampleDiffuse(const Vector3d &out, Vector3d &in, const Vector3d &normal, double &pdf);
-		Color sampleReflect(const Vector3d &out, Vector3d &in, const Vector3d &normal, double &pdf);
-		Color sampleRefract(const Vector3d &out, Vector3d &in, const Vector3d &normal, double &pdf);
-		Color samplePhong(const Vector3d &out, Vector3d &in, const Vector3d &normal, double &pdf);
-		Color sampleGlossy(const Vector3d &out, Vector3d &in, const Vector3d &normal, double &pdf);
-		Color sampleRetro(const Vector3d &out, Vector3d &in, const Vector3d &normal, double &pdf);
-		Color sampleHalton(const Vector3d &out, Vector3d &in, const Vector3d &normal, double &pdf);
+		Color sampleDiffuse(const Isect &isect, const Vector3d &out, Vector3d &in, double &pdf)const;
+		Color sampleReflect(const Isect &isect, const Vector3d &out, Vector3d &in, double &pdf)const;
+		Color sampleRefract(const Isect &isect, const Vector3d &out, Vector3d &in, double &pdf)const;
+		Color samplePhong(const Isect &isect, const Vector3d &out, Vector3d &in, double &pdf)const;
+		Color sampleGlossy(const Isect &isect, const Vector3d &out, Vector3d &in, double &pdf)const;
+		Color sampleRetro(const Isect &isect, const Vector3d &out, Vector3d &in, double &pdf)const;
+		Color sampleHalton(const Isect &isect, const Vector3d &out, Vector3d &in, double &pdf)const;
 
 		const Texture *texture_;
 		double         sin_;

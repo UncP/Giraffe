@@ -11,10 +11,9 @@
 
 namespace Giraffe {
 
-Vector3d StripeTexture::evaluate(const Point3d &position, const Point2d &uv,
-	Vector3d &normal) const
+Vector3d StripeTexture::evaluate(const Vertex &vertex) const
 {
-	Point3d p(transform_(position));
+	Point3d p(transform_(vertex.position()));
 	double var = axis_ == Xaxis ? p.x_ : (axis_ == Yaxis ? p.y_ : p.z_);
 	double t = (1.0 + std::sin((var * PI) * factor_)) * 0.5;
 	return mix(color1_, color2_, t);
