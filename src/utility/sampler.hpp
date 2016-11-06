@@ -30,6 +30,7 @@ class Sampler
 };
 
 Vector3d sampleCosHemisphere(const Vector3d &normal);
+
 Vector3d sampleCosSphere(const Vector3d &normal, double sin_, double cos_);
 
 } // namespace Giraffe

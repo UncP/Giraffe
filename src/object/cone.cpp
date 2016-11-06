@@ -14,11 +14,19 @@ namespace Giraffe {
 bool Cone::intersect(const Ray &ray, Isect &isect) const
 {
 	// 计算光线与底面的交点 dot((o + t * d - c), axis) = 0
-	double dis = -dot(ray.origin() - center_, axis_) / dot(ray.direction(), axis_);
+	double ad = dot(ray.direction(), axis_);
+	double dis = -dot(ray.origin() - center_, axis_) / ad;
 	if (dis < 0) return false;
 
-	Vector3d hitPos = ray.origin() + dis * ray.direction();
+	Point3d hitPos = ray.origin() + dis * ray.direction();
 
+	// 与底面相交
+	if (ad > 0 && (hitPos - center_).length2() < radius2_ && dis < isect.distance()) {
+		isect.update(dis, this, hitPos, -axis_, Point2d(), material_);
+		return true;
+	}
+
+	return false;
 }
 
 } // namespace Giraffe

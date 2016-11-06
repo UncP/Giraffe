@@ -77,20 +77,21 @@ void GiraffePathTracer::ray_tracing()
 {
 	Vector3d color;
 	double inv = 1.0 / samples_;
-	auto beg = std::chrono::high_resolution_clock::now();
 	const Camera &camera = scene_->camera();
+	auto beg = std::chrono::high_resolution_clock::now();
+
 	#pragma omp parallel for schedule(dynamic) private(color)
 	for (int x = 0; x < width_; ++x) {
 		fprintf(stderr,"\rprogress: %5.2f%%", 100 * (x / static_cast<float>(width_-1)));
 		for (int y = 0; y < height_; ++y) {
 			for (int sx = 0, i = x + y * width_; sx < 2; ++sx) {
 				for (int sy = 0; sy < 2; ++sy, color = Vector3d()) {
-					for (int n = 0; n < samples_; ++n) {
+					// for (int n = 0; n < samples_; ++n) {
 						Point2d off = Sampler::get2D1();
 						Point2d raster((x+(off.x_+sx+0.5)*0.5)/width_, (y+(off.y_+sy+0.5)*0.5)/height_);
 						Ray ray = camera.generateRay(raster);
 						color += trace(ray, 0) * inv;
-					}
+					// }
 					pixels_[i] += color * 0.25;
 				}
 			}

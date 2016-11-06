@@ -14,6 +14,7 @@
 
 #include "tl_parser.hpp"
 
+#include "../texture/constant.hpp"
 #include "../texture/stripe.hpp"
 #include "../texture/noise.hpp"
 #include "../texture/marble.hpp"
@@ -217,7 +218,11 @@ std::shared_ptr<Texture> TracingLanguageParser::findTexture()
 	std::string s;
 	str_ >> s;
 	Matrix matrix = Matrix::Identity;
-	if (s == "StripeTexture") {
+	if (s == "ConstantTexture") {
+		Vector3d color = findVector();
+		assert(str_.eof());
+		return std::shared_ptr<Texture>(new ConstantTexture(color));
+	} else if (s == "StripeTexture") {
 		Vector3d color1 = findVector();
 		Vector3d color2 = findVector();
 		int axis = findAxis();
@@ -252,6 +257,7 @@ std::shared_ptr<Texture> TracingLanguageParser::findTexture()
 		assert(str_.eof());
 		return std::shared_ptr<Texture>(new ImageTexture(file.c_str(), frequency));
 	}
+	abort("unsupported texture");
 	assert(0);
 }
 
@@ -260,37 +266,34 @@ std::shared_ptr<Material> TracingLanguageParser::findMaterial()
 	std::string s;
 	str_ >> s;
 	Material::Type type;
+	double roughness = 0.0;
+	int pow_factor = 0;
 	if (s == "Diffuse") {
-		assert(str_.eof());
-		return std::shared_ptr<Material>(new Material(Material::kDiffuse, color));
+		type = Material::kDiffuse;
 	} else if (s == "Mirror") {
-		Vector3d color = findVector();
-		assert(str_.eof());
-		return std::shared_ptr<Material>(new Material(Material::kReflect, color));
-	}/* else if (s == "Glass") {
-		assert(str_.eof());
-		return std::shared_ptr<Material>(new Mirror(Material::kRefract));
-	} */else if (s == "Phong") {
-		Vector3d color = findVector();
-		int pow_factor = findInteger();
-		assert(str_.eof());
-		return std::shared_ptr<Material>(new Material(Material::kPhong, color, 0, pow_factor));
+		type = Material::kReflect;
+	} else if (s == "Phong") {
+		type = Material::kPhong;
 	} else if (s == "Glossy") {
-		Vector3d color = findVector();
-		double roughness = findDouble();
-		assert(str_.eof());
-		return std::shared_ptr<Material>(new Material(Material::kGlossy, color, roughness));
+		type = Material::kGlossy;
 	} else if (s == "Retro") {
-		Vector3d color = findVector();
-		double roughness = findDouble();
-		assert(str_.eof());
-		return std::shared_ptr<Material>(new Material(Material::kRetro, color, roughness));
+		type = Material::kRetro;
 	} else if (s == "Halton") {
-		Vector3d color = findVector();
-		assert(str_.eof());
-		return std::shared_ptr<Material>(new Material(Material::kHalton, color));
+		type = Material::kHalton;
+	} else {
+		abort("unsupported material");
 	}
-	assert(0);
+	std::string t;
+	str_ >> t;
+	auto p = textures_.find(t);
+	if (p == textures_.end()) abort("texture not existed");
+	const Texture *texture = p->second.get();
+	if (s == "Phong")
+		pow_factor = findInteger();
+	else if (s == "Glossy" || s == "Retro")
+		roughness = findDouble();
+	assert(str_.eof());
+	return std::shared_ptr<Material>(new Material(type, texture, roughness, pow_factor));
 }
 
 std::shared_ptr<Object> TracingLanguageParser::findObject()

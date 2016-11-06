@@ -49,8 +49,7 @@ bool Cylinder::intersect(const Ray &ray, Isect &isect) const
 	Point3d hitPos = ray.origin() + ray.direction() * dis;
 
 	// 判断光线是否与底面相交
-	Vector3d v(hitPos - c);
-	if (v.length2() <= radis2_ && dis < isect.distance()) {
+	if ((hitPos - c).length2() <= radis2_ && dis < isect.distance()) {
 		Point2d uv;
 		// Point2d uv((ori.x_-c.x_+radis_) * inv2radis_,
 		// 					 (-ori.y_+c.y_+radis_) * inv2radis_);

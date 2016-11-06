@@ -50,23 +50,23 @@ Color Material::evaluate(const Vector3d &out, const Vector3d &in, const Isect &i
 	}
 }
 
-Color Material::sampleDiffuse(const Isect &isect, const Vector3d &out, Vector3d &in, double &pdf)
-const
+Color Material::sampleDiffuse(const Isect &isect, const Vector3d &out, Vector3d &in,
+	double &pdf) const
 {
 	in = sampleCosHemisphere(isect.normal());
 	return texture_->evaluate(isect.vertex());
 }
 
-Color Material::sampleReflect(const Isect &isect, const Vector3d &out, Vector3d &in, double &pdf)
-const
+Color Material::sampleReflect(const Isect &isect, const Vector3d &out, Vector3d &in,
+	double &pdf) const
 {
 	in = normalize(out - (2 * dot(out, isect.normal())) * isect.normal());
 
 	return texture_->evaluate(isect.vertex());
 }
 
-Color Material::sampleRefract(const Isect &isect, const Vector3d &out, Vector3d &in, double &pdf)
-const
+Color Material::sampleRefract(const Isect &isect, const Vector3d &out, Vector3d &in,
+	double &pdf) const
 {
 	return Vector3d();
 }

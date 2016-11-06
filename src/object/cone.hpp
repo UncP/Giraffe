@@ -18,7 +18,7 @@ class Cone : public Object
 {
 	public:
 		Cone(const Point3d &center, const Point3d &top, double radius, const Material *material)
-		:center_(center), top_(top), raidus_(radius), material_(material) {
+		:center_(center), top_(top), radius_(radius), radius2_(radius * radius), material_(material){
 			assert(top_ != center_);
 			axis_ = normalize(top_ - center_);
 		}
@@ -34,6 +34,7 @@ class Cone : public Object
 		Point3d         top_;
 		Vector3d        axis_;
 		double          radius_;
+		double          radius2_;
 		const Material *material_;
 };
 

@@ -17,8 +17,7 @@ namespace Giraffe {
 class ConstantTexture : public Texture
 {
 	public:
-		ConstantTexture(const Vector3d &color, REFL refl)
-		:Texture(refl), color_(color) { }
+		ConstantTexture(const Vector3d &color):color_(color) { }
 
 		Vector3d evaluate(const Vertex &vertex) const override {
 			return color_;
