@@ -18,13 +18,16 @@ namespace Giraffe {
 class RandomNumberGenerator
 {
 	public:
-		static double Uniform1() { return distribution1(generator); }
-		static double Uniform2() { return distribution2(generator); }
+		RandomNumberGenerator():generator_(time(0)), distribution1_(0, 1), distribution2_(-1, 1) { }
+
+		double Uniform1() { return distribution1_(generator_); }
+
+		double Uniform2() { return distribution2_(generator_); }
 
 	private:
-		static std::default_random_engine generator;
-		static std::uniform_real_distribution<double> distribution1;
-		static std::uniform_real_distribution<double> distribution2;
+		std::default_random_engine generator_;
+		std::uniform_real_distribution<double> distribution1_;
+		std::uniform_real_distribution<double> distribution2_;
 };
 
 } // namespace Giraffe

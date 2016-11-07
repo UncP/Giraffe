@@ -56,6 +56,10 @@ class TracingLanguageParser
 
 		void abort(const std::string &, const std::string & = "") const;
 
+		void findCamera();
+
+		void findSampler();
+
 		std::shared_ptr<Texture> findTexture();
 
 		std::shared_ptr<Material> findMaterial();
@@ -70,6 +74,7 @@ class TracingLanguageParser
 
 		int line_;
 		std::istringstream str_;
+		std::shared_ptr<Sampler>                         sampler_;
 		std::shared_ptr<Camera>                          camera_;
 		std::map<std::string, std::shared_ptr<Texture>>  textures_;
 		std::map<std::string, std::shared_ptr<Material>> materials_;

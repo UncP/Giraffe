@@ -4,19 +4,22 @@
  *    > Github:   https://www.github.com/UncP/Giraffe
  *    > Description:
  *
- *    > Created Time: 2016-10-31 12:06:04
+ *    > Created Time: 2016-11-07 11:09:57
 **/
+
+#ifndef _HALTON_SAMPLER_HPP_
+#define _HALTON_SAMPLER_HPP_
 
 #include <mutex>
 
-#include "halton.hpp"
+#include "../core/sampler.hpp"
 
 namespace Giraffe {
 
-class HaltonImpl
+class HaltonSampler : public Sampler
 {
 	public:
-		HaltonImpl(int num1, int num2) {
+		HaltonSampler(int num1, int num2) {
 			double factor = base_ = 1.0 / num2;
 			value_ = 0.0;
 			for (; num1 > 0; ) {
@@ -26,8 +29,7 @@ class HaltonImpl
 			}
 		}
 
-		double next()
-		{
+		double next() {
 			std::lock_guard<std::mutex> lock(mutex_);
 			double r = 1.0 - value_ - 0.0000001;
 			if(base_ < r) value_ += base_;
@@ -42,24 +44,21 @@ class HaltonImpl
 			return value_;
 		}
 
+		double get1D() override {
+			return next();
+		}
+
+		Point2d get2D() override {
+			double n = next();
+			return Point2d(n, n);
+		}
+
 	private:
 		std::mutex mutex_;
 		double value_;
 		double base_;
 };
 
-static HaltonImpl hal1(0, 2);
-static HaltonImpl hal2(0, 2);
-
-Color Halton::sample(const Vector3d &out, Vector3d &in, const Vector3d &normal, double &pdf)
-{
-	double u1 = hal1.next(), u2 = hal2.next();
-
-	double r = std::sqrt(1.0 - u1 * u1);
-	double phi = DOU_PI * u2;
-
-	in = normalize(normal + Vector3d(std::cos(phi) * r, std::sin(phi) * r, u1));
-	return color_;
-}
-
 } // namespace Giraffe
+
+#endif /* _HALTON_SAMPLER_HPP_ */

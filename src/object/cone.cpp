@@ -26,6 +26,7 @@ bool Cone::intersect(const Ray &ray, Isect &isect) const
 		return true;
 	}
 
+
 	return false;
 }
 

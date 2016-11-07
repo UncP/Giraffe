@@ -7,7 +7,7 @@
  *    > Created Time: 2016-10-29 22:38:43
 **/
 
-#include "../utility/sampler.hpp"
+#include "sampler.hpp"
 
 #include "material.hpp"
 

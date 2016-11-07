@@ -12,6 +12,7 @@
 
 #include <vector>
 
+#include "sampler.hpp"
 #include "camera.hpp"
 #include "object.hpp"
 #include "light.hpp"
@@ -21,16 +22,19 @@ namespace Giraffe {
 class Scene
 {
 	public:
-		Scene(const Camera *camera,
+		Scene(Sampler *sampler,
+					const Camera *camera,
 					const std::vector<Object *> &objects,
 					const std::vector<Light *> lights)
-		:camera_(camera), objects_(objects), lights_(lights) { }
+		:sampler_(sampler), camera_(camera), objects_(objects), lights_(lights) { }
 
+		Sampler* sampler() const { return sampler_; }
 		const Camera& camera() const { return *camera_; };
 		const std::vector<Object *>& objects() const { return objects_; };
 		const std::vector<Light *>& lights() const { return lights_; };
 
 	private:
+		Sampler              *sampler_;
 		const Camera         *camera_;
 		std::vector<Object *> objects_;
 		std::vector<Light *>  lights_;

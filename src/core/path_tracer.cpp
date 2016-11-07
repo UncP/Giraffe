@@ -11,18 +11,18 @@
 #include <chrono>
 #include <unistd.h>
 
-#include "../utility/isect.hpp"
 #include "camera.hpp"
 #include "path_tracer.hpp"
-#include "../utility/sampler.hpp"
-#include "../utility/image_io.hpp"
+#include "sampler.hpp"
 #include "material.hpp"
+#include "../utility/isect.hpp"
+#include "../utility/image_io.hpp"
 
 namespace Giraffe {
 
 GiraffePathTracer::GiraffePathTracer(const Scene *scene, int width, int height, int samples)
-:scene_(scene), width_(width), height_(height), samples_(samples),
- pixels_(new Vector3d[width_ * height_]) { }
+:scene_(scene), pixels_(new Vector3d[width * height]), width_(width), height_(height),
+	samples_(samples) { }
 
 Vector3d GiraffePathTracer::trace(const Ray &ray, int depth)
 {
@@ -43,7 +43,7 @@ Vector3d GiraffePathTracer::trace(const Ray &ray, int depth)
 
 	if (++depth > 3) {
 		double max = std::max(color.x_, std::max(color.y_, color.z_));
-		if (Sampler::get1D() < max) color *= (1.0 / max);
+		if (scene_->sampler()->get1D() < max) color *= (1.0 / max);
 		else return Vector3d();
 	}
 
@@ -75,26 +75,29 @@ Vector3d GiraffePathTracer::trace(const Ray &ray, int depth)
 
 void GiraffePathTracer::ray_tracing()
 {
-	Vector3d color;
 	double inv = 1.0 / samples_;
 	const Camera &camera = scene_->camera();
+	Sampler *sampler = scene_->sampler();
+
 	auto beg = std::chrono::high_resolution_clock::now();
 
-	#pragma omp parallel for schedule(dynamic) private(color)
+	#pragma omp parallel for schedule(dynamic)
 	for (int x = 0; x < width_; ++x) {
 		fprintf(stderr,"\rprogress: %5.2f%%", 100 * (x / static_cast<float>(width_-1)));
 		for (int y = 0; y < height_; ++y) {
-			for (int sx = 0, i = x + y * width_; sx < 2; ++sx) {
-				for (int sy = 0; sy < 2; ++sy, color = Vector3d()) {
-					// for (int n = 0; n < samples_; ++n) {
-						Point2d off = Sampler::get2D1();
-						Point2d raster((x+(off.x_+sx+0.5)*0.5)/width_, (y+(off.y_+sy+0.5)*0.5)/height_);
+			// for (int sx = 0, i = x + y * width_; sx < 2; ++sx) {
+				// for (int sy = 0; sy < 2; ++sy, color = Vector3d()) {
+					Vector3d color = Vector3d();
+					for (int n = 0; n < samples_; ++n) {
+						Point2d off = sampler->get2D();
+						// Point2d raster((x+(off.x_+sx)*0.5)/width_, (y+(off.y_+sy)*0.5)/height_);
+						Point2d raster((x+off.x_)/width_, (y+off.y_)/height_);
 						Ray ray = camera.generateRay(raster);
 						color += trace(ray, 0) * inv;
-					// }
-					pixels_[i] += color * 0.25;
-				}
-			}
+					}
+					pixels_[x + y * width_] += color;
+				// }
+			// }
 		}
 	}
 

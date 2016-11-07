@@ -38,6 +38,10 @@
 #include "../light/area.hpp"
 #include "../light/texture.hpp"
 
+#include "../sampler/uniform.hpp"
+#include "../sampler/stratified.hpp"
+#include "../sampler/halton.hpp"
+
 #include "camera.hpp"
 
 namespace Giraffe {
@@ -74,14 +78,7 @@ Scene* TracingLanguageParser::generateScene()
 			lights.push_back(p.second.get());
 	});
 
-	int screenWidth = 512, screenHeight = 512;
-	camera_ = std::shared_ptr<Camera>(
-		new PerspectiveCamera(Point3d(0, 0, 0), \
-													Vector3d(0, 0, -1.0), \
-													Point2i(screenWidth, screenHeight), \
-													Point2i(screenWidth, screenHeight), \
-													90));
-	return new Scene(camera_.get(), objects, lights);
+	return new Scene(sampler_.get(), camera_.get(), objects, lights);
 }
 
 Scene* TracingLanguageParser::parse(const char *file)
@@ -113,6 +110,10 @@ Scene* TracingLanguageParser::parse(const char *file)
 			str_ >> s;
 			if (lights_.find(s) != lights_.end()) abort("existed light ", s);
 				lights_.insert({s, findLight()});
+		} else if (s == "Camera") {
+			findCamera();
+		} else if (s == "Sampler") {
+			findSampler();
 		} else if (s == "Accelerate") {
 			str_ >> s;
 			if (objects_.find(s) != objects_.end()) abort("conflicted name ", s);
@@ -211,6 +212,41 @@ Matrix TracingLanguageParser::findMatrix()
 	double angle = findDouble();
 	check();
 	return transform(angle);
+}
+
+void TracingLanguageParser::findCamera()
+{
+	std::string s;
+	str_ >> s;
+	assert(s == "Perspective");
+	Point3d position = findPosition();
+	Vector3d direction = findVector();
+	int width = findInteger();
+	int height = findInteger();
+	double fov = findDouble();
+	assert(str_.eof());
+	camera_ = std::shared_ptr<Camera>(new PerspectiveCamera(position, direction, \
+		Point2i(width, height), Point2i(width, height), fov));
+}
+
+void TracingLanguageParser::findSampler()
+{
+	std::string s;
+	str_ >> s;
+	if (s == "Uniform") {
+		assert(str_.eof());
+		sampler_ = std::shared_ptr<Sampler>(new UniformSampler());
+	} else if (s == "Stratified") {
+		assert(str_.eof());
+		sampler_ = std::shared_ptr<Sampler>(new StratifiedSampler(512, 512));
+	} else if (s == "Halton") {
+		int num1 = findInteger();
+		int num2 = findInteger();
+		assert(str_.eof());
+		sampler_ = std::shared_ptr<Sampler>(new HaltonSampler(num1, num2));
+	} else {
+		abort("unsupported sampler");
+	}
 }
 
 std::shared_ptr<Texture> TracingLanguageParser::findTexture()

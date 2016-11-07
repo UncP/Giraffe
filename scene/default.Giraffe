@@ -1,19 +1,23 @@
+Camera Perspective Position 0 0 0 Direction 0 0 -1.0 512 512 90
+Sampler Stratified
+
 //Texture t2 ImageTexture "../texture/stones.png" 1
 //Texture t3 StripeTexture Color 0.3 0.4 0.5 Color 0.5 0.4 0.3 Xaxis 0.3 rotateZ 45
 //Texture t4 MarbleTexture Color 0.3 0.4 0.5 Color 0.5 0.5 0.5 Color 0.5 0.4 0.3  0.1
 //Texture t5 BrickTexture Color 0.3 0.4 0.5 Color 0.5 0.4 0.3 8e-5 3e-5 5e-6
 
-Material m1 Diffuse Color 0.75 0.75 0.75
-Material m2 Diffuse Color 0.75 0.25 0.25
-Material m3 Diffuse Color 0.25 0.75 0.25
-Material m4 Glossy Color 0.75 0.75 0.25 10
-Material m5 Retro Color 0.75 0.75 0.25 10
-Material m6 Phong Color 0.25 0.75 0.75 16
+Texture t1 ConstantTexture Color 0.75 0.75 0.75
+Texture t2 ConstantTexture Color 0.75 0.25 0.25
+Texture t3 ConstantTexture Color 0.25 0.75 0.25
+Texture t4 ConstantTexture Color 0.75 0.75 0.25
 
-//Material m1 Halton Color 0.75 0.75 0.75
-//Material m2 Halton Color 0.75 0.25 0.25
-//Material m3 Halton Color 0.25 0.75 0.25
-//Material m4 Halton Color 0.75 0.75 0.25
+Material m1 Diffuse t1
+Material m2 Diffuse t2
+Material m3 Diffuse t3
+Material m4 Diffuse t4
+Material m5 Mirror t4
+//Material m6 Retro t1 10
+//Material m7 Phong t1 16
 
 Object s1 Sphere Position 0 -40 -160 20 m4
 //Object s2 Sphere Position  35 -40 -160 20 m6

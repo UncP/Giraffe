@@ -33,11 +33,11 @@ class GiraffePathTracer
 
 		void save_ppm() const;
 
-		const Scene *scene_;
-		int          width_;
-		int	         height_;
-		int          samples_;
-		Vector3d    *pixels_;
+		const Scene   *scene_;
+		Vector3d      *pixels_;
+		int            width_;
+		int	           height_;
+		int            samples_;
 };
 
 } // namespace Giraffe

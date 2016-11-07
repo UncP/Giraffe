@@ -47,6 +47,5 @@ int main(int argc, char **argv)
 
 	giraffe_path_tracer.ray_tracing();
 
-	delete scene;
 	return 0;
 }
