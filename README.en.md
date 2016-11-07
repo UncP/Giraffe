@@ -16,6 +16,7 @@
 * Procedural Texture(Brick, Stripe, Image)
 * Perlin Noise(Marble)
 * Depth of field
+* Sampler(Uniform, Stratified, Halton)
 * Light(Point, Directional, Area, Texture)
 * Object(Plane, Triangle, Sphere, Quad, Cylinder, Disk)
 * Acceleration data structures
@@ -39,3 +40,5 @@
 
 ####Bear
 ![](./image/bear.png)
+
+`If you are interested, enter src directory and make && ./Giraffe`

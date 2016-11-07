@@ -17,6 +17,7 @@
 * Procedural Texture（砖块，条纹，图像）
 * Perlin Noise（大理石）
 * Depth of field
+* Sampler(Uniform, Stratified, Halton)
 * 光源（点光源，方向光，区域光，纹理光）
 * 物体（平面，三角形，球，四棱柱，圆柱，圆盘）
 * 加速数据结构
@@ -41,3 +42,4 @@
 ####Bear
 ![](./image/bear.png)
 
+`如果你有兴趣尝试，在*nix环境下进入src目录然后 make && ./Giraffe`
