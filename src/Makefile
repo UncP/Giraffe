@@ -10,8 +10,8 @@ OBJ      = math/constant.o math/vector.o math/point.o math/ray.o math/vertex.o m
            core/light.o core/camera.o core/scene.o \
            accelerator/box.o accelerator/bvh.o \
            sampler/uniform.o sampler/stratified.o sampler/halton.o \
-           texture/constant.o texture/brick.o texture/stripe.o texture/noise.o texture/marble.o \
-           texture/image.o \
+           texture/constant.o texture/brick.o texture/stripe.o texture/grid.o texture/noise.o \
+           texture/marble.o texture/image.o \
            light/point.o light/directional.o light/area.o light/texture.o \
            object/plane.o object/sphere.o object/cylinder.o object/cone.o \
            core/path_tracer.o core/tl_parser.o

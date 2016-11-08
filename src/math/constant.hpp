@@ -21,6 +21,7 @@ const double DOU_PI = 2.0 * PI;
 const double DOU_PI_INV = 1.0 / DOU_PI;
 const double kInfinity = std::numeric_limits<double>::max();
 const double kEpsilon = 1e-4;
+const double E = 2.718281828459045;
 
 enum Axis { Xaxis = 0, Yaxis, Zaxis};
 

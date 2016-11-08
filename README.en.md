@@ -13,7 +13,7 @@
 * Distributed Path Tracing
 * Explicit Lighting
 * Russian Roulette
-* Procedural Texture(Brick, Stripe, Image)
+* Procedural Texture(Brick, Stripe, Image, Grid)
 * Perlin Noise(Marble)
 * Depth of field
 * Sampler(Uniform, Stratified, Halton)
@@ -40,5 +40,7 @@
 
 ####Bear
 ![](./image/bear.png)
+
+***
 
 `If you are interested, enter src directory and make && ./Giraffe`

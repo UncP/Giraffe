@@ -16,6 +16,7 @@
 
 #include "../texture/constant.hpp"
 #include "../texture/stripe.hpp"
+#include "../texture/grid.hpp"
 #include "../texture/noise.hpp"
 #include "../texture/marble.hpp"
 #include "../texture/brick.hpp"
@@ -267,16 +268,24 @@ std::shared_ptr<Texture> TracingLanguageParser::findTexture()
 			matrix = findMatrix();
 			assert(str_.eof());
 		}
-		return std::shared_ptr<Texture>(
-			new StripeTexture(color1, color2, axis, factor, matrix));
+		return std::shared_ptr<Texture>(new StripeTexture(color1, color2, axis, factor, matrix));
+	} else if (s == "GridTexture") {
+		Vector3d color1 = findVector();
+		Vector3d color2 = findVector();
+		int axis = findAxis();
+		double factor = findDouble();
+		if (!str_.eof()) {
+			matrix = findMatrix();
+			assert(str_.eof());
+		}
+		return std::shared_ptr<Texture>(new GridTexture(color1, color2, axis, factor, matrix));
 	} else if (s == "MarbleTexture") {
 		Vector3d color1 = findVector();
 		Vector3d color2 = findVector();
 		Vector3d color3 = findVector();
 		double frequency = findDouble();
 		assert(str_.eof());
-		return std::shared_ptr<Texture>(
-			new MarbleTexture(color1, color2, color3, frequency));
+		return std::shared_ptr<Texture>(new MarbleTexture(color1, color2, color3, frequency));
 	} else if (s == "BrickTexture") {
 		Vector3d color1 = findVector();
 		Vector3d color2 = findVector();
@@ -284,8 +293,7 @@ std::shared_ptr<Texture> TracingLanguageParser::findTexture()
 		double height = findDouble();
 		double interval = findDouble();
 		assert(str_.eof());
-		return std::shared_ptr<Texture>(
-			new BrickTexture(color1, color2, width, height, interval));
+		return std::shared_ptr<Texture>(new BrickTexture(color1, color2, width, height, interval));
 	} else if (s == "ImageTexture") {
 		std::string file = findString();
 		if (str_.fail() || !file.size()) return nullptr;

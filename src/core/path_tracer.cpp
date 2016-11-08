@@ -22,7 +22,7 @@ namespace Giraffe {
 
 GiraffePathTracer::GiraffePathTracer(const Scene *scene, int width, int height, int samples)
 :scene_(scene), pixels_(new Vector3d[width * height]), width_(width), height_(height),
-	samples_(samples) { }
+samples_(samples) { }
 
 Vector3d GiraffePathTracer::trace(const Ray &ray, int depth)
 {

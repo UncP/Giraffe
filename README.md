@@ -14,7 +14,7 @@
 * 分布式路径追踪
 * Explicit Lighting
 * Russian Roulette
-* Procedural Texture（砖块，条纹，图像）
+* Procedural Texture（砖块，条纹，图像, 格子）
 * Perlin Noise（大理石）
 * Depth of field
 * Sampler(Uniform, Stratified, Halton)
@@ -42,4 +42,6 @@
 ####Bear
 ![](./image/bear.png)
 
-`如果你有兴趣尝试，在*nix环境下进入src目录然后 make && ./Giraffe`
+***
+
+####如果你有兴趣尝试一下Giraffe，在*nix环境下进入src目录然后 make && ./Giraffe puppy 4 (puppy是文件名,在scene文件夹里,以Giraffe为后缀的都可以,4是采样数,默认为 1,还可以是8, 16...另外你需要有头文件png.h)
