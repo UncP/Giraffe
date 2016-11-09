@@ -11,7 +11,7 @@ OBJ      = math/constant.o math/vector.o math/point.o math/ray.o math/vertex.o m
            accelerator/box.o accelerator/bvh.o \
            sampler/uniform.o sampler/stratified.o sampler/halton.o \
            texture/constant.o texture/brick.o texture/stripe.o texture/grid.o texture/noise.o \
-           texture/marble.o texture/image.o \
+           texture/marble.o texture/image.o texture/bump_brick.o \
            light/point.o light/directional.o light/area.o light/texture.o \
            object/plane.o object/sphere.o object/cylinder.o object/cone.o \
            core/path_tracer.o core/tl_parser.o

@@ -11,7 +11,7 @@
 
 namespace Giraffe {
 
-Vector3d MarbleTexture::evaluate(const Vertex &vertex) const
+Vector3d MarbleTexture::evaluate(Vertex &vertex) const
 {
 	double t = Noise::getNoise().fractalSum(vertex.position() * frequency_);
 	double tt = 2 * std::fabs(std::sin(vertex.position().z_ * frequency_ + t));

@@ -22,12 +22,8 @@ class Vertex
 
 		Vertex(const Point3d &position, const Vector3d &normal, const Point2d &uv)
 		:position_(position), normal_(normal), uv_(uv) { }
-		Vertex& operator=(const Vertex &v) {
-			position_ = v.position_;
-			normal_ 	= v.normal_;
-			uv_       = v.uv_;
-			return *this;
-		}
+
+		Vertex& operator=(const Vertex &v) = default;
 
 		void setPosition(const Point3d &position) { position_ = position; }
 		void setNormal(const Vector3d &normal) { normal_ = normal; }

@@ -17,88 +17,84 @@ Material::Material(Type type, const Texture *texture, double roughness, int pow)
 :type_(type), texture_(texture), sin_(std::sin(radian(roughness))),
  cos_(std::cos(radian(roughness))), pow_(pow) { }
 
-Color Material::brdf(const Isect &isect, const Vector3d &out, Vector3d &in, double &pdf) const
+Color Material::brdf(Isect &isect, const Vector3d &out, Vector3d &in, double &pdf) const
 {
+	Color color = texture_->evaluate(isect.vertex());
+	isect.setNormal(normalize(isect.normal()));
 	switch (type_) {
 		case kDiffuse:
-			return sampleDiffuse(isect, out, in, pdf);
+			sampleDiffuse(isect, out, in, pdf);
+			break;
 		case kReflect:
-			return sampleReflect(isect, out, in, pdf);
+			sampleReflect(isect, out, in, pdf);
+			break;
 		case kRefract:
-			return sampleRefract(isect, out, in, pdf);
+			sampleRefract(isect, out, in, pdf);
+			break;
 		case kPhong:
-			return samplePhong(isect, out, in, pdf);
+			samplePhong(isect, out, in, pdf);
+			break;
 		case kGlossy:
-			return sampleGlossy(isect, out, in, pdf);
+			sampleGlossy(isect, out, in, pdf);
+			break;
 		case kRetro:
-			return sampleRetro(isect, out, in,  pdf);
+			sampleRetro(isect, out, in, pdf);
+			break;
 		case kHalton:
-			return sampleHalton(isect, out, in,  pdf);
+			sampleHalton(isect, out, in, pdf);
+			break;
+		default:
+			assert(0);
 	}
-	assert(0);
+	return color;
 }
 
-Color Material::evaluate(const Vector3d &out, const Vector3d &in, const Isect &isect) const
+Color Material::evaluate(const Vector3d &out, const Vector3d &in, Isect &isect) const
 {
+	Color color = texture_->evaluate(isect.vertex());
+	isect.setNormal(normalize(isect.normal()));
 	if (type_ == kPhong) {
 		Vector3d mid(normalize(in - out));
-		return texture_->evaluate(isect.vertex()) * dot(isect.normal(), in) +
-					 Vector3d(1.5) * std::pow(dot(isect.normal(), mid), pow_);
+		return color * dot(isect.normal(), in) +
+			Vector3d(1.5) * std::pow(dot(isect.normal(), mid), pow_);
 	} else {
-		Vector3d color = texture_->evaluate(isect.vertex());
 		return color * dot(isect.normal(), in);
 	}
 }
 
-Color Material::sampleDiffuse(const Isect &isect, const Vector3d &out, Vector3d &in,
-	double &pdf) const
+void Material::sampleDiffuse(Isect &isect, const Vector3d &out, Vector3d &in,double &pdf) const
 {
 	in = sampleCosHemisphere(isect.normal());
-	return texture_->evaluate(isect.vertex());
 }
 
-Color Material::sampleReflect(const Isect &isect, const Vector3d &out, Vector3d &in,
-	double &pdf) const
+void Material::sampleReflect(Isect &isect, const Vector3d &out, Vector3d &in,double &pdf) const
 {
 	in = normalize(out - (2 * dot(out, isect.normal())) * isect.normal());
-
-	return texture_->evaluate(isect.vertex());
 }
 
-Color Material::sampleRefract(const Isect &isect, const Vector3d &out, Vector3d &in,
+void Material::sampleRefract(Isect &isect, const Vector3d &out, Vector3d &in,
 	double &pdf) const
 {
-	return Vector3d();
 }
 
-Color Material::samplePhong(const Isect &isect, const Vector3d &out, Vector3d &in, double &pdf)
-const
+void Material::samplePhong(Isect &isect, const Vector3d &out, Vector3d &in, double &pdf) const
 {
 	in = sampleCosHemisphere(isect.normal());
-	return texture_->evaluate(isect.vertex());
 }
 
-Color Material::sampleGlossy(const Isect &isect, const Vector3d &out, Vector3d &in, double &pdf)
-const
+void Material::sampleGlossy(Isect &isect, const Vector3d &out, Vector3d &in, double &pdf) const
 {
 	in = sampleCosSphere(
 		normalize(out - (2 * dot(out, isect.normal())) * isect.normal()), sin_, cos_);
-
-	return texture_->evaluate(isect.vertex());
 }
 
-Color Material::sampleRetro(const Isect &isect, const Vector3d &out, Vector3d &in, double &pdf)
-const
+void Material::sampleRetro(Isect &isect, const Vector3d &out, Vector3d &in, double &pdf) const
 {
 	in = sampleCosSphere(-out, sin_, cos_);
-
-	return texture_->evaluate(isect.vertex());
 }
 
-Color Material::sampleHalton(const Isect &isect, const Vector3d &out, Vector3d &in, double &pdf)
-const
+void Material::sampleHalton(Isect &isect, const Vector3d &out, Vector3d &in, double &pdf) const
 {
-	return Vector3d();
 }
 
 } // namespace Giraffe

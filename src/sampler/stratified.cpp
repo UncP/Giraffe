@@ -23,7 +23,6 @@ index1D_(0), index2D_(0)
 		array1D_.push_back((rng_.Uniform1() + i) * invPixels);
 	for (int i = 0; i != pixels_; ++i) {
 		int other = i + rng_.Uniform1() * (pixels_-i);
-		assert(other < pixels_);
 		std::swap(array1D_[i], array1D_[other]);
 	}
 	double dx = 1.0 / xPixels;
@@ -38,7 +37,6 @@ index1D_(0), index2D_(0)
 	}
 	for (int i = 0; i != pixels_; ++i) {
 		int other = i + rng_.Uniform1() * (pixels_-i);
-		assert(other < pixels_);
 		std::swap(array2D_[i], array2D_[other]);
 	}
 }

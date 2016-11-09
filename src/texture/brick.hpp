@@ -27,7 +27,7 @@ class BrickTexture : public Texture
 			hf_ = (interval * 0.5) / height;
 		}
 
-		Vector3d evaluate(const Vertex &vertex) const override;
+		Vector3d evaluate(Vertex &vertex) const override;
 
 	private:
 		Vector3d color1_;

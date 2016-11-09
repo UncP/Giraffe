@@ -17,14 +17,12 @@ namespace Giraffe {
 class BumpBrickTexture : public Texture
 {
 	public:
-
 		static const int map_len = 100;
 
 		BumpBrickTexture(	const Vector3d &color1, const Vector3d &color2,
-											double width, double height,
-											double interval, REFL refl);
+											double width, double height, double interval, double gradient);
 
-		Vector3d evaluate(const Vertex &vertex) const override;
+		Vector3d evaluate(Vertex &vertex) const override;
 
 	private:
 		Vector3d color1_;
@@ -33,7 +31,9 @@ class BumpBrickTexture : public Texture
 		double 	 height_;
 		double   wf_;
 		double   hf_;
-		unsigned char height_map_[map_len * map_len];
+		double   gradient_;
+
+		char     height_map_[map_len * map_len];
 
 		void generateHeightMap();
 		void showHeightMap();

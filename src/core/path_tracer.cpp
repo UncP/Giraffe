@@ -34,9 +34,6 @@ Vector3d GiraffePathTracer::trace(const Ray &ray, int depth)
 
 	if (isect.miss()) return Vector3d();
 
-	Vector3d normal = normalize(isect.normal());
-	isect.setNormal(normal);
-
 	double pdf;
 	Vector3d refl_dir;
 	Color color = isect.material()->brdf(isect, ray.direction(), refl_dir, pdf);
@@ -47,7 +44,7 @@ Vector3d GiraffePathTracer::trace(const Ray &ray, int depth)
 		else return Vector3d();
 	}
 
-	Point3d pos = isect.position() + normal * kEpsilon;
+	Point3d pos = isect.position() + isect.normal() * kEpsilon;
 	isect.setPosition(pos);
 
 	Vector3d emission;
@@ -57,7 +54,7 @@ Vector3d GiraffePathTracer::trace(const Ray &ray, int depth)
 		for (size_t i = 0, lend = lights.size(); i != lend; ++i) {
 			bool flag = true;
 			Vector3d light_dir = lights[i]->illuminate(isect);
-			if (light_dir == Vector3d(0) || dot(light_dir, normal) < 0) continue;
+			if (light_dir == Vector3d(0) || dot(light_dir, isect.normal()) < 0) continue;
 			for (size_t j = 0; j != oend; ++j) {
 				if (objects[j]->hit(Ray(pos, light_dir), isect.distance(), obj)) {
 					flag = false;

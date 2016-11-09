@@ -11,7 +11,7 @@
 
 namespace Giraffe {
 
-Vector3d GridTexture::evaluate(const Vertex &vertex) const
+Vector3d GridTexture::evaluate(Vertex &vertex) const
 {
 	Point3d p(transform_(vertex.position()));
 	double fac1 = p.x_ * PI * factor_;

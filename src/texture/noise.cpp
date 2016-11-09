@@ -11,7 +11,7 @@
 
 namespace Giraffe {
 
-Vector3d NoiseTexture::evaluate(const Vertex &vertex) const
+Vector3d NoiseTexture::evaluate(Vertex &vertex) const
 {
 	double t = Noise::getNoise().gnoise(vertex.position() * frequency_);
 	if (t < 0) t = 0;

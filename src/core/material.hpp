@@ -34,9 +34,9 @@ class Material
 
 		Type type() const { return type_; }
 
-		Color brdf(const Isect &isect, const Vector3d &out, Vector3d &in, double &pdf) const;
+		Color brdf(Isect &isect, const Vector3d &out, Vector3d &in, double &pdf) const;
 
-		Color evaluate(const Vector3d &out, const Vector3d &in, const Isect &isect) const;
+		Color evaluate(const Vector3d &out, const Vector3d &in, Isect &isect) const;
 
 		virtual Color sample(const Vector3d &out, Vector3d &in, const Vector3d &normal, double &pdf){
 			return Vector3d(0);
@@ -48,13 +48,13 @@ class Material
 		Type type_;
 
 	private:
-		Color sampleDiffuse(const Isect &isect, const Vector3d &out, Vector3d &in, double &pdf)const;
-		Color sampleReflect(const Isect &isect, const Vector3d &out, Vector3d &in, double &pdf)const;
-		Color sampleRefract(const Isect &isect, const Vector3d &out, Vector3d &in, double &pdf)const;
-		Color samplePhong(const Isect &isect, const Vector3d &out, Vector3d &in, double &pdf)const;
-		Color sampleGlossy(const Isect &isect, const Vector3d &out, Vector3d &in, double &pdf)const;
-		Color sampleRetro(const Isect &isect, const Vector3d &out, Vector3d &in, double &pdf)const;
-		Color sampleHalton(const Isect &isect, const Vector3d &out, Vector3d &in, double &pdf)const;
+		void sampleDiffuse(Isect &isect, const Vector3d &out, Vector3d &in, double &pdf) const;
+		void sampleReflect(Isect &isect, const Vector3d &out, Vector3d &in, double &pdf) const;
+		void sampleRefract(Isect &isect, const Vector3d &out, Vector3d &in, double &pdf) const;
+		void samplePhong(Isect &isect, const Vector3d &out, Vector3d &in, double &pdf) const;
+		void sampleGlossy(Isect &isect, const Vector3d &out, Vector3d &in, double &pdf) const;
+		void sampleRetro(Isect &isect, const Vector3d &out, Vector3d &in, double &pdf) const;
+		void sampleHalton(Isect &isect, const Vector3d &out, Vector3d &in, double &pdf) const;
 
 		const Texture *texture_;
 		double         sin_;

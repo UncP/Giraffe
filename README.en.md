@@ -14,6 +14,7 @@
 * Explicit Lighting
 * Russian Roulette
 * Procedural Texture(Brick, Stripe, Image, Grid)
+* Bump Mapping
 * Perlin Noise(Marble)
 * Depth of field
 * Sampler(Uniform, Stratified, Halton)

@@ -9,21 +9,20 @@
 
 #include <assert.h>
 
+#include "../math/matrix.hpp"
 #include "bump_brick.hpp"
 
 namespace Giraffe {
 
 BumpBrickTexture::BumpBrickTexture(const Vector3d &color1, const Vector3d &color2,
-double width, double height, double interval, REFL refl)
-:Texture(refl), color1_(color1), color2_(color2)
+double width, double height, double interval, double gradient)
+:color1_(color1), color2_(color2), gradient_(gradient)
 {
-	assert(width > 0 && height > 0 && interval > 0);
 	width_  = width + interval;
 	height_ = height + interval;
 	wf_ = (interval * 0.5) / width;
 	hf_ = (interval * 0.5) / height;
 	generateHeightMap();
-	// showHeightMap();
 }
 
 void BumpBrickTexture::showHeightMap()
@@ -31,7 +30,7 @@ void BumpBrickTexture::showHeightMap()
 	bool flag = true;
 	for (int i = 0; i != map_len; ++i) {
 		for (int j = 0; j != map_len; ++j) {
-			if((i <= 20 && (j <= 20 || j >= 80)) || (i >= 80 && (j <= 20 || j >= 80))) {
+			if((i <= 15 && (j <= 15 || j >= 85)) || (i >= 85 && (j <= 15 || j >= 85))) {
 				std::cout << static_cast<int>(height_map_[i * map_len + j]) << " ";
 				flag = true;
 			} else {
@@ -47,15 +46,11 @@ void BumpBrickTexture::generateHeightMap()
 {
 	int width_count  = static_cast<int>(static_cast<double>(map_len) * wf_ + 0.5);
 	int height_count = static_cast<int>(static_cast<double>(map_len) * hf_ + 0.5);
-	// std::cout << width_count << " " << height_count << std::endl;
 	int min_blank = std::min(width_count, height_count);
 	int max_blank = std::max(width_count, height_count);
 	int interval = (max_blank - 1) / (min_blank - 1);
-	// std::cout << interval << std::endl;
 	int max_fill = max_blank + 1;
-	// std::cout << max_fill << std::endl;
 	float k = -static_cast<float>(height_count) / static_cast<float>(width_count);
-	// std::cout << k << std::endl;
 	for (int i = 0; i != map_len; ++i) {
 		height_map_[i * map_len] = 1;
 		height_map_[i] = 1;
@@ -98,14 +93,14 @@ void BumpBrickTexture::generateHeightMap()
 	height_map_[(width_count-1) + (map_len-height_count) * map_len] = max_blank;
 	height_map_[(map_len-width_count) + (map_len-height_count) * map_len] = max_blank;
 	for (int i = 1; i != height_count; ++i) {
-		unsigned char val = height_map_[i * map_len + (width_count-1)];
+		char val = height_map_[i * map_len + (width_count-1)];
 		for (int j = width_count; j != map_len-width_count; ++j) {
 			height_map_[i * map_len + j] = val;
 			height_map_[(map_len-i-1) * map_len + j] = val;
 		}
 	}
 	for (int i = 1; i != width_count; ++i) {
-		unsigned char val = height_map_[(height_count-1) * map_len + i];
+		char val = height_map_[(height_count-1) * map_len + i];
 		for (int j = height_count; j != map_len-height_count; ++j) {
 			height_map_[j * map_len + i] = val;
 			height_map_[j * map_len + (map_len-i-1)] = val;
@@ -116,7 +111,7 @@ void BumpBrickTexture::generateHeightMap()
 			height_map_[i * map_len + j] = max_fill;
 }
 
-Vector3d BumpBrickTexture::evaluate(const Vertex &vertex) const
+Vector3d BumpBrickTexture::evaluate(Vertex &vertex) const
 {
 	double ss = vertex.uv().x_ / width_;
 	double tt = vertex.uv().y_ / height_;
@@ -132,24 +127,26 @@ Vector3d BumpBrickTexture::evaluate(const Vertex &vertex) const
 
 	double w = step(wf_, ss) - step(1 - wf_, ss);
 	double h = step(hf_, tt) - step(1 - hf_, tt);
-	double interval = w * h;
-	if (interval == 0.0) {
+	double gap = w * h;
+	if (gap == 0.0) {
 		int i = ss * (map_len - 1);
 		int j = tt * (map_len - 1);
-		int l = (i > 0) ? (i - 1) : i;
-		int r = (i < (map_len-1)) ? (i + 1) : i;
-		int du = height_map_[j * map_len + l] - height_map_[j * map_len + r];
+		int l, r;
+		if (i < (map_len-1)) l = i, r = i + 1;
+		else l = i - 1, r = i;
+		double du = gradient_ * (height_map_[j * map_len + r] - height_map_[j * map_len + l]);
 		double angle1 = rradian(std::atan(du));
 		Matrix a = rotateX(angle1);
-		int u = (j > 0) ? (j - 1) : j;
-		int d = (j < (map_len-1)) ? (j + 1) : j;
-		int dv = height_map_[u * map_len + i] - height_map_[d * map_len + i];
+		int u, d;
+		if (j < (map_len-1)) u = j, d = j + 1;
+		else u = j - 1, d = j;
+		double dv = gradient_ * (height_map_[u * map_len + i] - height_map_[d * map_len + i]);
 		double angle2 = rradian(std::atan(dv));
-		Matrix b = rotateX(angle2);
+		Matrix b = rotateZ(angle2);
 		Matrix c = a * b;
-		normal = c(normal);
+		vertex.setNormal(a(vertex.normal()));
 	}
-	return mix(color1_, color2_, interval);
+	return mix(color1_, color2_, gap);
 }
 
 } // namespace Giraffe

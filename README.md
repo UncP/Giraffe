@@ -15,6 +15,7 @@
 * Explicit Lighting
 * Russian Roulette
 * Procedural Texture（砖块，条纹，图像, 格子）
+* 凹凸映射
 * Perlin Noise（大理石）
 * Depth of field
 * Sampler(Uniform, Stratified, Halton)
@@ -44,4 +45,5 @@
 
 ***
 
-####如果你有兴趣尝试一下Giraffe，在*nix环境下进入src目录然后 make && ./Giraffe puppy 4 (puppy是文件名,在scene文件夹里,以Giraffe为后缀的都可以,4是采样数,默认为 1,还可以是8, 16...另外你需要有头文件png.h)
+####如果你有兴趣尝试一下Giraffe
+`在*nix环境下进入src目录然后 make && ./Giraffe puppy 4 (puppy是文件名,在scene文件夹里,以Giraffe为后缀的都可以,4是采样数,默认为 1,还可以是8, 16...另外你需要有头文件png.h以及支持C++11/14的编译器，若不能支持C++14，将Makefile里的参数改为-std=c++11)`

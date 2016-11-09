@@ -35,7 +35,7 @@ class Isect
 		const Object* object() const { return object_; }
 		const Point3d& position() const { return vertex_.position(); }
 		const Vector3d& normal() const { return vertex_.normal(); }
-		const Vertex& vertex() const { return vertex_; }
+		Vertex& vertex() { return vertex_; }
 		const Material* material() const { return material_; }
 
 	private:

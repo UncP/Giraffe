@@ -20,6 +20,7 @@
 #include "../texture/noise.hpp"
 #include "../texture/marble.hpp"
 #include "../texture/brick.hpp"
+#include "../texture/bump_brick.hpp"
 #include "../texture/image.hpp"
 
 // #include "../material/diffuse.hpp"
@@ -300,6 +301,16 @@ std::shared_ptr<Texture> TracingLanguageParser::findTexture()
 		double frequency = findDouble();
 		assert(str_.eof());
 		return std::shared_ptr<Texture>(new ImageTexture(file.c_str(), frequency));
+	} else if (s == "BumpBrickTexture") {
+		Vector3d color1 = findVector();
+		Vector3d color2 = findVector();
+		double width = findDouble();
+		double height = findDouble();
+		double interval = findDouble();
+		double gradient = findDouble();
+		assert(str_.eof());
+		return std::shared_ptr<Texture>(
+			new BumpBrickTexture(color1, color2, width, height, interval, gradient));
 	}
 	abort("unsupported texture");
 	assert(0);

@@ -11,7 +11,7 @@
 
 namespace Giraffe {
 
-Vector3d StripeTexture::evaluate(const Vertex &vertex) const
+Vector3d StripeTexture::evaluate(Vertex &vertex) const
 {
 	Point3d p(transform_(vertex.position()));
 	double var = axis_ == Xaxis ? p.x_ : (axis_ == Yaxis ? p.y_ : p.z_);

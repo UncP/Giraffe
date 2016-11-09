@@ -11,7 +11,7 @@
 
 namespace Giraffe {
 
-Vector3d BrickTexture::evaluate(const Vertex &vertex) const
+Vector3d BrickTexture::evaluate(Vertex &vertex) const
 {
 	Point2d uv_(transform_(vertex.uv()));
 	double ss = uv_.x_ / width_;

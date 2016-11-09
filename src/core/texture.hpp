@@ -20,7 +20,7 @@ class Texture
 	public:
 		Texture() { }
 
-		virtual Vector3d evaluate(const Vertex &vertex) const = 0;
+		virtual Vector3d evaluate(Vertex &vertex) const = 0;
 
 		virtual ~Texture() { }
 };
