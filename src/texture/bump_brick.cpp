@@ -136,15 +136,15 @@ Vector3d BumpBrickTexture::evaluate(Vertex &vertex) const
 		else l = i - 1, r = i;
 		double du = gradient_ * (height_map_[j * map_len + r] - height_map_[j * map_len + l]);
 		double angle1 = rradian(std::atan(du));
-		Matrix a = rotateX(angle1);
+		Matrix a = rotateY(angle1);
 		int u, d;
 		if (j < (map_len-1)) u = j, d = j + 1;
 		else u = j - 1, d = j;
 		double dv = gradient_ * (height_map_[u * map_len + i] - height_map_[d * map_len + i]);
 		double angle2 = rradian(std::atan(dv));
-		Matrix b = rotateZ(angle2);
+		Matrix b = rotateX(angle2);
 		Matrix c = a * b;
-		vertex.setNormal(a(vertex.normal()));
+		vertex.setNormal(c(vertex.normal()));
 	}
 	return mix(color1_, color2_, gap);
 }
