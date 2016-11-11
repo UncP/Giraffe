@@ -22,6 +22,7 @@
 #include "../texture/brick.hpp"
 #include "../texture/bump_brick.hpp"
 #include "../texture/image.hpp"
+#include "../texture/spot.hpp"
 
 // #include "../material/diffuse.hpp"
 // #include "../material/mirror.hpp"
@@ -311,6 +312,12 @@ std::shared_ptr<Texture> TracingLanguageParser::findTexture()
 		assert(str_.eof());
 		return std::shared_ptr<Texture>(
 			new BumpBrickTexture(color1, color2, width, height, interval, gradient));
+	} else if (s == "SpotTexture") {
+		Vector3d color1 = findVector();
+		Vector3d color2 = findVector();
+		double radius = findDouble();
+		assert(str_.eof());
+		return std::shared_ptr<Texture>(new SpotTexture(color1, color2, radius));
 	}
 	abort("unsupported texture");
 	assert(0);
