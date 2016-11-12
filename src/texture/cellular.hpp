@@ -19,8 +19,8 @@ namespace Giraffe {
 class CellularTexture : public Texture
 {
 	public:
-		CellularTexture(const std::vector<Vector3d> &colors)
-		:colors_(colors), n_close_(colors_.size()) { }
+		CellularTexture(const Vector3d &color1, const Vector3d &color2, int n_close)
+		:color1_(color1), color2_(color2), n_close_(n_close) { }
 
 		Vector3d evaluate(Vertex &vertex) const override;
 
@@ -31,6 +31,9 @@ class CellularTexture : public Texture
 			public:
 				Neighbor():distance_(kInfinity) { }
 
+				Neighbor(double distance, const Point3d &position, unsigned int id)
+				:distance_(kInfinity), position_(position), id_(id) { }
+
 				bool operator<(const Neighbor &that) { return distance_ < that.distance_; }
 
 				double       distance_;
@@ -38,10 +41,11 @@ class CellularTexture : public Texture
 				unsigned int id_;
 		};
 
-		void addSample(const Point3<unsigned long> &upos, const Point3d &fpos,
+		void addSample(const Point3i &upos, const Point3d &fpos,
 			std::vector<Neighbor> &neighbors) const;
 
-		std::vector<Vector3d> colors_;
+		Vector3d color1_;
+		Vector3d color2_;
 		int n_close_;
 };
 
