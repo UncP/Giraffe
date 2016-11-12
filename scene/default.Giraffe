@@ -1,5 +1,5 @@
 Camera Perspective Position 0 0 0 Direction 0 0 -1.0 512 512 90
-Sampler Stratified
+Sampler Uniform
 
 //Texture t2 ImageTexture "../texture/stones.png" 1
 //Texture t3 StripeTexture Color 0.3 0.4 0.5 Color 0.5 0.4 0.3 Xaxis 0.3 rotateZ 45
@@ -12,7 +12,7 @@ Texture t3 ConstantTexture Color 0.25 0.75 0.25
 Texture t4 ConstantTexture Color 0.75 0.75 0.25
 Texture t5 GridTexture Color 0.8 0.8 0.2 Color 0.2 0.8 0.8 Xaxis 0.3
 Texture t6 BumpBrickTexture Color 0.8 0.8 0.2 Color 0.2 0.8 0.8 0.2 0.1 0.05 0.2
-Texture t7 StripeTexture Color 0.3 0.4 0.5 Color 0.5 0.4 0.3 Yaxis 0.3 rotateX 90
+Texture t7 SpotTexture Color 0.3 0.4 0.6 Color 0.6 0.4 0.3 0.2
 
 Material m1 Diffuse t1
 Material m2 Diffuse t2
@@ -36,5 +36,5 @@ Object p1 Plane Position   0  -60 0   Normal  0  1  0  m1
 
 //Light l1 TextureLight Position -20 0 -50  Direction 0.2 0 -1  Intensity 1.5 1.5 1.5 20 t2
 //Light l2 PointLight Position 0 30 -160 Intensity 1024 1024 1024
-//Light l3 DirectionalLight Direction 0.2 -0.2 -1 Intensity 0.8 0.8 0.8
-Light l4 AreaLight Position 0 59.99 -160 Direction 0 -1 0 Intensity 3072 3072 3072 90
+Light l3 DirectionalLight Direction 0 0 -1 Intensity 0.8 0.8 0.8
+//Light l4 AreaLight Position 0 59.99 -160 Direction 0 -1 0 Intensity 3072 3072 3072 90
