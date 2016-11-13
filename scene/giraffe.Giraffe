@@ -1,0 +1,41 @@
+Camera Perspective Position 0 0 0 Direction 0 0 -1.0 512 512 90
+Sampler Uniform
+
+Texture t1 ConstantTexture Color 0.75 0.75 0.75
+Texture t2 ConstantTexture Color 0.25 0.25 0.75
+Texture t3 ConstantTexture Color 0.75 0.25 0.25
+
+Material m1 Diffuse t1
+Material m2 Diffuse t2
+Material m3 Diffuse t3
+
+Texture tt1 ConstantTexture Color 0.75 0.75 0.25
+Texture tt2 CellularTexture Color 0.8 0.2 0.8 4
+
+Material mm1 Diffuse tt1
+Material mm2 Diffuse tt2
+
+Object c1 Cylinder Position -8 -61 -145 Position -5 -39 -148 1.8 mm1
+Object c2 Cylinder Position -10 -61 -155 Position -7 -39 -152 1.8 mm1
+Object c3 Cylinder Position  12 -61 -145 Position  9 -39 -148 1.8 mm1
+Object c4 Cylinder Position  14 -61 -155 Position  11 -39 -152 1.8 mm1
+
+Object c5 Cylinder Position -18 -30 -150 Position 20 -30 -150 10 mm1
+
+Object s1 Sphere Position -13 -30 -150 10.2 mm1
+Object s2 Sphere Position 15  -30 -150 10.2 mm1
+
+Object c6 Cylinder Position -14.5 -35 -149 Position -20 15 -149 3.5 mm1
+
+Object c7 Cylinder Position -20 18 -153 Position -18 11 -147 4.5 mm1
+
+Accelerate a1 c1 c2 c3 c4 c5
+//Accelerate a2 c6 c7
+
+Object p1 Plane Position 0  -60 0   Normal  0  1  0  m1
+Object p2 Plane Position 0   60 0   Normal  0 -1  0  m1
+Object p3 Plane Position 0   0 -225 Normal  0  0  1  mm2
+Object p4 Plane Position -70 0  0   Normal  1  0  0  m2
+Object p5 Plane Position 70  0  0   Normal -1  0  0  m3
+
+Light l1 AreaLight Position 0 59.99 -160 Direction 0 -1 0 Intensity 4096 4096 4096 90

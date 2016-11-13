@@ -1,28 +1,30 @@
-// Camera *cam = new PerspectiveCamera(Point3d(0, 0, 0), 	\
-// 																		Vector3d(0, 0, -1.0),\
-// 																		Point2i(screenWidth, screenHeight), \
-// 																		Point2i(screenWidth, screenHeight), \
-// 																		90, 10, 150);
+Camera Perspective Position 0 0 0 Direction 0 0 -1.0 512 512 90 10 150
+Sampler Uniform
 
-Texture wall1 ConstantTexture Color 0.75 0.75 0.75
-Texture wall2 ConstantTexture Color 0.75 0.25 0.25
-Texture wall3 ConstantTexture Color 0.25 0.75 0.25
+Texture t1 ConstantTexture Color 0.75 0.75 0.75
+Texture t2 ConstantTexture Color 0.75 0.25 0.25
+Texture t3 ConstantTexture Color 0.25 0.75 0.25
 
-Texture t1 ConstantTexture Color 0.25 0.25 0.75
+Material m1 Diffuse t1
+Material m2 Diffuse t2
+Material m3 Diffuse t3
 
-Object s1 Sphere Position -55 -45 -210   15  t1
-Object s2 Sphere Position -40 -45 -195   15  t1
-Object s3 Sphere Position -25 -45 -180   15  t1
-Object s4 Sphere Position -10 -45 -165   15  t1
-Object s5 Sphere Position 5   -45 -150   15  t1
-Object s6 Sphere Position 20  -45 -135   15  t1
-Object s7 Sphere Position 35  -45 -120   15  t1
-Object s8 Sphere Position 50  -45 -105   15  t1
+Texture tt1 ConstantTexture Color 0.25 0.25 0.75
+Material mm1 Diffuse tt1
 
-Object w1 Sphere Position  0   -100060  -160     1e5  wall1
-Object w2 Sphere Position  0    100060  -160     1e5  wall1
-Object w3 Sphere Position  0         0  -100225  1e5  wall1
-Object w4 Sphere Position -100070    0  -175     1e5  wall2
-Object w5 Sphere Position 100070     0  -175     1e5  wall3
+Object s1 Sphere Position -55 -45 -210   15  mm1
+Object s2 Sphere Position -40 -45 -195   15  mm1
+Object s3 Sphere Position -25 -45 -180   15  mm1
+Object s4 Sphere Position -10 -45 -165   15  mm1
+Object s5 Sphere Position 5   -45 -150   15  mm1
+Object s6 Sphere Position 20  -45 -135   15  mm1
+Object s7 Sphere Position 35  -45 -120   15  mm1
+Object s8 Sphere Position 50  -45 -105   15  mm1
+
+Object p1 Plane Position 0  -60 0   Normal  0  1  0  m1
+Object p2 Plane Position 0   60 0   Normal  0 -1  0  m1
+Object p3 Plane Position 0   0 -225 Normal  0  0  1  m1
+Object p4 Plane Position -70 0  0   Normal  1  0  0  m2
+Object p5 Plane Position 70  0  0   Normal -1  0  0  m3
 
 Light l1 AreaLight Position 0 59.99 -160 Direction 0 -1 0 Intensity 4096 4096 4096 90

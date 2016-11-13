@@ -7,8 +7,7 @@
  *    > Created Time: 2016-09-17 16:57:31
 **/
 
-#include <ctime>
-#include <random>
+#include "../utility/random.hpp"
 
 #include "noise.hpp"
 
@@ -25,19 +24,16 @@ Noise::Noise()
 	for (int i = 0; i != PerlinNumber; ++i)
 		permutationTable_[i] = i;
 
-	std::default_random_engine generator(1);
-	std::uniform_int_distribution<int> distribution1(0, PerlinNumber-1);
+	RandomNumberGenerator rng;
 	for (int i = 0; i != PerlinNumber; ++i) {
-		int j = distribution1(generator);
+		int j = rng.Uniform1() * (PerlinNumber-1);
 		std::swap(permutationTable_[i], permutationTable_[j]);
 		permutationTable_[i + PerlinNumber] = permutationTable_[i];
 	}
-
-	std::uniform_real_distribution<double> distribution2(0, 1);
 	for (int i = 0; i != 3 * PerlinNumber; i += 3) {
-		double j = 1 - 2 * distribution2(generator);
+		double j = 1 - 2 * rng.Uniform1();
 		double r = std::sqrt(1 - j * j);
-		double theta = 2 * PI * distribution2(generator);
+		double theta = 2 * PI * rng.Uniform1();
 		gradientTable_[i]   = r * std::cos(theta);
 		gradientTable_[i+1] = r * std::sin(theta);
 		gradientTable_[i+2] = j;

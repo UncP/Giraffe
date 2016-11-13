@@ -1,0 +1,26 @@
+Camera Perspective Position 0 0 0 Direction 0 0 -1.0 512 512 90
+Sampler Uniform
+
+Texture t1 ConstantTexture Color 0.75 0.75 0.75
+Texture t2 ConstantTexture Color 0.25 0.25 0.75
+Texture t3 ConstantTexture Color 0.75 0.25 0.25
+
+Texture tt1 ConstantTexture Color 0.999 0.999 0.999
+
+Material m1 Diffuse t1
+Material m2 Diffuse t2
+Material m3 Diffuse t3
+
+Material mm1 Mirror tt1
+Material mm2 Refract tt1
+
+Object s1 Sphere Position -35 -42 -180.0 18 mm1
+Object s2 Sphere Position 38  -45 -150.0 15 mm2
+
+Object p1 Plane Position 0  -60 0   Normal  0  1  0  m1
+Object p2 Plane Position 0   60 0   Normal  0 -1  0  m1
+Object p3 Plane Position 0   0 -225 Normal  0  0  1  m1
+Object p4 Plane Position -70 0  0   Normal  1  0  0  m2
+Object p5 Plane Position 70  0  0   Normal -1  0  0  m3
+
+Light l1 AreaLight Position 0 59.99 -160 Direction 0 -1 0 Intensity 4096 4096 4096 90

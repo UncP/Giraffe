@@ -23,16 +23,21 @@ class Cylinder : public Object
 
 		bool intersect(const Ray &, Isect &) const override;
 
+		void computeBox(std::vector<double> &, std::vector<double> &,
+			const Vector3d *) const override;
+
+		bool hit(const Ray &ray, const double &distance, const Object *obj) const override;
+
 		std::ostream& print(std::ostream &os) const override {
-			return os << "cylinder\n" << center1_ << center2_ << radis_ << std::endl;
+			return os << "cylinder\n" << center1_ << center2_ << radius_ << std::endl;
 		}
 
 	private:
 		Point3d   center1_;
 		Point3d   center2_;
-		double    radis_;
-		double    radis2_;
-		double    inv2radis_;
+		double    radius_;
+		double    radius2_;
+		double    inv2radius_;
 		double    tmax_;
 		Vector3d  axis_;
 		const Material *material_;

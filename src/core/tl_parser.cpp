@@ -23,6 +23,7 @@
 #include "../texture/bump_brick.hpp"
 #include "../texture/image.hpp"
 #include "../texture/spot.hpp"
+#include "../texture/cellular.hpp"
 
 // #include "../material/diffuse.hpp"
 // #include "../material/mirror.hpp"
@@ -222,14 +223,20 @@ void TracingLanguageParser::findCamera()
 	std::string s;
 	str_ >> s;
 	assert(s == "Perspective");
+	double radius = 0;
+	double focal_distance = 0;
 	Point3d position = findPosition();
 	Vector3d direction = findVector();
 	int width = findInteger();
 	int height = findInteger();
 	double fov = findDouble();
-	assert(str_.eof());
+	if (!str_.eof()) {
+		radius = findDouble();
+		focal_distance = findDouble();
+		assert(str_.eof());
+	}
 	camera_ = std::shared_ptr<Camera>(new PerspectiveCamera(position, direction, \
-		Point2i(width, height), Point2i(width, height), fov));
+		Point2i(width, height), Point2i(width, height), fov, radius, focal_distance));
 }
 
 void TracingLanguageParser::findSampler()
@@ -318,6 +325,11 @@ std::shared_ptr<Texture> TracingLanguageParser::findTexture()
 		double radius = findDouble();
 		assert(str_.eof());
 		return std::shared_ptr<Texture>(new SpotTexture(color1, color2, radius));
+	} else if (s == "CellularTexture") {
+		Vector3d color = findVector();
+		int n_close = findInteger();
+		assert(str_.eof());
+		return std::shared_ptr<Texture>(new CellularTexture(color, n_close));
 	}
 	abort("unsupported texture");
 	assert(0);

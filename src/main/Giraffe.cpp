@@ -12,16 +12,11 @@
 #include "../core/tl_parser.hpp"
 #include "../core/path_tracer.hpp"
 
-int main(int argc, char **argv)
+int getArg(int argc, char **argv, char *file)
 {
-	using namespace Giraffe;
-
-	int screenWidth = 512, screenHeight = 512;
-
 	const char *dir = "../scene/";
 	const char *def = "default";
 
-	char file[128] = {0};
 	strcat(file, dir);
 	int samples = 1;
 	if (argc == 1) {
@@ -34,12 +29,24 @@ int main(int argc, char **argv)
 			strcat(file, def);
 		}
 	} else if (argc == 3) {
+		strcat(file, argv[1]);
 		samples = atoi(argv[2]);
 		if (!samples) samples = 1;
-		strcat(file, argv[1]);
 	}
 	strcat(file, ".Giraffe");
+	return samples;
+}
+
+int main(int argc, char **argv)
+{
+	using namespace Giraffe;
+
+	int screenWidth = 512, screenHeight = 512;
+
 	TracingLanguageParser parser;
+
+	char file[128] = {0};
+	int samples = getArg(argc, argv, file);
 
 	Scene *scene = parser.parse(file);
 

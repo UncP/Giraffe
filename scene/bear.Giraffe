@@ -1,0 +1,50 @@
+Camera Perspective Position 0 0 0 Direction 0 0 -1.0 512 512 90
+Sampler Uniform
+
+Texture t1 ConstantTexture Color 0.75 0.75 0.75
+Texture t2 ConstantTexture Color 0.75 0.25 0.25
+Texture t3 ConstantTexture Color 0.25 0.75 0.25
+
+Material m1 Diffuse t1
+Material m2 Diffuse t2
+Material m3 Diffuse t3
+
+Texture tt1 ConstantTexture Color 0.99 0.99 0.99
+Texture tt2 ConstantTexture Color 0.25 0.25 0.7
+Texture tt3 ConstantTexture Color 0.3 0.3 0.3
+Texture tt4 ConstantTexture Color 0.8 0.8 0.8
+Texture tt5 ConstantTexture Color 0.15 0.15 0.15
+Texture tt6 ConstantTexture Color 0.9 0.2 0.2
+Texture tt7 ConstantTexture Color 0.2 0.2 0.2
+
+Material mm1 Mirror tt1
+Material mm2 Diffuse tt2
+Material mm3 Diffuse tt3
+Material mm4 Diffuse tt4
+Material mm5 Diffuse tt5
+Material mm6 Diffuse tt6
+Material mm7 Diffuse tt7
+
+Object c1 Cylinder Position -10 -60 -145 Position -10 -52 -145 35 mm1
+Object s1 Sphere Position  -15  -25 -160.0  15   mm4
+Object s2 Sphere Position  -24  -33 -151.0  6    mm3
+Object s3 Sphere Position  -4   -35 -160.0  6    mm3
+Object s4 Sphere Position  -23.5 -17 -148.0  6   mm3
+Object s5 Sphere Position  -2   -20  -158.0  6   mm3
+Object s6 Sphere Position  -9   -2  -160.0   18  mm4
+Object s7 Sphere Position -15   10.3 -147.0  6   mm7
+Object s8 Sphere Position  4     9   -156.0  6   mm7
+Object s9 Sphere Position -6.5  0.3  -143.6  3   mm5
+Object sa Sphere Position  2.5  0 -147.5     3   mm5
+Object c2 Cylinder Position -3 -7 -150 Position 4 -10 -132 1.8 mm6
+Object sb Sphere Position  -0.8 -13.3 -149.8 2   mm2
+
+Accelerate a1 s1 s2 s3 s4 s5 s6 s7 s8 s9 sa sb
+
+Object p1 Plane Position 0  -60 0   Normal  0  1  0  m1
+Object p2 Plane Position 0   60 0   Normal  0 -1  0  m1
+Object p3 Plane Position 0   0 -225 Normal  0  0  1  m1
+Object p4 Plane Position -70 0  0   Normal  1  0  0  m2
+Object p5 Plane Position 70  0  0   Normal -1  0  0  m3
+
+Light l1 DirectionalLight Direction -0.3 0.3 -1 Intensity 0.8 0.8 0.8

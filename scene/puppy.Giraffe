@@ -1,29 +1,43 @@
-Texture wall1 ConstantTexture Color 0.75 0.75 0.75
-Texture wall2 ConstantTexture Color 0.25 0.25 0.75
-Texture wall3 ConstantTexture Color 0.75 0.25 0.25
+Camera Perspective Position 0 0 0 Direction 0 0 -1.0 512 512 90
+Sampler Uniform
 
-Texture t1 ConstantTexture Color 0.999 0.999 0.999
-Texture t2 ConstantTexture Color 0.3 0.3 0.3
-Texture t3 ConstantTexture Color 0.15 0.15 0.15
-Texture t4 ConstantTexture Color 0.2 0.8 0.2
-Texture t5 StripeTexture Color 0.8 0.8 0.1 Color 0.7 0.7 0.7 Xaxis 0.5
+Texture t1 ConstantTexture Color 0.75 0.75 0.75
+Texture t2 ConstantTexture Color 0.25 0.25 0.75
+Texture t3 ConstantTexture Color 0.75 0.25 0.25
 
-Object s1 Sphere Position   0   -35  -160.0  20   t1
-Object s2 Sphere Position   0   -41  -140    2.5  t4
-Object s3 Sphere Position   0   -31  -143.0  6    t2
-Object s4 Sphere Position  -9   -23  -144.5  3    t3
-Object s5 Sphere Position   9   -23  -144.5  3    t3
-Object s6 Sphere Position   0   -22  -160    10   t5
-Object s7 Sphere Position -9.5  -52  -152.0  8    t1
-Object s8 Sphere Position -13   -52  -170.0  8.5  t1
-Object s9 Sphere Position  9.5  -52  -152.0	 8    t1
-Object sa Sphere Position  13   -52  -170.0	 8.5  t1
+Texture tt1 ConstantTexture Color 0.999 0.999 0.999
+Texture tt2 ConstantTexture Color 0.3 0.3 0.3
+Texture tt3 ConstantTexture Color 0.15 0.15 0.15
+Texture tt4 ConstantTexture Color 0.2 0.8 0.2
+Texture tt5 StripeTexture Color 0.8 0.8 0.1 Color 0.7 0.7 0.7 Xaxis 0.5
 
-Object w1 Sphere Position  0   -100060  -160     1e5  wall1
-Object w2 Sphere Position  0    100060  -160     1e5  wall1
-Object w3 Sphere Position  0         0  -100225  1e5  wall1
-Object w4 Sphere Position -100070    0  -175     1e5  wall2
-Object w5 Sphere Position 100070     0  -175     1e5  wall3
+Material m1 Diffuse t1
+Material m2 Diffuse t2
+Material m3 Diffuse t3
 
-// Light l1 PointLight Position 0 40 -160 Intensity 2048 2048 2048
+Material mm1 Diffuse tt1
+Material mm2 Diffuse tt2
+Material mm3 Diffuse tt3
+Material mm4 Diffuse tt4
+Material mm5 Diffuse tt5
+
+Object s1 Sphere Position   0   -35  -160.0  20   mm1
+Object s2 Sphere Position   0   -41  -140    2.5  mm4
+Object s3 Sphere Position   0   -31  -143.0  6    mm2
+Object s4 Sphere Position  -9   -23  -144.5  3    mm3
+Object s5 Sphere Position   9   -23  -144.5  3    mm3
+Object s6 Sphere Position   0   -22  -160    10   mm5
+Object s7 Sphere Position -9.5  -52  -152.0  8    mm1
+Object s8 Sphere Position -13   -52  -170.0  8.5  mm1
+Object s9 Sphere Position  9.5  -52  -152.0	 8    mm1
+Object sa Sphere Position  13   -52  -170.0	 8.5  mm1
+
+Accelerate a1 s1 s2 s3 s4 s5 s6 s7 s8 s9 sa
+
+Object p1 Plane Position 0  -60 0   Normal  0  1  0  m1
+Object p2 Plane Position 0   60 0   Normal  0 -1  0  m1
+Object p3 Plane Position 0   0 -225 Normal  0  0  1  m1
+Object p4 Plane Position -70 0  0   Normal  1  0  0  m2
+Object p5 Plane Position 70  0  0   Normal -1  0  0  m3
+
 Light l1 AreaLight Position 0 59.99 -160 Direction 0 -1 0 Intensity 4096 4096 4096 90

@@ -5,6 +5,7 @@ Sampler Uniform
 //Texture t3 StripeTexture Color 0.3 0.4 0.5 Color 0.5 0.4 0.3 Xaxis 0.3 rotateZ 45
 //Texture t4 MarbleTexture Color 0.3 0.4 0.5 Color 0.5 0.5 0.5 Color 0.5 0.4 0.3  0.1
 //Texture t5 BrickTexture Color 0.3 0.4 0.5 Color 0.5 0.4 0.3 8e-5 3e-5 5e-6
+//Texture t7 SpotTexture Color 0.3 0.4 0.6 Color 0.6 0.4 0.3 0.2
 
 Texture t1 ConstantTexture Color 0.75 0.75 0.75
 Texture t2 ConstantTexture Color 0.75 0.25 0.25
@@ -12,7 +13,7 @@ Texture t3 ConstantTexture Color 0.25 0.75 0.25
 Texture t4 ConstantTexture Color 0.75 0.75 0.25
 Texture t5 GridTexture Color 0.8 0.8 0.2 Color 0.2 0.8 0.8 Xaxis 0.3
 Texture t6 BumpBrickTexture Color 0.8 0.8 0.2 Color 0.2 0.8 0.8 0.2 0.1 0.05 0.2
-Texture t7 SpotTexture Color 0.3 0.4 0.6 Color 0.6 0.4 0.3 0.2
+Texture t7 CellularTexture Color 0.8 0.2 0.8 4
 
 Material m1 Diffuse t1
 Material m2 Diffuse t2
