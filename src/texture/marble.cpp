@@ -34,4 +34,14 @@ Vector3d MarbleTexture::evaluate(Vertex &vertex) const
 	// return spline(clamp(2 * t + 0.75, 0, 1), 12, color);
 }
 
+std::shared_ptr<Texture> createMarbleTexture(Slice &slice)
+{
+	Vector3d color1 = slice.findVector();
+	Vector3d color2 = slice.findVector();
+	Vector3d color3 = slice.findVector();
+	double frequency = slice.findDouble();
+	assert(slice.eof());
+	return std::shared_ptr<Texture>(new MarbleTexture(color1, color2, color3, frequency));
+}
+
 } // namespace Giraffe

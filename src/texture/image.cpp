@@ -18,4 +18,12 @@ Vector3d ImageTexture::evaluate(Vertex &vertex) const
 	return image_[uu + vv * width_];
 }
 
+std::shared_ptr<Texture> createImageTexture(Slice &slice)
+{
+	std::string s(slice.findString());
+	double frequency = slice.findDouble();
+	assert(slice.eof());
+	return std::shared_ptr<Texture>(new ImageTexture(s.c_str(), frequency));
+}
+
 } // namespace Giraffe

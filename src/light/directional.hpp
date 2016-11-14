@@ -31,6 +31,8 @@ class DirectionalLight : public Light
 		Vector3d direction_;
 };
 
+std::shared_ptr<Light> createDirectionalLight(Slice &slice);
+
 } // namespace Giraffe
 
 #endif /* _DIRECTIONAL_LIGHT_HPP_ */

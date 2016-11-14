@@ -32,6 +32,8 @@ class StripeTexture : public Texture
 		double 	 factor_;
 };
 
+std::shared_ptr<Texture> createStripeTexture(Slice &slice);
+
 } // namepsace Giraffe
 
 #endif /* _STRIPE_TEXTURE_HPP_ */

@@ -39,6 +39,8 @@ class BrickTexture : public Texture
 		Matrix2  transform_;
 };
 
+std::shared_ptr<Texture> createBrickTexture(Slice &slice);
+
 } // namespace Giraffe
 
 #endif /* _BRICK_TEXTURE_HPP_ */

@@ -37,6 +37,8 @@ class TextureLight : public Light
 		double   inv2radius_;
 };
 
+std::shared_ptr<TextureLight> createTextureLight(Slice &slice);
+
 } // namespace Giraffe
 
 #endif /* _TEXTURE_LIGHT_HPP_ */

@@ -30,6 +30,8 @@ class MarbleTexture : public Texture
 		double   frequency_;
 };
 
+std::shared_ptr<Texture> createMarbleTexture(Slice &slice);
+
 } // namespace Giraffe
 
 #endif /* _MARBLE_TEXUTRE_HPP_ */

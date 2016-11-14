@@ -30,6 +30,8 @@ class PointLight : public Light
 		Point3d  position_;
 };
 
+std::shared_ptr<Light> createPointLight(Slice &slice);
+
 } // namespace Giraffe
 
 #endif /* _POINT_LIGHT_HPP_ */

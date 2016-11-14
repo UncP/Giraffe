@@ -10,6 +10,10 @@
 #ifndef _SAMPLER_HPP_
 #define _SAMPLER_HPP_
 
+#include <cassert>
+#include <memory>
+
+#include "../utility/slice.hpp"
 #include "../math/point.hpp"
 #include "../utility/random.hpp"
 

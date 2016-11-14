@@ -31,6 +31,8 @@ class GridTexture : public Texture
 		double 	 factor_;
 };
 
+std::shared_ptr<Texture> createGirdTexture(Slice &slice);
+
 } // namespace Giraffe
 
 #endif /* _GRID_TEXTURE_HPP_ */

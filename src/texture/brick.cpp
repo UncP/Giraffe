@@ -32,4 +32,15 @@ Vector3d BrickTexture::evaluate(Vertex &vertex) const
 	return mix(color1_, color2_, w * h);
 }
 
+std::shared_ptr<Texture> createBrickTexture(Slice &slice)
+{
+	Vector3d color1 = slice.findVector();
+	Vector3d color2 = slice.findVector();
+	double width = slice.findDouble();
+	double height = slice.findDouble();
+	double interval = slice.findDouble();
+	assert(slice.eof());
+	return std::shared_ptr<Texture>(new BrickTexture(color1, color2, width, height, interval));
+}
+
 } // namespace Giraffe

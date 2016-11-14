@@ -40,6 +40,50 @@ void Cylinder::computeBox(std::vector<double> &near, std::vector<double> &far,
 
 bool Cylinder::hit(const Ray &ray, const double &distance, const Object *obj) const
 {
+	Vector3d ab(center1_ - ray.origin());
+	Vector3d n(normalize(cross(axis_, ray.direction())));
+	double l_to_l = std::fabs(dot(ab, n));
+	if (l_to_l > radius_) return false;
+
+	double ad = dot(axis_, ray.direction());
+	double fac = 1.0 / ad;
+	double t1 = dot(center1_ - ray.origin(), axis_) * fac;
+	double t2 = dot(center2_ - ray.origin(), axis_) * fac;
+	if (t1 < 0 && t2 < 0) return false;
+
+	double aa = 1.0 / dot(axis_, axis_);
+	Vector3d co(center1_ - ray.origin());
+	Vector3d M = (ad * aa) * axis_ - ray.direction();
+	double coa = dot(co, axis_);
+	Vector3d N = co - ((coa * aa) * axis_);
+
+	double A = dot(M, M);
+	double C = dot(N, N) - radius2_;
+	double B = dot(M, N);
+	double delta = B * B - A * C;
+	if (delta < 0) return false;
+
+	B = -B;
+	A = 1.0 / A;
+	delta = std::sqrt(delta);
+	double d1 = (B + delta) * A;
+	double d2 = (B - delta) * A;
+	if (d1 < 0) return false;
+	double dis = d2 < 0 ? d1 : d2;
+
+	double t = (dis * ad - coa) * aa;
+	if ((tmax_ * t) < 0 || t > tmax_) {
+		bool flag = t1 < t2;
+		double dis = flag ? t1 : t2;
+		const Point3d &c = flag ? center1_ : center2_;
+		Point3d hitPos = ray.origin() + ray.direction() * dis;
+		if ((hitPos - c).length2() <= radius2_ && dis < distance && this != obj)
+			return true;
+		return false;
+	}
+
+	if (dis < distance && this != obj)
+		return true;
 	return false;
 }
 

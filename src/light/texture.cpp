@@ -44,4 +44,9 @@ Vector3d TextureLight::radiance(const Isect &isect) const
 	return mult(intensity_, texture_->evaluate(vertex));
 }
 
+std::shared_ptr<TextureLight> createTextureLight(Slice &slice)
+{
+	return nullptr;
+}
+
 } // namespace Giraffe

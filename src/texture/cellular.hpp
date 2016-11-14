@@ -24,8 +24,7 @@ class CellularTexture : public Texture
 		enum Combine {kDistance, kClosest};
 
 		CellularTexture(const Vector3d &color, int n_close,
-			Distance type = kEuclidean, Combine combine = kDistance)
-		:color_(color), n_close_(n_close), type_(type), combine_(kClosest) { }
+			Distance type = kEuclidean, Combine combine = kDistance);
 
 		Vector3d evaluate(Vertex &vertex) const override;
 
@@ -58,6 +57,8 @@ class CellularTexture : public Texture
 		Distance type_;
 		Combine  combine_;
 };
+
+std::shared_ptr<Texture> createCellularTexture(Slice &slice);
 
 } // namespace Giraffe
 

@@ -36,5 +36,14 @@ Vector3d AreaLight::radiance(const Isect &isect) const
 	return intensity_ * (1.0 / direction.length2());
 }
 
+std::shared_ptr<Light> createAreaLight(Slice &slice)
+{
+	Point3d position = slice.findPosition();
+	Vector3d direction = slice.findVector();
+	Vector3d intensity = slice.findVector();
+	double angle = slice.findDouble();
+	assert(slice.eof());
+	return std::shared_ptr<Light>(new AreaLight(position, direction, intensity, angle));
+}
 
 } // namespace Giraffe

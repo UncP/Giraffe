@@ -24,4 +24,12 @@ Vector3d DirectionalLight::radiance(const Isect &isect) const
 	return intensity_;
 }
 
+std::shared_ptr<Light> createDirectionalLight(Slice &slice)
+{
+	Vector3d direction = slice.findVector();
+	Vector3d intensity = slice.findVector();
+	assert(slice.eof());
+	return std::shared_ptr<Light>(new DirectionalLight(direction, intensity));
+}
+
 } // namespace Giraffe

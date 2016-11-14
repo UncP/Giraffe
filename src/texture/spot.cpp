@@ -22,4 +22,13 @@ Vector3d SpotTexture::evaluate(Vertex &vertex) const
 	return mix(color1_, color2_, (x * x + y * y) > (radius_ * radius_));
 }
 
+std::shared_ptr<Texture> createSpotTexture(Slice &slice)
+{
+	Vector3d color1 = slice.findVector();
+	Vector3d color2 = slice.findVector();
+	double radius = slice.findDouble();
+	assert(slice.eof());
+	return std::shared_ptr<Texture>(new SpotTexture(color1, color2, radius));
+}
+
 } // namespace Giraffe

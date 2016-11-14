@@ -11,5 +11,12 @@
 
 namespace Giraffe {
 
+std::shared_ptr<Texture> createConstantTexture(Slice &slice)
+{
+	Vector3d color = slice.findVector();
+	assert(slice.eof());
+	return std::shared_ptr<Texture>(new ConstantTexture(color));
+}
+
 
 } // namespace Giraffe

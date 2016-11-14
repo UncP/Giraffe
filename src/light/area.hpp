@@ -33,6 +33,8 @@ class AreaLight : public Light
 		double   cos_max_;
 };
 
+std::shared_ptr<Light> createAreaLight(Slice &slice);
+
 } // namespace Giraffe
 
 #endif /* _AREA_LIGHT_HPP_ */

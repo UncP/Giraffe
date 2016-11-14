@@ -11,5 +11,10 @@
 
 namespace Giraffe {
 
+std::shared_ptr<Sampler> createUniformSampler(Slice &slice)
+{
+	assert(slice.eof());
+	return std::shared_ptr<Sampler>(new UniformSampler());
+}
 
 } // namespace Giraffe

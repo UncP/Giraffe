@@ -149,4 +149,17 @@ Vector3d BumpBrickTexture::evaluate(Vertex &vertex) const
 	return mix(color1_, color2_, gap);
 }
 
+std::shared_ptr<Texture> createBumpBrickTexture(Slice &slice)
+{
+	Vector3d color1 = slice.findVector();
+	Vector3d color2 = slice.findVector();
+	double width = slice.findDouble();
+	double height = slice.findDouble();
+	double interval = slice.findDouble();
+	double gradient = slice.findDouble();
+	assert(slice.eof());
+	return std::shared_ptr<Texture>(
+		new BumpBrickTexture(color1, color2, width, height, interval, gradient));
+}
+
 } // namespace Giraffe

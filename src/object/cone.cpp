@@ -21,12 +21,14 @@ bool Cone::intersect(const Ray &ray, Isect &isect) const
 	Point3d hitPos = ray.origin() + dis * ray.direction();
 
 	// 与底面相交
-	if (ad > 0 && (hitPos - center_).length2() < radius2_ && dis < isect.distance()) {
+	if (ad > 0 && (hitPos - center_).length2() <= radius2_ && dis < isect.distance()) {
 		isect.update(dis, this, hitPos, -axis_, Point2d(), material_);
 		return true;
 	}
 
+	// Point3d x = center_ + normalize(center_ - hitPos) * radius_;
 
+	// x + t(top - x) + o
 	return false;
 }
 

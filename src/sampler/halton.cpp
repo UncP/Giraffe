@@ -11,5 +11,13 @@
 
 namespace Giraffe {
 
+std::shared_ptr<Sampler> createHaltonSampler(Slice &slice)
+{
+	int num1 = slice.findInteger();
+	int num2 = slice.findInteger();
+	assert(slice.eof());
+	return std::shared_ptr<Sampler>(new HaltonSampler(num1, num2));
+}
+
 
 } // namespace Giraffe

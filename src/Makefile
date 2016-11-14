@@ -5,7 +5,7 @@ LDFLAGS  = -lpng
 DIR      = math utility core accelerator sampler object texture light
 OBJ      = math/constant.o math/vector.o math/point.o math/ray.o math/vertex.o math/matrix.o \
            utility/random.o utility/isect.o \
-           utility/image_io.o \
+           utility/image_io.o utility/slice.o \
            core/object.o core/noise.o core/texture.o core/sampler.o core/material.o \
            core/light.o core/camera.o core/scene.o \
            accelerator/box.o accelerator/bvh.o \

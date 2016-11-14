@@ -10,6 +10,11 @@
 #ifndef _LIGHT_HPP_
 #define _LIGHT_HPP_
 
+#include <cassert>
+#include <memory>
+
+#include "../utility/slice.hpp"
+
 #include "../math/point.hpp"
 #include "../math/vector.hpp"
 #include "../utility/isect.hpp"

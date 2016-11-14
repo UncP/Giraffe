@@ -41,4 +41,10 @@ index1D_(0), index2D_(0)
 	}
 }
 
+std::shared_ptr<Sampler> createStratifiedSampler(Slice &slice)
+{
+	assert(slice.eof());
+	return std::shared_ptr<Sampler>(new StratifiedSampler(512, 512));
+}
+
 } // namespace Giraffe

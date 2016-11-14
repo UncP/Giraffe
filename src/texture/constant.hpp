@@ -27,6 +27,8 @@ class ConstantTexture : public Texture
 		Vector3d color_;
 };
 
+std::shared_ptr<Texture> createConstantTexture(Slice &slice);
+
 } // namespace Giraffe
 
 #endif /* _CONSTANT_TEXTURE_HPP_ */

@@ -39,6 +39,8 @@ class BumpBrickTexture : public Texture
 		void showHeightMap();
 };
 
+std::shared_ptr<Texture> createBumpBrickTexture(Slice &slice);
+
 } // namespace Giraffe
 
 #endif /* _BUMP_BRICK_TEXTURE_HPP_ */

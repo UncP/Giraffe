@@ -26,6 +26,8 @@ class UniformSampler : public Sampler
 		}
 };
 
+std::shared_ptr<Sampler> createUniformSampler(Slice &slice);
+
 } // namespace Giraffe
 
 #endif /* _UNIFORM_SAMPLER_HPP_ */

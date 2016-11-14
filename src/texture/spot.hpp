@@ -28,6 +28,8 @@ class SpotTexture : public Texture
 		double   radius_;
 };
 
+std::shared_ptr<Texture> createSpotTexture(Slice &slice);
+
 } // namespace Giaffe
 
 #endif /* _SPOT_TEXTURE_HPP_ */

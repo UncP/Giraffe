@@ -35,6 +35,8 @@ class ImageTexture : public Texture
 		Vector3d *image_;
 };
 
+std::shared_ptr<Texture> createImageTexture(Slice &slice);
+
 } // namespace Giraffe
 
 #endif /* _IMAGE_TEXTURE_HPP_ */

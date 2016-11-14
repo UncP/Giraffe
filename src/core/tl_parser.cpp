@@ -50,20 +50,6 @@
 
 namespace Giraffe {
 
-void TracingLanguageParser::check() const
-{
-	if (str_.fail()) {
-		std::cout << "line " << line_ << ": syntax error:(\n";
-		exit(-1);
-	}
-}
-
-void TracingLanguageParser::abort(const std::string &error, const std::string &s) const
-{
-	std::cerr << "line " << line_ << ": " << error << s << " :(\n";
-	exit(-1);
-}
-
 Scene* TracingLanguageParser::generateScene()
 {
 	if (!objects_.size()) abort("no objects");
@@ -75,13 +61,11 @@ Scene* TracingLanguageParser::generateScene()
 			if (accelerated_.find(p.first) == accelerated_.end())
 				objects.push_back(p.second.get());
 	});
-
 	std::vector<Light *> lights;
 	std::for_each(lights_.begin(), lights_.end(),
 		[&lights] (const std::pair<std::string, std::shared_ptr<Light>> &p) {
 			lights.push_back(p.second.get());
 	});
-
 	return new Scene(sampler_.get(), camera_.get(), objects, lights);
 }
 
@@ -89,29 +73,27 @@ Scene* TracingLanguageParser::parse(const char *file)
 {
 	std::ifstream in(file);
 	if (!in.is_open()) abort("文件打开失败 ", std::string(file));
-
 	std::string str;
 	std::getline(in, str);
 	for (; !in.eof() || str.size(); ++line_, str.clear(), std::getline(in, str)) {
 		if (!str.size() || str.find("//") != std::string::npos)
 			continue;
-		str_ = std::istringstream(str);
-		std::string s;
-		str_ >> s;
+		slice_ = Slice(str, line_);
+		std::string s(slice_.findString());
 		if (s == "Texture") {
-			str_ >> s;
+			s = slice_.findString();
 			if (textures_.find(s) != textures_.end()) abort("existed texture ", s);
 			textures_.insert({s, findTexture()});
 		} else if (s == "Material") {
-			str_ >> s;
+			s = slice_.findString();
 			if (materials_.find(s) != materials_.end()) abort("existed material ", s);
 			materials_.insert({s, findMaterial()});
 		} else if (s == "Object") {
-			str_ >> s;
+			s = slice_.findString();
 			if (objects_.find(s) != objects_.end()) abort("existed object ", s);
 			objects_.insert({s, findObject()});
 		} else if (s == "Light") {
-			str_ >> s;
+			s = slice_.findString();
 			if (lights_.find(s) != lights_.end()) abort("existed light ", s);
 				lights_.insert({s, findLight()});
 		} else if (s == "Camera") {
@@ -119,226 +101,68 @@ Scene* TracingLanguageParser::parse(const char *file)
 		} else if (s == "Sampler") {
 			findSampler();
 		} else if (s == "Accelerate") {
-			str_ >> s;
+			s = slice_.findString();
 			if (objects_.find(s) != objects_.end()) abort("conflicted name ", s);
 			if (accelerators_.find(s) != accelerators_.end()) abort("existed box ", s);
 			accelerators_.insert(s);
 			objects_.insert({s, findBox()});
 		} else {
-			abort("wrong type");
+			abort("wrong syntax ");
 		}
 	}
 	return generateScene();
 }
 
-Point3d TracingLanguageParser::findPosition()
-{
-	std::string s;
-	str_ >> s;
-	assert(s == "Position");
-	Point3d res;
-	str_ >> res.x_ >> res.y_ >> res.z_;
-	check();
-	return res;
-}
-
-Vector3d TracingLanguageParser::findVector()
-{
-	std::string s;
-	str_ >> s;
-	assert(s == "Normal" || s == "Color" || s == "Direction" || s == "Intensity");
-	Vector3d res;
-	str_ >> res.x_ >> res.y_ >> res.z_;
-	check();
-	return res;
-}
-
-std::string TracingLanguageParser::findString()
-{
-	std::string res;
-	str_ >> res;
-	if (res.size() < 3 || res[0] != '\"' || res[res.size() - 1] != '\"')
-		return std::string();
-	check();
-	return std::string(res.begin() + 1, res.end() - 1);
-}
-
-double TracingLanguageParser::findDouble()
-{
-	double res;
-	str_ >> res;
-	check();
-	return res;
-}
-
-int TracingLanguageParser::findInteger()
-{
-	int res;
-	str_ >> res;
-	check();
-	return res;
-}
-
-int TracingLanguageParser::findAxis()
-{
-	std::string s;
-	str_ >> s;
-	if (s == "Xaxis") return Xaxis;
-	if (s == "Yaxis") return Yaxis;
-	if (s == "Zaxis") return Zaxis;
-	abort("find axis failed");
-	return 0;
-}
-
-bool TracingLanguageParser::findBool()
-{
-	std::string s;
-	str_ >> s;
-	if (s == "true") return true;
-	if (s == "false") return false;
-	abort("find bool failed");
-	return 0;
-}
-
-Matrix TracingLanguageParser::findMatrix()
-{
-	std::string s;
-	str_ >> s;
-	Matrix (*transform)(double) = nullptr;
-	if (s == "rotateX")
-		transform = rotateX;
-	else if (s == "rotateY")
-		transform = rotateY;
-	else if (s == "rotateZ")
-		transform = rotateZ;
-	else
-		abort("find matrix failed");
-	double angle = findDouble();
-	check();
-	return transform(angle);
-}
-
 void TracingLanguageParser::findCamera()
 {
-	std::string s;
-	str_ >> s;
-	assert(s == "Perspective");
-	double radius = 0;
-	double focal_distance = 0;
-	Point3d position = findPosition();
-	Vector3d direction = findVector();
-	int width = findInteger();
-	int height = findInteger();
-	double fov = findDouble();
-	if (!str_.eof()) {
-		radius = findDouble();
-		focal_distance = findDouble();
-		assert(str_.eof());
-	}
-	camera_ = std::shared_ptr<Camera>(new PerspectiveCamera(position, direction, \
-		Point2i(width, height), Point2i(width, height), fov, radius, focal_distance));
+	assert(slice_.findString() == "Perspective");
+	camera_ = createPerspectiveCamera(slice_);
 }
 
 void TracingLanguageParser::findSampler()
 {
 	std::string s;
-	str_ >> s;
-	if (s == "Uniform") {
-		assert(str_.eof());
-		sampler_ = std::shared_ptr<Sampler>(new UniformSampler());
-	} else if (s == "Stratified") {
-		assert(str_.eof());
-		sampler_ = std::shared_ptr<Sampler>(new StratifiedSampler(512, 512));
-	} else if (s == "Halton") {
-		int num1 = findInteger();
-		int num2 = findInteger();
-		assert(str_.eof());
-		sampler_ = std::shared_ptr<Sampler>(new HaltonSampler(num1, num2));
-	} else {
+	s = slice_.findString();
+	if (s == "Uniform")
+		sampler_ = createUniformSampler(slice_);
+	else if (s == "Stratified")
+		sampler_ = createStratifiedSampler(slice_);
+	else if (s == "Halton")
+		sampler_ = createHaltonSampler(slice_);
+	else
 		abort("unsupported sampler");
-	}
 }
 
 std::shared_ptr<Texture> TracingLanguageParser::findTexture()
 {
-	std::string s;
-	str_ >> s;
-	Matrix matrix = Matrix::Identity;
-	if (s == "ConstantTexture") {
-		Vector3d color = findVector();
-		assert(str_.eof());
-		return std::shared_ptr<Texture>(new ConstantTexture(color));
-	} else if (s == "StripeTexture") {
-		Vector3d color1 = findVector();
-		Vector3d color2 = findVector();
-		int axis = findAxis();
-		double factor = findDouble();
-		if (!str_.eof()) {
-			matrix = findMatrix();
-			assert(str_.eof());
-		}
-		return std::shared_ptr<Texture>(new StripeTexture(color1, color2, axis, factor, matrix));
-	} else if (s == "GridTexture") {
-		Vector3d color1 = findVector();
-		Vector3d color2 = findVector();
-		int axis = findAxis();
-		double factor = findDouble();
-		if (!str_.eof()) {
-			matrix = findMatrix();
-			assert(str_.eof());
-		}
-		return std::shared_ptr<Texture>(new GridTexture(color1, color2, axis, factor, matrix));
-	} else if (s == "MarbleTexture") {
-		Vector3d color1 = findVector();
-		Vector3d color2 = findVector();
-		Vector3d color3 = findVector();
-		double frequency = findDouble();
-		assert(str_.eof());
-		return std::shared_ptr<Texture>(new MarbleTexture(color1, color2, color3, frequency));
-	} else if (s == "BrickTexture") {
-		Vector3d color1 = findVector();
-		Vector3d color2 = findVector();
-		double width = findDouble();
-		double height = findDouble();
-		double interval = findDouble();
-		assert(str_.eof());
-		return std::shared_ptr<Texture>(new BrickTexture(color1, color2, width, height, interval));
-	} else if (s == "ImageTexture") {
-		std::string file = findString();
-		if (str_.fail() || !file.size()) return nullptr;
-		double frequency = findDouble();
-		assert(str_.eof());
-		return std::shared_ptr<Texture>(new ImageTexture(file.c_str(), frequency));
-	} else if (s == "BumpBrickTexture") {
-		Vector3d color1 = findVector();
-		Vector3d color2 = findVector();
-		double width = findDouble();
-		double height = findDouble();
-		double interval = findDouble();
-		double gradient = findDouble();
-		assert(str_.eof());
-		return std::shared_ptr<Texture>(
-			new BumpBrickTexture(color1, color2, width, height, interval, gradient));
-	} else if (s == "SpotTexture") {
-		Vector3d color1 = findVector();
-		Vector3d color2 = findVector();
-		double radius = findDouble();
-		assert(str_.eof());
-		return std::shared_ptr<Texture>(new SpotTexture(color1, color2, radius));
-	} else if (s == "CellularTexture") {
-		Vector3d color = findVector();
-		int n_close = findInteger();
-		assert(str_.eof());
-		return std::shared_ptr<Texture>(new CellularTexture(color, n_close));
-	}
+	std::string s(slice_.findString());
+	if (s == "ConstantTexture")
+		return createConstantTexture(slice_);
+	else if (s == "StripeTexture")
+		return createStripeTexture(slice_);
+	else if (s == "GridTexture")
+		return createGirdTexture(slice_);
+	else if (s == "MarbleTexture")
+		return createMarbleTexture(slice_);
+	else if (s == "BrickTexture")
+		return createBrickTexture(slice_);
+	else if (s == "ImageTexture")
+		return createImageTexture(slice_);
+	else if (s == "BumpBrickTexture")
+		return createBumpBrickTexture(slice_);
+	else if (s == "SpotTexture")
+		return createSpotTexture(slice_);
+	else if (s == "CellularTexture")
+		return createCellularTexture(slice_);
+	else if (s == "NoiseTexture")
+		return createNoiseTexture(slice_);
 	abort("unsupported texture");
-	assert(0);
+	return nullptr;
 }
 
 std::shared_ptr<Material> TracingLanguageParser::findMaterial()
 {
-	std::string s;
-	str_ >> s;
+	std::string s(slice_.findString());
 	Material::Type type;
 	double roughness = 0.0;
 	int pow_factor = 0;
@@ -355,52 +179,50 @@ std::shared_ptr<Material> TracingLanguageParser::findMaterial()
 	} else if (s == "Halton") {
 		type = Material::kHalton;
 	} else {
-		abort("unsupported material");
+		abort("unsupported material ");
 	}
-	std::string t;
-	str_ >> t;
+	std::string t(slice_.findString());
 	auto p = textures_.find(t);
 	if (p == textures_.end()) abort("texture not existed");
 	const Texture *texture = p->second.get();
 	if (s == "Phong")
-		pow_factor = findInteger();
+		pow_factor = slice_.findInteger();
 	else if (s == "Glossy" || s == "Retro")
-		roughness = findDouble();
-	assert(str_.eof());
+		roughness = slice_.findDouble();
+	assert(slice_.eof());
 	return std::shared_ptr<Material>(new Material(type, texture, roughness, pow_factor));
 }
 
 std::shared_ptr<Object> TracingLanguageParser::findObject()
 {
-	std::string s;
-	str_ >> s;
+	std::string s(slice_.findString());
 	if (s == "Plane") {
-		Point3d position = findPosition();
-		Vector3d normal = findVector();
-		str_ >> s;
+		Point3d position = slice_.findPosition();
+		Vector3d normal = slice_.findVector();
+		s = slice_.findString();
 		auto p = materials_.find(s);
 		if (p == materials_.end())
 			abort("material not existed");
-		assert(str_.eof());
+		assert(slice_.eof());
 		return std::shared_ptr<Object>(new Plane(position, normal, p->second.get()));
 	} else if (s == "Sphere") {
-		Point3d center = findPosition();
-		double radius = findDouble();
-		str_ >> s;
+		Point3d center = slice_.findPosition();
+		double radius = slice_.findDouble();
+		s = slice_.findString();
 		auto p = materials_.find(s);
 		if (p == materials_.end())
 			abort("material not existed");
-		assert(str_.eof());
+		assert(slice_.eof());
 		return std::shared_ptr<Object>(new Sphere(center, radius, p->second.get()));
 	} else if (s == "Cylinder") {
-		Point3d center1 = findPosition();
-		Point3d center2 = findPosition();
-		double radius = findDouble();
-		str_ >> s;
+		Point3d center1 = slice_.findPosition();
+		Point3d center2 = slice_.findPosition();
+		double radius = slice_.findDouble();
+		s = slice_.findString();
 		auto p = materials_.find(s);
 		if (p == materials_.end())
 			abort("material not existed");
-		assert(str_.eof());
+		assert(slice_.eof());
 		return std::shared_ptr<Object>(new Cylinder(center1, center2, radius, p->second.get()));
 	}
 	assert(0);
@@ -408,33 +230,23 @@ std::shared_ptr<Object> TracingLanguageParser::findObject()
 
 std::shared_ptr<Light> TracingLanguageParser::findLight()
 {
-	std::string s;
-	str_ >> s;
-	if (s == "PointLight") {
-		Point3d position = findPosition();
-		Vector3d intensity = findVector();
-		assert(str_.eof());
-		return std::shared_ptr<Light>(new PointLight(position, intensity));
-	} else if (s == "DirectionalLight") {
-		Vector3d direction = findVector();
-		Vector3d intensity = findVector();
-		return std::shared_ptr<Light>(new DirectionalLight(direction, intensity));
-	} else if (s == "AreaLight") {
-		Point3d position = findPosition();
-		Vector3d direction = findVector();
-		Vector3d intensity = findVector();
-		double angle = findDouble();
-		return std::shared_ptr<Light>(new AreaLight(position, direction, intensity, angle));
-	} else if (s == "TextureLight") {
-		Point3d position = findPosition();
-		Vector3d direction = findVector();
-		Vector3d intensity = findVector();
-		double angle = findDouble();
-		str_ >> s;
+	std::string s(slice_.findString());
+	if (s == "PointLight")
+		return createPointLight(slice_);
+	else if (s == "DirectionalLight")
+		return createDirectionalLight(slice_);
+	else if (s == "AreaLight")
+		return createAreaLight(slice_);
+	else if (s == "TextureLight") {
+		Point3d position = slice_.findPosition();
+		Vector3d direction = slice_.findVector();
+		Vector3d intensity = slice_.findVector();
+		double angle = slice_.findDouble();
+		s = slice_.findString();
 		auto p = textures_.find(s);
 		if (p == textures_.end())
 			abort("texture not existed");
-		assert(str_.eof());
+		assert(slice_.eof());
 		return std::shared_ptr<Light>(new TextureLight(position, direction, intensity, angle, \
 			p->second.get()));
 	}
@@ -444,10 +256,9 @@ std::shared_ptr<Light> TracingLanguageParser::findLight()
 std::shared_ptr<Object> TracingLanguageParser::findBox()
 {
 	std::string name;
-	std::vector<Object *> vec;
 	std::shared_ptr<Object> box = std::shared_ptr<Object>(new AABB());
-	for (; !str_.eof();) {
-		str_ >> name;
+	for (; !slice_.eof();) {
+		name = slice_.findString();
 		auto p = objects_.find(name);
 		if (p == objects_.end()) abort("objects not existed");
 		accelerated_.insert(name);

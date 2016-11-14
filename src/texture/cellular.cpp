@@ -23,13 +23,16 @@ int CellularTexture::PoissonCount[256] = {
 2,5,2,3,3,2,0,2,1,1,4,2,1,3,2,1,2,2,3,2,5,5,3,4,5,5,2,4,4,5,3,2,2,2,
 1,4,2,3,3,4,2,5,4,2,4,2,2,2,4,5,3,2};
 
+CellularTexture::CellularTexture(const Vector3d &color, int n_close, Distance type,
+Combine combine):color_(color), n_close_(n_close), type_(type), combine_(combine) { }
+
 double CellularTexture::distance(const Point3d &pos) const
 {
 	switch(type_) {
 		case kEuclidean:
-			return pos.x_ * pos.x_ + pos.y_ * pos.y_ + pos.z_ * pos.z_;
-		case kManhattan:
 			return fabs(pos.x_) + fabs(pos.y_) + fabs(pos.z_);
+		case kManhattan:
+			return pos.x_ * pos.x_ + pos.y_ * pos.y_ + pos.z_ * pos.z_;
 		case kSuperquadratic:
 			return pow(fabs(pos.x_), 3) + pow(fabs(pos.y_), 3) + pow(fabs(pos.z_), 3);
 		case kRadialManhattan:
@@ -165,6 +168,30 @@ void CellularTexture::addSample(const Point3i &ipos, const Point3d &fpos,
 	}
 	#undef next
 	#undef get
+}
+
+std::shared_ptr<Texture> createCellularTexture(Slice &slice)
+{
+	Vector3d color = slice.findVector();
+	int n_close = slice.findInteger();
+	std::string s(slice.findString());
+	CellularTexture::Distance distance = CellularTexture::kEuclidean;
+	CellularTexture::Combine combine = CellularTexture::kDistance;
+	if (s == "Euclidean")
+		distance = CellularTexture::kEuclidean;
+	else if (s == "Manhattan")
+		distance = CellularTexture::kManhattan;
+	else if (s == "Superquadratic")
+		distance = CellularTexture::kSuperquadratic;
+	else if (s == "Biased")
+		distance = CellularTexture::kBiased;
+	s = slice.findString();
+	if (s == "Distance")
+		combine = CellularTexture::kDistance;
+	if (s == "Closest")
+		combine = CellularTexture::kClosest;
+	assert(slice.eof());
+	return std::shared_ptr<Texture>(new CellularTexture(color, n_close, distance, combine));
 }
 
 } // namespace Giraffe

@@ -59,6 +59,8 @@ class HaltonSampler : public Sampler
 		double base_;
 };
 
+std::shared_ptr<Sampler> createHaltonSampler(Slice &slice);
+
 } // namespace Giraffe
 
 #endif /* _HALTON_SAMPLER_HPP_ */

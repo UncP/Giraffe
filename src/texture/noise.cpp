@@ -19,4 +19,13 @@ Vector3d NoiseTexture::evaluate(Vertex &vertex) const
 	return mix(color1_, color2_, t);
 }
 
+std::shared_ptr<Texture> createNoiseTexture(Slice &slice)
+{
+	Vector3d color1 = slice.findVector();
+	Vector3d color2 = slice.findVector();
+	double frequency = slice.findDouble();
+	assert(slice.eof());
+	return std::shared_ptr<Texture>(new NoiseTexture(color1, color2, frequency));
+}
+
 } // namespace Giraffe

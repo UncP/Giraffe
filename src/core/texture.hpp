@@ -10,6 +10,9 @@
 #ifndef _TEXTURE_HPP_
 #define _TEXTURE_HPP_
 
+#include <memory>
+
+#include "../utility/slice.hpp"
 #include "../math/vertex.hpp"
 #include "noise.hpp"
 

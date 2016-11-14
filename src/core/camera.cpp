@@ -100,4 +100,22 @@ Ray OrthographicCamera::computeRay(const double &x, const double &y) const
 }
 */
 
+std::shared_ptr<Camera> createPerspectiveCamera(Slice &slice)
+{
+	double radius = 0;
+	double focal_distance = 0;
+	Point3d position = slice.findPosition();
+	Vector3d direction = slice.findVector();
+	int width = slice.findInteger();
+	int height = slice.findInteger();
+	double fov = slice.findDouble();
+	if (!slice.eof()) {
+		radius = slice.findDouble();
+		focal_distance = slice.findDouble();
+		assert(slice.eof());
+	}
+	return std::shared_ptr<Camera>(new PerspectiveCamera(position, direction, \
+		Point2i(width, height), Point2i(width, height), fov, radius, focal_distance));
+}
+
 } // namespace Giraffe

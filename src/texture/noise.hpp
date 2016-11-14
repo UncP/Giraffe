@@ -28,6 +28,8 @@ class NoiseTexture : public Texture
 		double   frequency_;
 };
 
+std::shared_ptr<Texture> createNoiseTexture(Slice &slice);
+
 } // namespace Giraffe
 
 #endif /* _NOISE_TEXTURE_HPP_ */

@@ -10,6 +10,9 @@
 #ifndef _CAMERA_HPP_
 #define _CAMERA_HPP_
 
+#include <memory>
+
+#include "../utility/slice.hpp"
 #include "../math/matrix.hpp"
 #include "../math/ray.hpp"
 
@@ -58,6 +61,8 @@ class OrthographicCamera : public Camera
 	private:
 };
 */
+
+std::shared_ptr<Camera> createPerspectiveCamera(Slice &slice);
 
 } // namespace Giraffe
 

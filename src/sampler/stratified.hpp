@@ -37,6 +37,8 @@ class StratifiedSampler : public Sampler
 		std::vector<Point2d> array2D_;
 };
 
+std::shared_ptr<Sampler> createStratifiedSampler(Slice &slice);
+
 } // namespace Giraffe
 
 #endif /* _STRATIFIED_SAMPLER_HPP_ */

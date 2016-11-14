@@ -30,4 +30,12 @@ Vector3d PointLight::radiance(const Isect &isect) const
 	return intensity_ * (1.0 / direction.length2());
 }
 
+std::shared_ptr<Light> createPointLight(Slice &slice)
+{
+	Point3d position = slice.findPosition();
+	Vector3d intensity = slice.findVector();
+	assert(slice.eof());
+	return std::shared_ptr<Light>(new PointLight(position, intensity));
+}
+
 } // namespace Giraffe
