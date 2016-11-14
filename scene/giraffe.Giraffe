@@ -4,38 +4,70 @@ Sampler Uniform
 Texture t1 ConstantTexture Color 0.75 0.75 0.75
 Texture t2 ConstantTexture Color 0.25 0.25 0.75
 Texture t3 ConstantTexture Color 0.75 0.25 0.25
-
 Material m1 Diffuse t1
 Material m2 Diffuse t2
 Material m3 Diffuse t3
 
-Texture tt1 ConstantTexture Color 0.75 0.75 0.25
-Texture tt2 CellularTexture Color 0.8 0.2 0.8 4
+Texture tt1 ConstantTexture Color 0.2 0.8 0.2
+Texture tt2 ConstantTexture Color 0.1 0.1 0.1
+Texture tt3 ConstantTexture Color 0.9 0.2 0.2
+Texture tt4 ImageTexture ../texture/stones.png 1
+Texture cell1 CellularTexture Color 0.8 0.8 0.2 4 Euclidean Distance
+Texture cell2 CellularTexture Color 0.8 0.8 0.2 2 Manhattan Closest
 
 Material mm1 Diffuse tt1
 Material mm2 Diffuse tt2
+Material mm3 Diffuse tt3
+Material mm4 Diffuse tt4
+Material mm6 Diffuse cell1
+Material mm7 Diffuse cell2
 
-Object c1 Cylinder Position -8 -61 -145 Position -5 -39 -148 1.8 mm1
-Object c2 Cylinder Position -10 -61 -155 Position -7 -39 -152 1.8 mm1
-Object c3 Cylinder Position  12 -61 -145 Position  9 -39 -148 1.8 mm1
-Object c4 Cylinder Position  14 -61 -155 Position  11 -39 -152 1.8 mm1
+Object c1 Cylinder Position -8 -61 -145 Position -5 -39 -148 1.8 mm6
+Object c2 Cylinder Position -10 -61 -155 Position -7 -39 -152 1.8 mm6
+Object c3 Cylinder Position  12 -61 -145 Position  9 -39 -148 1.8 mm6
+Object c4 Cylinder Position  14 -61 -155 Position  11 -39 -152 1.8 mm6
 
-Object c5 Cylinder Position -18 -30 -150 Position 20 -30 -150 10 mm1
+Object body Cylinder Position -14 -30 -150 Position 16 -30 -150 10 mm6
 
-Object s1 Sphere Position -13 -30 -150 10.2 mm1
-Object s2 Sphere Position 15  -30 -150 10.2 mm1
+Object body1 Sphere Position -14 -30 -150 10 mm6
+Object body2 Sphere Position 16  -30 -150 10 mm6
 
-Object c6 Cylinder Position -14.5 -35 -149 Position -20 15 -149 3.5 mm1
+Object neck Cylinder Position -14.5 -35 -149 Position -20 13 -154 3.5 mm6
 
-Object c7 Cylinder Position -20 18 -153 Position -18 11 -147 4.5 mm1
+Object head Cylinder Position -20 20 -153 Position -18 13 -147 4.5 mm7
 
-Accelerate a1 c1 c2 c3 c4 c5
-//Accelerate a2 c6 c7
+Object mouth Sphere Position -17.7 13 -146 1.5 mm3
+
+Object eye1 Sphere Position -21 19.4 -145.9   2 mm2
+Object eye2 Sphere Position -17 19.8 -146 2 mm2
+
+Object ear1 Cylinder Position -21.5 20.5 -152 Position -24 24.5 -155 2.5 mm7
+Object ear2 Cylinder Position -18 21 -151 Position -16 24.5 -154 2.5 mm7
+
+Object tail Cylinder Position 23 -28 -150 Position 27 -32 -148 2.6 mm6
+
+Object tail1 Sphere Position 27 -32 -148 2.6 mm6
+
+Object g1 Cylinder Position -35 -61 -170 Position -36 -56 -175 3 mm1
+Object g2 Cylinder Position -37 -61 -168 Position -41 -57 -173 3 mm1
+Object g3 Cylinder Position -33 -61 -168 Position -29 -57 -173 3 mm1
+
+Object g4 Cylinder Position 40 -62 -150 Position 39 -56 -153 3 mm1
+Object g5 Cylinder Position 38  -61 -148 Position 35 -57 -151 3 mm1
+Object g6 Cylinder Position 42 -61 -148 Position 45 -57 -151 3 mm1
+
+Object s1 Sphere Position 55 -45 -210 15 mm4
+
+Accelerate a1 c1 c2 c3 c4
+Accelerate a2 body body1 body2
+Accelerate a3 head mouth eye1 eye2 ear1 ear2
+Accelerate a4 g1 g2 g3
+Accelerate a5 g4 g5 g6
 
 Object p1 Plane Position 0  -60 0   Normal  0  1  0  m1
 Object p2 Plane Position 0   60 0   Normal  0 -1  0  m1
-Object p3 Plane Position 0   0 -225 Normal  0  0  1  mm2
+Object p3 Plane Position 0   0 -225 Normal  0  0  1  m1
 Object p4 Plane Position -70 0  0   Normal  1  0  0  m2
 Object p5 Plane Position 70  0  0   Normal -1  0  0  m3
 
-Light l1 AreaLight Position 0 59.99 -160 Direction 0 -1 0 Intensity 4096 4096 4096 90
+Light l1 DirectionalLight Direction 0.1 -0.1 -1 Intensity 0.8 0.8 0.8

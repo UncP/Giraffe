@@ -1,8 +1,13 @@
-##Giraffe Distributed Monte Carlo Ray Tracer
+##Giraffe: Distributed Monte Carlo Ray Tracer
 [English Version of README](./README.en.md)
 
 ###Giraffe 是一个拥有自己的光线追踪语言的分布式蒙特卡洛光线追踪器，采用C++11/14实现。
 ###它的中文名字是`长颈鹿`。
+
+***
+
+####Giraffe
+![](./image/giraffe.png)
 
 ***
 
@@ -48,4 +53,4 @@
 ***
 
 ####如果你有兴趣尝试一下Giraffe
-`在*nix环境下进入src目录然后 make && ./Giraffe puppy 4 (puppy是文件名,在scene文件夹里,4是采样数,默认为1,还可以是8, 16...另外你需要有头文件png.h以及支持C++11/14的编译器，若不能支持C++14，将Makefile里的参数14改为11)`
+在*nix环境下进入src目录然后 make && ./Giraffe puppy 4 (puppy是文件名,scene文件夹里所有文件都可以,4是采样数,默认为1,还可以是8, 16...另外你需要有头文件png.h以及支持C++11/14的编译器，若不能支持C++14，将Makefile里的参数14改为11)
