@@ -26,7 +26,7 @@ class Cylinder : public Object
 		void computeBox(std::vector<double> &, std::vector<double> &,
 			const Vector3d *) const override;
 
-		bool hit(const Ray &ray, const double &distance, const Object *obj) const override;
+		bool hit(const Ray &ray, const double &distance) const override;
 
 		std::ostream& print(std::ostream &os) const override {
 			return os << "cylinder\n" << center1_ << center2_ << radius_ << std::endl;

@@ -25,7 +25,7 @@ class Object
 
 		virtual bool intersect(const Ray &, Isect &) const = 0;
 
-		virtual bool hit(const Ray &, const double &distance, const Object *obj) const {
+		virtual bool hit(const Ray &, const double &distance) const {
 			return false;
 		}
 

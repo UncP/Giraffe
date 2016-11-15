@@ -38,7 +38,7 @@ void Cylinder::computeBox(std::vector<double> &near, std::vector<double> &far,
 	}
 }
 
-bool Cylinder::hit(const Ray &ray, const double &distance, const Object *obj) const
+bool Cylinder::hit(const Ray &ray, const double &distance) const
 {
 	Vector3d ab(center1_ - ray.origin());
 	Vector3d n(normalize(cross(axis_, ray.direction())));
@@ -77,12 +77,12 @@ bool Cylinder::hit(const Ray &ray, const double &distance, const Object *obj) co
 		double dis = flag ? t1 : t2;
 		const Point3d &c = flag ? center1_ : center2_;
 		Point3d hitPos = ray.origin() + ray.direction() * dis;
-		if ((hitPos - c).length2() <= radius2_ && dis < distance && this != obj)
+		if ((hitPos - c).length2() <= radius2_ && dis < distance)
 			return true;
 		return false;
 	}
 
-	if (dis < distance && this != obj)
+	if (dis < distance)
 		return true;
 	return false;
 }

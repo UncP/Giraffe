@@ -28,7 +28,7 @@ class Box : public Object
 
 		bool intersect(const Ray &ray, Isect &isect) const override;
 
-		bool hit(const Ray &ray, const double &distance, const Object *object) const override;
+		bool hit(const Ray &ray, const double &distance) const override;
 
 		void enclose(const std::vector<std::pair<Object *, Box *>> &boxes, size_t beg, size_t end);
 

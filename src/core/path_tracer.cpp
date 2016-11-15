@@ -50,13 +50,12 @@ Vector3d GiraffePathTracer::trace(const Ray &ray, int depth)
 	Vector3d emission;
 	if (isect.material()->type() & Material::kDiffuse) {
 		const std::vector<Light *> &lights = scene_->lights();
-		const Object *obj = isect.object();
 		for (size_t i = 0, lend = lights.size(); i != lend; ++i) {
 			bool flag = true;
 			Vector3d light_dir = lights[i]->illuminate(isect);
 			if (light_dir == Vector3d(0) || dot(light_dir, isect.normal()) < 0) continue;
 			for (size_t j = 0; j != oend; ++j) {
-				if (objects[j]->hit(Ray(pos, light_dir), isect.distance(), obj)) {
+				if (objects[j]->hit(Ray(pos, light_dir), isect.distance())) {
 					flag = false;
 					break;
 				}

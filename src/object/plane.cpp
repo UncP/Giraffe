@@ -11,7 +11,7 @@
 
 namespace Giraffe {
 
-bool Plane::hit(const Ray &ray, const double &distance, const Object *obj) const
+bool Plane::hit(const Ray &ray, const double &distance) const
 {
 	double a = dot(normal_, ray.direction());
 	if (a > 0) return false;
@@ -20,7 +20,7 @@ bool Plane::hit(const Ray &ray, const double &distance, const Object *obj) const
 
 	double dis = b / a;
 
-	if (dis > 0 && dis < distance && this != obj) return true;
+	if (dis > 0 && dis < distance) return true;
 	return false;
 }
 

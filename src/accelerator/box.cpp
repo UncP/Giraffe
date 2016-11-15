@@ -84,12 +84,12 @@ bool Box::intersect(const Ray &ray, Isect &isect) const
 	return flag;
 }
 
-bool Box::hit(const Ray &ray, const double &distance, const Object *object) const
+bool Box::hit(const Ray &ray, const double &distance) const
 {
 	if (!intersect(ray)) return false;
 	bool flag = false;
 	for (auto &e : objects_)
-		if (e->hit(ray, distance, object))
+		if (e->hit(ray, distance))
 			flag = true;
 	return flag;
 }
