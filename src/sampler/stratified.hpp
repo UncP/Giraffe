@@ -20,7 +20,9 @@ namespace Giraffe {
 class StratifiedSampler : public Sampler
 {
 	public:
-		StratifiedSampler(int xPixels, int yPixels);
+		StratifiedSampler(int dimensions, int xPixels, int yPixels);
+
+		void startNextSample() override;
 
 		double get1D() override {
 			return array1D_[index1D_++ % pixels_];
@@ -32,9 +34,11 @@ class StratifiedSampler : public Sampler
 
 	private:
 		int                  pixels_;
+		int                  dimensions_;
+		std::atomic<int>     curr_dimension_;
 		std::atomic<int>     index1D_, index2D_;
-		std::vector<double>  array1D_;
-		std::vector<Point2d> array2D_;
+		std::vector<std::vector<double>>  array1D_;
+		std::vector<std::vector<Point2d>> array2D_;
 };
 
 std::shared_ptr<Sampler> createStratifiedSampler(Slice &slice);

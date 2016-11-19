@@ -13,38 +13,44 @@
 
 namespace Giraffe {
 
-StratifiedSampler::StratifiedSampler(int xPixels, int yPixels):pixels_(xPixels * yPixels),
-index1D_(0), index2D_(0)
+StratifiedSampler::StratifiedSampler(int dimension, int xPixels, int yPixels)
+:pixels_(xPixels * yPixels), dimensions_(dimensions), curr_dimension_(0), index1D_(0),index2D_(0)
 {
-	array1D_.reserve(pixels_);
-	array2D_.reserve(pixels_);
-	double invPixels = 1.0 / pixels_;
-	for (int i = 0; i != pixels_; ++i)
-		array1D_.push_back((rng_.Uniform1() + i) * invPixels);
-	for (int i = 0; i != pixels_; ++i) {
-		int other = i + rng_.Uniform1() * (pixels_-i);
-		std::swap(array1D_[i], array1D_[other]);
+	for (int i = 0; i != dimensions_; ++i) {
+		array1D_.push_back(std::vector<double>(pixels_));
+		array2D_.push_back(std::vector<Point2d>(pixels_));
 	}
+	double invPixels = 1.0 / pixels_;
+	for (int i = 0; i != dimensions_; ++i)
+		for (int j = 0; j != pixels_; ++j)
+			array1D_[i][j] = (rng_.Uniform1() + i) * invPixels;
+	for (int i = 0; i != dimensions_; ++i)
+		for (int j = 0; j != pixels_; ++j) {
+			int other = j + rng_.Uniform1() * (pixels_-j);
+			std::swap(array1D_[i][j], array1D_[i][other]);
+		}
 	double dx = 1.0 / xPixels;
 	double dy = 1.0 / yPixels;
-	for (int i = 0; i != xPixels; ++i) {
-		for (int j = 0; j != yPixels; ++j) {
-			Point2d p;
-			p.x_ = (rng_.Uniform1() + i) * dx;
-			p.y_ = (rng_.Uniform1() + j) * dy;
-			array2D_.push_back(p);
+	for (int i = 0; i != dimensions_; ++i)
+		for (int j = 0; j != xPixels; ++j) {
+			for (int k = 0; k != yPixels; ++k) {
+				Point2d p;
+				p.x_ = (rng_.Uniform1() + j) * dx;
+				p.y_ = (rng_.Uniform1() + k) * dy;
+				array2D_[j][k] = p;
+			}
 		}
-	}
-	for (int i = 0; i != pixels_; ++i) {
-		int other = i + rng_.Uniform1() * (pixels_-i);
-		std::swap(array2D_[i], array2D_[other]);
-	}
+	for (int i = 0; i != dimensions_; ++i)
+		for (int j = 0; j != pixels_; ++j) {
+			int other = j + rng_.Uniform1() * (pixels_-j);
+			std::swap(array2D_[i][j], array2D_[i][other]);
+		}
 }
 
 std::shared_ptr<Sampler> createStratifiedSampler(Slice &slice)
 {
 	assert(slice.eof());
-	return std::shared_ptr<Sampler>(new StratifiedSampler(512, 512));
+	return std::shared_ptr<Sampler>(new StratifiedSampler(1, 512, 512));
 }
 
 } // namespace Giraffe

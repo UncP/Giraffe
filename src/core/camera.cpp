@@ -50,11 +50,11 @@ PerspectiveCamera::PerspectiveCamera(	const Point3d  &ori,
 
 Ray PerspectiveCamera::generateRay(const Point2d &sample) const
 {
-	static RandomNumberGenerator rng;
 	Point3d ori(0);
 	Ray ray(ori, normalize(Vector3d(rasterToCamera_(Point3d(sample.x_, sample.y_, 0)))));
 
 	if (focal_distance_ > 0) {
+		static RandomNumberGenerator rng;
 		Point2d tmp = Point2d(rng.Uniform2(), rng.Uniform2());
 		ori = Point3d(tmp.x_, tmp.y_, 0) * radius_;
 		double z = -(focal_distance_ / ray.direction().z_);
