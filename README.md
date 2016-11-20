@@ -12,20 +12,17 @@
 ***
 
 ###特点
-* 多种表面的BRDF(reflect, refract, glossy, specular...)
+* 多种表面的BRDF(diffuse，reflect，refract，glossy，specular...)
 * 全局光照
-* 蒙特卡洛积分
+* 蒙特卡洛积分(Uniform Sampling，Stratified Sampling)
 * 分布式路径追踪
-* 直接光照
 * Russian Roulette
 * 纹理
-	- Solid Texture（砖块，条纹，图像，格子，圆点）
-	- Procedural Texture（Perlin Noise（大理石））
+	- Solid Texture（砖块，圆点，图像）
+	- Procedural Texture（Perlin Noise，格子，条纹）
 	- Cellular Texture(Worley Noise)
-* 凹凸映射
 * 反走样
 * 景深
-* 采样(Uniform, Stratified, Halton)
 * 光源（点光源，方向光，区域光，纹理光）
 * 物体（平面，三角形，球，四棱柱，圆柱，圆盘）
 * 加速数据结构

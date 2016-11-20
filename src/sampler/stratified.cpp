@@ -13,7 +13,7 @@
 
 namespace Giraffe {
 
-StratifiedSampler::StratifiedSampler(int dimension, int xPixels, int yPixels)
+StratifiedSampler::StratifiedSampler(int dimensions, int xPixels, int yPixels)
 :pixels_(xPixels * yPixels), dimensions_(dimensions), curr_dimension_(0), index1D_(0),index2D_(0)
 {
 	for (int i = 0; i != dimensions_; ++i) {
@@ -50,7 +50,7 @@ StratifiedSampler::StratifiedSampler(int dimension, int xPixels, int yPixels)
 std::shared_ptr<Sampler> createStratifiedSampler(Slice &slice)
 {
 	assert(slice.eof());
-	return std::shared_ptr<Sampler>(new StratifiedSampler(1, 512, 512));
+	return std::shared_ptr<Sampler>(new StratifiedSampler(1, 4, 4));
 }
 
 } // namespace Giraffe

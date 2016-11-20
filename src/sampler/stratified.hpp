@@ -22,14 +22,23 @@ class StratifiedSampler : public Sampler
 	public:
 		StratifiedSampler(int dimensions, int xPixels, int yPixels);
 
-		void startNextSample() override;
+		void startNextSample() override {
+			index1D_ = 0, index2D_ = 0;
+			curr_dimension_ = 0;
+		}
 
 		double get1D() override {
-			return array1D_[index1D_++ % pixels_];
+			if (curr_dimension_ < dimensions_)
+				return array1D_[curr_dimension_++][index1D_];
+			else
+				return rng_.Uniform1();
 		}
 
 		Point2d get2D() override {
-			return array2D_[index2D_++ % pixels_];
+			if (curr_dimension_ < dimensions_)
+				return array2D_[curr_dimension_++][index2D_];
+			else
+				return Point2d(rng_.Uniform1(), rng_.Uniform1());
 		}
 
 	private:

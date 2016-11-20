@@ -9,20 +9,17 @@
 ***
 
 ###Features
-* Multi BRDF(reflect, refract, glossy, specular...)
+* Multi BRDF(diffuse, reflect, refract, glossy, specular...)
 * Global illumination
-* Monte Carlo Integration
+* Monte Carlo Integration(Uniform Sampling, Stratified Sampling)
 * Distributed Path Tracing
-* Explicit Lighting
 * Russian Roulette
 * Texture
 	- Solid Texture(Brick, Stripe, Image, Grid, Spot)
-	- Procedural Texture(Perlin Noise(Marble))
-	- Cellular Texture
-* Bump Mapping
+	- Procedural Texture(Perlin Noise)
+	- Cellular Texture(Worley Noise)
 * Anti-aliasing
 * Depth of field
-* Sampler(Uniform, Stratified, Halton)
 * Light(Point, Directional, Area, Texture)
 * Object(Plane, Triangle, Sphere, Quad, Cylinder, Disk)
 * Acceleration data structures

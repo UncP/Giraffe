@@ -24,6 +24,8 @@ class Sampler
 	public:
 		Sampler() { }
 
+		virtual void startNextSample() { }
+
 		virtual double get1D() = 0;
 
 		virtual Point2d get2D() = 0;
