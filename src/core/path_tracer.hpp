@@ -23,7 +23,7 @@ class GiraffePathTracer
 
 		Vector3d trace(const Ray &ray, int depth);
 
-		void ray_tracing();
+		void path_tracing();
 
 		~GiraffePathTracer();
 

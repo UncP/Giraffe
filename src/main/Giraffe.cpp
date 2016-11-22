@@ -52,7 +52,7 @@ int main(int argc, char **argv)
 
 	GiraffePathTracer giraffe_path_tracer(scene, screenWidth, screenHeight, samples);
 
-	giraffe_path_tracer.ray_tracing();
+	giraffe_path_tracer.path_tracing();
 
 	return 0;
 }

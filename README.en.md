@@ -1,7 +1,7 @@
-##Giraffe: Distributed Monte Carlo Ray Tracer
+##Giraffe: Distributed Monte Carlo Path Tracer
 [中文版 README](./README.md)
 
-###Giraffe is a Distributed Monte Carlo Ray Tracer which has its own ray tracing language, written in C++11/14
+###Giraffe is a Distributed Monte Carlo Path Tracer which has its own path tracing language, written in C++11/14
 
 ***
 ####Giraffe
@@ -26,7 +26,7 @@
 	- BVH
 		+	AABB (Axis-Aligned Bounding Box)
 		+	DOP	(Discrete Oriented Polytopes)
-* Giraffe Ray Tracing Language
+* Giraffe Path Tracing Language
 
 
 ####Reflection & Refraction

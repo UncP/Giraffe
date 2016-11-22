@@ -69,7 +69,7 @@ Vector3d GiraffePathTracer::trace(const Ray &ray, int depth)
 	return emission + mult(color, trace(Ray(pos, refl_dir), depth));
 }
 
-void GiraffePathTracer::ray_tracing()
+void GiraffePathTracer::path_tracing()
 {
 	double inv = 1.0 / samples_;
 	const Camera &camera = scene_->camera();
