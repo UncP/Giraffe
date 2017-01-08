@@ -40,4 +40,5 @@ Object p3 Plane Position 0   0 -225 Normal  0  0  1  m1
 Object p4 Plane Position -70 0  0   Normal  1  0  0  m2
 Object p5 Plane Position 70  0  0   Normal -1  0  0  m3
 
-Light l1 AreaLight Position 0 59.99 -160 Direction 0 -1 0 Intensity 4096 4096 4096 90
+//Light l1 AreaLight Position 0 59.99 -160 Direction 0 -1 0 Intensity 4096 4096 4096 90
+Light l1 PointLight Position 0 55 -160 Intensity 2048 2048 2048
