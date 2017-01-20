@@ -113,7 +113,7 @@ class Point3
 		Point3(const T &t):x_(t), y_(t), z_(t) { }
 		Point3(const T &x, const T &y, const T &z):x_(x), y_(y), z_(z) { }
 		Point3(const Point3<T> &p):x_(p.x_), y_(p.y_), z_(p.z_) { }
-		Point3& operator=(const Point3<T> &p) {
+		Point3<T>& operator=(const Point3<T> &p) {
 			x_ = p.x_;
 			y_ = p.y_;
 			z_ = p.z_;
@@ -243,4 +243,5 @@ Point3<T> operator*(const U u, const Point3<T> &p) {
 }
 
 } // namespace Giraffe
+
 #endif /* _POINT_HPP_ */
