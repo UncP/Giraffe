@@ -114,8 +114,9 @@ void GiraffePathTracer::save_ppm() const
 void GiraffePathTracer::save_png() const
 {
 	std::string file;
-	if (ImageIO::save_png(width_, height_, pixels_, file))
-		execlp("subl", "subl", file.c_str(), NULL);
+	ImageIO::save_png(width_, height_, pixels_, file);
+	// if (ImageIO::save_png(width_, height_, pixels_, file))
+		// execlp("subl", "subl", file.c_str(), NULL);
 }
 
 GiraffePathTracer::~GiraffePathTracer()
