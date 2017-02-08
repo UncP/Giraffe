@@ -3,7 +3,10 @@
 
 ###Giraffe is a Distributed Monte Carlo Path Tracer which has its own path tracing language, written in C++11/14
 
+###It has become an offline rendering library [Zebra](https://github.com/UncP/Zebra)
+
 ***
+
 ####Giraffe
 ![](./image/giraffe.png)
 ***
