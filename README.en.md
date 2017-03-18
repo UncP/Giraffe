@@ -1,17 +1,17 @@
-##Giraffe: Distributed Monte Carlo Path Tracer
+## Giraffe: Distributed Monte Carlo Path Tracer
 [中文版 README](./README.md)
 
-###Giraffe is a Distributed Monte Carlo Path Tracer which has its own path tracing language, written in C++11/14
+### Giraffe is a Distributed Monte Carlo Path Tracer which has its own path tracing language, written in C++11/14
 
-###It has become an offline rendering library [Zebra](https://github.com/UncP/Zebra)
+### It has become an offline rendering library [Zebra](https://github.com/UncP/Zebra)
 
 ***
 
-####Giraffe
+#### Giraffe
 ![](./image/giraffe.png)
 ***
 
-###Features
+### Features
 * Multi BRDF(diffuse, reflect, refract, glossy, specular...)
 * Global illumination
 * Monte Carlo Integration(Uniform Sampling, Stratified Sampling)
@@ -32,24 +32,24 @@
 * Giraffe Path Tracing Language
 
 
-####Reflection & Refraction
+#### Reflection & Refraction
 ![](./image/reflect_refract.png)
 
-####Brick Texture
+#### Brick Texture
 ![](./image/brick.png)
 
-####Depth of Field
+#### Depth of Field
 ![](./image/depth_of_field.png)
 
-####Puppy
+#### Puppy
 ![](./image/puppy.png)
 
-####Bear
+#### Bear
 ![](./image/bear.png)
 
 ***
 
-####If you are interested in Giraffe
+#### If you are interested in Giraffe
 `Enter src directory and make && ./Giraffe puppy 4`  
 `puppy is in directory scene, all file in scene is Ok`  
 `4 means sample number, default is 1, you can change it to 8, 16...`  
