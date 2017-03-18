@@ -1,19 +1,19 @@
-##Giraffe: Distributed Monte Carlo Path Tracer
+## Giraffe: Distributed Monte Carlo Path Tracer
 [English Version of README](./README.en.md)
 
-###Giraffe 是一个拥有自己的路径追踪语言的分布式蒙特卡洛路径追踪器，采用C++11/14实现。
-###它的中文名字是`长颈鹿`。
+### Giraffe 是一个拥有自己的路径追踪语言的分布式蒙特卡洛路径追踪器，采用C++11/14实现。
+### 它的中文名字是`长颈鹿`。
 
-####已升级为离线渲染库[Zebra](https://github.com/UncP/Zebra)
+#### 已升级为离线渲染库[Zebra](https://github.com/UncP/Zebra)
 
 ***
 
-####Giraffe
+#### Giraffe
 ![](./image/giraffe.png)
 
 ***
 
-###特点
+### 特点
 * 多种表面的BRDF(diffuse，reflect，refract，glossy，specular...)
 * 全局光照
 * 蒙特卡洛积分(Uniform Sampling，Stratified Sampling)
@@ -34,24 +34,24 @@
 * Giraffe路径追踪语言
 
 
-####反射折射
+#### 反射折射
 ![](./image/reflect_refract.png)
 
-####砖块纹理
+#### 砖块纹理
 ![](./image/brick.png)
 
-####景深
+#### 景深
 ![](./image/depth_of_field.png)
 
-####Puppy
+#### Puppy
 ![](./image/puppy.png)
 
-####Bear
+#### Bear
 ![](./image/bear.png)
 
 ***
 
-####如果你有兴趣尝试一下Giraffe
+#### 如果你有兴趣尝试一下Giraffe
 `在Linux环境下进入src目录然后 make && ./Giraffe puppy 4`  
 `puppy是文件名,scene文件夹里所有文件都可以`  
 `4是采样数,默认为1,还可以是8, 16...`  
