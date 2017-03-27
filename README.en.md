@@ -1,6 +1,10 @@
 ## Giraffe: Distributed Monte Carlo Path Tracer
 [中文版 README](./README.md)
 
+[![Author](https://img.shields.io/badge/Author-UncP-blue.svg)]()
+[![Build](https://img.shields.io/badge/Build-Passing-brightgreen.svg)](https://travis-ci.org/UncP/Giraffe)
+[![License](https://img.shields.io/badge/License-BSD--3-red.svg)](./LICENSE)
+
 ### Giraffe is a Distributed Monte Carlo Path Tracer which has its own path tracing language, written in C++11/14
 
 ### It has become an offline rendering library [Zebra](https://github.com/UncP/Zebra)
