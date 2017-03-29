@@ -3,7 +3,7 @@
 
 [![Author](https://img.shields.io/badge/Author-UncP-blue.svg)]()
 [![Build](https://img.shields.io/badge/Build-Passing-brightgreen.svg)](https://travis-ci.org/UncP/Giraffe)
-[![License](https://img.shields.io/badge/License-BSD--3-red.svg)](./LICENSE)
+[![License](https://img.shields.io/badge/License-BSD-red.svg)](./LICENSE)
 
 ### Giraffe 是一个拥有自己的路径追踪语言的分布式蒙特卡洛路径追踪器，采用C++11/14实现。
 ### 它的中文名字是`长颈鹿`。
