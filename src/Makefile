@@ -1,4 +1,4 @@
-CPP      = g++
+CXX      = g++
 CPPFLAGS = -std=c++14 -Wall -O3 -fopenmp
 LDFLAGS  = -lpng
 
@@ -20,7 +20,7 @@ OBJ      = math/constant.o math/vector.o math/point.o math/ray.o math/vertex.o m
            # object/triangle.o object/cube.oobject/disk.o \
 
 Giraffe:$(OBJ) main/Giraffe.cpp
-	$(CPP) $(CPPFLAGS) -o Giraffe $(OBJ) main/Giraffe.cpp $(LDFLAGS)
+	$(CXX) $(CPPFLAGS) -o Giraffe $(OBJ) main/Giraffe.cpp $(LDFLAGS)
 
 tag:
 	ctags -R --sort=yes -f .tags
